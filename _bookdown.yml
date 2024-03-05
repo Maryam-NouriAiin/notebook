@@ -1,0 +1,19 @@
+book_filename: "Courses"
+new_session: true
+before_chapter_script: _common.R
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files: [
+  "index.Rmd",
+  "compbiol.Rmd",
+  "compbiolinstallations.Rmd",
+  "compbiolhomeworks.Rmd",
+    "fqr.Rmd",
+  "fqrpract.Rmd",
+  "eg2017.Rmd",
+  "eg2018.Rmd",
+  "eg2021.Rmd",
+  "eg2023.Rmd"
+]

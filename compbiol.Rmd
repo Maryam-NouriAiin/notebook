@@ -1,0 +1,2469 @@
+# (PART\*) Computational Biology
+
+
+# Lectures {-}
+
+
+## Introductions {-}
+
+- Nick Nicholas.Gotelli@uvm.edu
+- George George.Ni@uvm.edu
+
+### The Workflow {-}
+- get data
+    + hand entry
+    + machine generated
+    + scraped from Web
+- wrangle data
+    + transform and format for analysis
+- analyze data
+    + statistical analysis
+    + simulation modeling, forecasting
+- graph data
+    + exploratory graphics
+    + publication quality graphics
+- write paper
+    + tools for speeding up writing process
+    
+### Traditional and Modern Computational Tools {-}
+- Traditional
+    + Word/Excel/Powerpoint
+    + SAS/SPSS/JMP for stats
+    + Sigmaplot for graphics
+
+- Commercial
+- Proprietary
+- Expensive, availability of updates
+- Code not available to modify, improve
+- File formats usually not compatable
+- Poor tools for documentation, transparency
+
+- Modern
+    + /Markdown/Typora/LaTeX/Overleaf (instead of Word)
+    + plain-text editors (instead of Excel)
+    + Beamer slides package in LaTeX (instead of Powerpoint)
+    + R (instead of stats and graphics packages)
+  
+- Plain text files
+    + always can be opened and read by humans
+    + requires special plain-text editor
+    + illustrate BBedit editor
+    
+- Advantages of Modern
+    + free, open source
+    + files always usable and readable
+    + huge network of expert users (Wikipedia style)
+    + less vulnerable to hackers and malware
+    
+- Learning to code
+    + deeper understanding of problem
+    + hypothesis testing
+    + life long habit of learning and staying abreast of field
+    
+- Three kinds of students
+    + complete beginners (no chance for bad habits)
+    + currently use R (R user, but not a programmer)
+    + experienced programmer (still useful for refresher of basics, new tools)
+    
+    
+- Prerequisites
+    + Familiarity with files/folders basic operations clicking, dragging, creating, deleting files
+    + Familiarity with unholy trio (Word, Excel, Powerpoint)
+    + Familiarity with basic statistics (mean, variance, p-value, regression, anova)
+    + Familiarity with basic probability (normal, uniform)
+    
+### Course Structure {-}
+
+#### Lectures {-}
+- bring fully charged computer
+- code line by line with me
+- help your neighbor
+- help me
+
+
+####Labs {-}
+- do homeworks intended for in class work
+- post work to your GitHub portfolio
+- 5 - 8 hours of work a week
+
+####Grading{-}
+- portfolio
+- participation
+- presentation
+    
+####Course content {-}
+- Computational tools
+    + plain-text editors (use for all files and for writing)
+    + markdown (simple word processing)
+    + LaTeX (for formatting equations)
+    + regular expressions (search and find on steroids)
+    + git and GitHub (for organizing and storing data and scripts)
+    + web page construction and maintenance (using markdown and GitHub)
+    + shell commands (for using GitHub and other programs)
+    + learning new tools (doing new things in R)
+    
+- Programming Foundations in R
+    + Basic coding in R studio (scripts, sourcing, console, data structures, functions)
+    + Foundational Programming Methods (annotating code, for loops, control structures, ifelse, and much more) 
+    + Data Files (creating and annotating your scripts and data files for safe storage and archival use)
+
+- Advanced Topics
+    + Graphics (creating publication quality graphics with `ggplot2`)
+    + Basic experimental designs (ANOVA, regression, logistic regression, contingency table)
+    + Data simulation (normal, uniform, poisson, beta, gamma distributions)
+    + Advanced git commands
+    + Advanced shell commands
+    + Manuscript production in LaTeX
+    + Slide presentations in LaTeX
+
+### Non-computational tools {-}
+- A good notebook
+- Touch typing
+
+
+## GitHub {-}
+
+### Learning git and GitHub {-}
+- multiple copies of files
+- access to past copies
+- originally developed for teams of coders interacting on a single project
+- learn how to use for your own work
+- use for building portfolio and maintaining webpage
+- use in tandem with a project in r studio, but can be used with any files
+
+### Basic Vocabulary {-}
+- `Version Control` A system for maintaining current and past copies of all of your files and a record of all the changes you have made; 
+- `git` Version control software for tracking your project on your local computer
+- `GitHub` A free, public remote website where your project is permanently hosted
+- `Repository` Any collection of files that belong to the same project, plus a few special `git` files that set up the version control. Also called a `repo` by hipster programmers.
+- `Clone` Create a local copy of a repository from the GitHub website to your own website. You can clone from your own repository or anyone else's that is posted on GitHub. Once the files are on your local computer you can edit or use them as you like. However, you can only change files on GitHub for the repositories that you yourself created or for projects that you have been invited to collaborate on with others.
+- `Commit (the noun)` A snapshot of your file system at a particular time. Since your last commit, it keeps track of the files you currently have, the ones you have deleted or added, and any changes you have made to files.
+- `Commit (the verb)` When you commit, you are taking a snapshot of your files at the current time. You must add a summary of the commit that briefly describes what changes you have made (such as "add new homework file"). Note that all commits affect only the local copy of your repository. They do not affect the remote copy that is stored on GitHub
+- `Push` Pushing a set of changes means copying them from your local repository up to GitHub.
+- `Pull(=fetch)` Pulling means copying the repository in its current state on GitHub down to your local repository. This would incorporate any changes that others have made (and pushed) in a collaborative project.
+
+### Creating a webpage hosted by github for an r project {-}
+
+### Set the location for the new project {-}
+* from the Project pull-down (upper-right corner of RStudio window) choose `Close Project`
+* from the console run the command `getwd()`
+* from the `Session` menu set the working directory (choose directory) to where you want the new repository to be created
+* from the console run the command `getwd()` a second time (to confirm new location)
+
+### Create the new project and move to it {-}
+* from the console run command `library(devtools)`
+* from console run command `create_project("ProjectName")` This command creates the project and opens a new RStudio environment
+* close the original RStudio environment and move to your new RStudio project window
+
+### Add git functionality to the new project {-}
+* from the console run the command `library(devtools)` Remember the `devtools` package is not open in your new project
+* from the console run the command `use_git()`
+* respond affirmative to the question "Is it ok to commit them?"
+* respond affirmative to the question "Restart now?"
+
+### Set up and link your local git repository to your GitHub account {-}
+* after RStudio reopens, from the console run `library(devtools)`
+* from the console run the command `use_github()`
+* go to your GitHub site to admire your new repository!
+
+### Clean up the new project {-}
+* Using the Delete icon in the file panel, remove the `R` folder
+* click on the `.gitignore` file 
+* add line `gitignore` file: `*.Rproj` 
+* optionally add lines `gitignore` file: `*.pdf` for other file types or individual files to ignore
+* optionally add a license with use_mit_license(copyright="YourName")
+
+### Commit changes to the new project {-}
+* Click on the terminal tab to open a new terminal for a git commit
+* display a list of changed files `git status`
+* stage the changes `git add -A` 
+* display the staged changes `git status`
+* git commit -am 'first commit' (makes local commit)
+* git status
+* git push (push the changes up to the GitHub repo)
+
+### Build and host a website associated with your new repository {-}
+* 
+* from the pulldown menu in Rstudio, select a new markdown file `R Markdown...`
+* change title to "Initial webpage set up" (or some such thing)
+* save this file with file name "index" (RStudio will provide the .Rmd suffix)
+* run CTRL-SHFT-K to "knit" the file
+
+### Commit changes from the terminal {-}
+* switch from `Console` to `Terminal` panel
+* `git status`
+* `git add -A` 
+* `git status`
+* `git commit -am 'add webpage' `
+* `git status`
+* `git push` 
+
+### Host the "index" webpage {-}
+* Return to GitHub public repository
+* click on your name to go to your sign in
+* Go to "Settings"
+* Scroll down and under "Pages" and "Branch" change from "None" to "main"
+* Wait a minute (! could be very slow!!) and click the new link at "Your site is live at..."
+* New webpage should display
+* Note the address: https://UserName.github.io/RepoName/
+* Example: https://ngotelli.github.io/Trial/
+
+### Optional: rename "master" branch to "main" branch {-}
+
+These instructions are modified from [Scott Hanselman's blog](  https://www.hanselman.com/blog/easily-rename-your-git-default-branch-from-master-to-main) 
+
+* from the github General page, find the box to change "master" to "main"
+
+
+* Now go to each of your local clones of this repository and run the following from the terminal prompt (`$` is the prompt before the command)
+
+```
+$ git checkout master
+$ git branch -m master main
+$ git fetch
+$ git branch --unset-upstream
+$ git branch -u origin/main
+$ git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
+## git config --global init.defaultBranch main
+```
+These commands need to be issued only once for each local copy of the repository. These commands do the following:
+
+```
+1. Go to the master branch
+2. Rename master to main locally
+3. Get the latest commits from the server
+4. Remove the link to origin/master
+5. Add a link to origin/main
+6. Update the default branch to be origin/main
+7. Change git configuration to recognize main (may only need to be done once)
+```
+
+
+
+### Basic workflow for git from the terminal {-}
+
+
+### Check things out before starting your work {-}
+
+* `git status` (make sure your local repo is not ahead of the remote)
+* `git pull` (just in case there was a change made from another location)
+* `git status`  (ready to start working)
+
+### Make changes {-}
+
+* modify files, including knitting new versions of html pages or pdfs
+* delete files
+* add files
+
+### Stage changes{-}
+
+* `git status`
+* `git add -A`
+* `git status`
+
+### Commit changes {-}
+
+* `git commit -am 'write a brief informative commit message'` (no caps or punctuation, present tense)
+* `git status`
+
+### Push changes up to GitHub {-}
+* `git push`
+* `git status`
+* `git pull`
+
+### Summary of workflow {-}
+- check `status` of the local repo (uncommitted changes? local commits ahead of remote?)
+- `pull` any changes from the repo (incorporating changes pushed by others)
+- do some work (edit, create, delete files)
+- `add` changes (local)
+- `commit` changes (local)
+- `push` changes (from local repo to GitHub)
+
+[1]: From the blog post https://www.hanselman.com/blog/easily-rename-your-git-default-branch-from-master-to-main
+
+
+## Markdown {-}
+
+- `.Rmd` is Rstudio's special blend of Markdown (a text rendering language)
+- `.md` is the more generic Markdown file type. In RStudio, the intermediate `.md` files are not (in the default state) preserved.
+
+### Languages {-}
+- `LaTeX` Typesetting language invented in the 1970s by computer programmer Donald Knuth for proper rendering of text and equations. Hundreds of commands. Precise, but somewhat complicated to use.
+- `Markdown` Greatly simplified version of LaTeX with a small number of commands to master. Easy to use, text looks great.
+- `yaml`^[Originally "Yet Another Markdown Language", but more recently "YAML Ain't no Markdown Language", which is a self-referencing acronym]. Header material for `.Rmd` files that can be changed manually or by selecting options.
+- `R` Computer language for manipulating numbers, text, graphics, statistics.
+
+### Using R-markdown {-}
+- pull up cheatsheet
+- new `.Rmd` file
+
+### Basic text formatting {-}
+- headers `##` to `########`
+    *numbering from options
+- text
+- markup
+    * italic `*<text>*`
+    * bold-face `**<text>**`
+    * subscript `~<text>~`
+    * superscript `^<text>^`
+    * strikethrough `~~<text>~~`
+    * quotations `>text with no closing mark`
+    
+
+### Spacing, manual breaks, lines {-}
+- line spacing effects
+- two extra spaces at the end of a line for a manual break
+- lists
+    * indented
+    * numbered
+    
+### Links {-}
+- links `[linking text](website address)`
+- footnotes^[Footnoted text, consecutively at bottom of page]
+- images 
+```
+![image link](website address)
+```
+
+### Tables {-}
+
+```
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+```
+
+- also the `kable` package for later
+```
+{r, echo=TRUE,results='asis'}
+library(knitr)
+kable(head(iris))
+```
+
+```{r, echo=TRUE, results='asis'}
+library(knitr)
+kable(head(iris))
+```
+
+
+### Fencing {-}
+- in line fencing `to shade`
+- in line R code for calculations `r 3 + pi`
+- simple fencing to set off large chunks of plain text
+
+### Links {-}
+- links [linking text](website address)
+- footnotes^[Footnoted text, consecutively at bottom of page]
+- images 
+
+
+### Tables {-}
+
+
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+```
+
+- also the `kable` package for later
+```
+{r, echo=TRUE,results='asis'}
+library(knitr)
+kable(head(iris))
+```
+
+```{r, echo=TRUE, results='asis'}
+library(knitr)
+kable(head(iris))
+```
+
+
+
+
+### Equations {-}
+
+* in-line `$`
+* centered `$$`
+
+- basic math and text spacing handled by LateX
+
+```
+$$y = a + b$$
+```
+
+$$y = a + b$$
+
+### Subcripts {-}
+
+```
+$$H_0 = Z_{a + b}$$
+```
+
+$$H_0 = Z_{a + b}$$
+
+### Superscripts {-}
+
+```
+$$S = cA^z$$
+
+```
+
+$$S = cA^z$$
+
+
+- elements can be coupled and nested
+
+$$S=cA^z_1 + z_{2 + x}$$
+
+
+```
+$$S=cA^z_1 + z_{2 + x}$$
+
+```
+
+### Fractions and Greek Symbols {-}
+
+$$\alpha = \frac{\beta}{\delta + \gamma_x}$$
+```
+$$\alpha = \frac{\beta}{\delta + \gamma_x}$$
+
+```
+
+### Summation signs {-}
+
+$$z = \sum_{i=1}^X{K}$$
+
+```
+$$z = \sum_{i=1}^X{K}$$
+
+```
+
+### "Escaping" the \ special character in LaTeX {-}
+
+Use `\backslash`
+
+```
+$$\backslash \alpha \le b \backslash$$
+
+```
+
+$$\backslash \alpha \le b \backslash$$
+
+###Rendering plain text in a LaTex Equation
+
+$$P(Occurrence Of Species A) = Z$$
+```
+$$P(Occurrence Of Species A) = Z$$
+```
+
+$$P(\mbox{Occurrence Of Species A}) = Z$$
+
+```
+$$P(\mbox{Occurrence Of Species A}) = Z$$
+```
+
+### R Code in Chunks {-}
+
+* `CTRL-ALT-I` inserts a new "chunk" of R code
+```{r}
+## Use comments extensively in ALL of your coding!
+Pred <- seq(1,10)     ## make a vector of integers from 1 to 10
+Res <- runif(10)      ## generate 10 draws from a random uniform (0,1) distribution
+
+## print the random numbers
+print(Res)
+
+## plot the graph
+plot(x=Pred,y=Res,type="b")
+```
+
+### Using chunk options `echo` and `eval` to control printing of code and output {-}
+```{r}
+plot(runif(50),cex=10*runif(50),col="goldenrod")
+print(rnorm(n=10, mean=10, sd=2))
+```
+
+### Writing R scripts {-}
+
+- new script
+- code executes and prints in console
+- graphs in output window
+- `CTRL - ENTER` to run a single line of code
+- `CTRL - SHIFT - ENTER` to source and echo the entire script
+- `CTRL - SHIFT - S` to source entire script without echoing console output
+- `CTRL - SHIFT - C` comment and un-comment selected lines of code
+- code to illustrate:
+
+```{r}
+## First comment to explain what this program is doing.
+## Be expansive and describe it in great detail. This may seem trivial, but will become increasingly important as you create complex programs.
+## Simple script to examine the distribution of the product of two uniform variables
+## Make sure it is readable. Use complete sentences, not cryptic phrases.
+## 6 September 2018
+## NJG
+
+## Preliminaries 
+library(ggplot2)
+set.seed(100)
+library(TeachingDemos) ## use this to set the random number seed from a character string
+char2seed("green tea")
+char2seed("green tea",set=FALSE)
+
+##
+
+## Global variables
+nRep <- 10000
+
+## Create or read in data
+ranVar1 <- rnorm(nRep)
+## print(ranVar1)
+head(ranVar1)
+tail(ranVar1)
+
+ranVar2 <- rnorm(nRep)
+
+
+## visualize data
+qplot(x=ranVar1)
+
+
+## create product vector
+ranProd <- ranVar1*ranVar2
+length(ranProd)
+str(ranProd)
+head(ranProd)
+
+
+## do other stuff..
+```
+
+### Converting `.R` files to `.html` (creating an R notebook) {-}
+- use notebook script
+- roxygen comments ``##`
+
+
+### `Purling` to strip and consolidate R chunks from a Markdown file {-}
+- commands executed from console
+
+```
+library(knitr)
+purl("FileName.Rmd")
+```
+These commands will create a file `FileName.R` that has all of the R code and none of the markdown text. R comments are still retained.
+
+### Leave RStudio and Work in Typora
+
+
+
+
+## Regular Expressions {-}
+
+
+### Use of literals in searches {-}
+```
+STRING: A sentence. Another. And a third.
+SEARCH: .
+RESULT: finds the periods
+
+with Regex (or grep) search
+
+STRING: A sentence. Another. And a third.
+SEARCH: .
+RESULT: finds every consecutive character and space!
+```
+### Escaping a metacharacter {-}
+
+- insert a `\` before special characters for a literal search in regex
+
+```
+STRING: A sentence. Another. And a third.
+SEARCH: \.
+RESULT: finds the periods
+```
+### Wildcards {-}
+- `\w` a single word character [letter,number or `_`]
+- `\d` a single number character [0-9]
+- `\t` a single tab space
+- `\s` a single space, tab, or line break
+- `\n` a single line break (or try `\r`)
+
+```
+STRING: crow raven grackle
+SEARCH: \s
+REPLACE: \n
+RESULT: 
+crow
+raven
+grackle
+```
+
+###Repairing pdf cut and paste {-}
+```
+STRING:
+Cutting and
+pasting from pdf is
+a mess. Sentences
+are
+all chopped up. It is
+hard
+to repair.
+
+SEARCH: \n
+REPLACE: (replace with nothing)
+RESULT: 
+Cutting and pasting from pdf is a mess. Sentences are all chopped up. It is hard to repair. 
+```
+- TRY THIS WITH AN ACTUAL PDF PARAGRAPH
+
+### Quantifiers {-}
+- add these on to any of the wildcards
+
+- `\w+` one or more consecutive word characters
+- `\w*` zero or more consecutive word characters
+- `\w{3}` exactly 3 consecutive word characters
+- `\w{3,}` 3 or more consecutive word characters
+- `\w{3,5}` 3, 4, or 5 consecutive word characters
+
+###Using a zero or more * quantifier {-}
+
+```
+STRING: crow, raven ,grackle,starling  ,    robin
+SEARCH: \s*,\s*
+REPLACE: , 
+RESULT: crow,raven,grackle,starling,robin
+```
+###Using .* for "all the rest" {-}
+
+```
+STRING: 
+x, MyWord OtherJunk. ,
+13, MyWord2,OtherStuff,,
+X13,   MyThirdWord,        MoreTrash,!###
+xxx,LastWord     x.
+
+SEARCH: \w+,\s*\w+.*
+RESULT: Matches each line completely!
+```
+
+###Using captures to join and abbreviate species names {-}
+
+```
+STRING: 
+Lasius neoniger
+Lasius umbratus
+Myrmica lobifrons
+SEARCH: \s
+REPLACE: _
+RESULT:
+Lasius_neoniger
+Lasius_umbratus
+Myrmica_lobifrons
+
+But now use a capture to create an abbreviation
+STRING: 
+Lasius neoniger
+Lasius umbratus
+Myrmica lobifrons
+SEARCH: (\w)\w+ (\w+)
+REPLACE: \1_\2
+RESULT:
+L_neoniger
+L_umbratus
+M_lobifrons
+```
+
+###Extracting and saving text elements from messy files {-}
+```
+STRING: 
+x, MyWord OtherJunk. ,
+13, MyWord2,OtherStuff,,
+X13,   MyThirdWord,        MoreTrash,!###
+xxx,LastWord     x.
+
+SEARCH: \w+,\s*\w+.*
+
+SEARCH (with capture): \w+,\s*(\w+).*
+REPLACE: \1
+RESULT:
+MyWord
+AnotherOfMyWords
+MyThirdWord
+```
+### Interweaving multiple captures and literal text {-}
+```
+STRING: 
+x, MyWord OtherJunk. ,
+13, MyWord2,OtherStuff,,
+X13,   MyThirdWord,        MoreTrash,!###
+xxx,LastWord     x.
+
+SEARCH: \w+,\s*\w+.*
+SEARCH: \w+,\s*(\w+)(.*)
+REPLACE: MY WORD: \1\s LEFTOVER: \2
+RESULT:
+MY WORD: MyWord LEFTOVER:  OtherJunk. ,
+MY WORD: MyWord2 LEFTOVER:
+MY WORD: MyThirdWord LEFTOVER: ,        MoreTrash,!###
+MY WORD: LastWord LEFTOVER:      x.
+```
+
+### Custom character sets {-}
+
+```
+[ATCG] ## single character that is A T C or G
+[ATCG]+ ## DNA sequence
+```
+### Negated character sets {-}
+```
+[^XY]  ## a single character that is anything but X OR Y
+[^0-9.]+ one or more characters that are not numbers of decimals
+```
+### Boundary stakes {-}
+```
+^ ## outside of character set indicates start of line
+$ ## indicates end of line
+- `\<` Start of a word 
+- `\>` End of a word 
+```
+
+### E11: Search for whole words within regex {-}
+
+```
+STRING:
+Try to ascertain a kind of karma.
+SEARCH:
+a
+RESULT: finds 5 matches
+
+Search:
+\sa\s
+RESULT: finds 1 match (whole word)
+
+Search:
+\sa
+RESULT: finds 1 match (start of word)
+
+Search:
+\wa\s
+RESULT: finds 1 match (end of word)
+
+Search:
+\wa\w
+RESULT: finds 2 matches (middle of word)
+```
+
+
+
+### E12: Simplify column searches by staking to the beginning or end of the line {-}
+
+
+
+```
+STRING:
+a,b,c,MyFirstWord,g,MyLastWord
+d,ee,FirstKeeper,xx,LastKeeper
+SEARCH:
+\w+,\w+,\w+$
+SEARCH (with capture):
+(\w+),\w+,(\w+)$
+REPLACE:
+\1 \2
+RESULT:
+a,b,c,d,e,f,MyFirstWord MyLastWord
+ee,f,FirstKeeper LastKeeper
+## Perhaps not exactly what we wanted!
+
+ALTERNATE SEARCH: 
+.*,\w+,\w+,\w+$
+ALTERNATE SEARCH: (with capture):
+(.*),(\w+),(\w+),(\w+)$
+REPLACE:
+\2\s\4
+RESULT:
+MyFirstWord MyLastWord
+FirstKeeper LastKeeper
+
+ALTERNATIVE REPLACE:
+\1,\2
+ALTERNATIVE RESULT:
+a,b,c
+d,ee
+```
+
+### Finding bad characters {-}
+```
+STRING: 
+X1, 0031
+X2, 003l
+X3, 0032
+X4, 0O32
+SEARCH: (\wt,\s,)\d+,$
+REPLACE: \1ok
+RESULT:
+X1, ok
+X2, 003l
+X3, ok
+X4, 0O32
+
+```
+### Stripping out comment lines from an R script {-}
+
+```
+STRING:
+### header
+##
+x <- 3 + 5
+print (x) ## in line comment
+##
+##
+y <- x + pi
+## end of code
+
+SEARCH: ^##.*
+REPLACE: {nothing}
+RESULT:
+
+
+x <- 3 + 5
+print (x) ## in line comment
+
+
+y <- x + pi
+
+Now to eliminate blank lines:
+F
+```
+### Strip out comment lines + in-line comments from an R script {-}
+
+```
+STRING:
+### header
+##
+x <- 3 + 5
+print (x) ## in line comment
+##
+##
+y <- x + pi
+## end of code
+
+SEARCH: ##.*
+REPLACE: {nothing}
+RESULT:
+
+
+x <- 3 + 5
+print (x) 
+
+
+y <- x + pi
+
+To strip out blank lines try:
+
+SEARCH:
+\n\n
+REPLACE:
+\n
+
+OR
+
+SEARCH:
+^\n
+REPLACE:
+(nothing)
+
+But these do not handle blank lines. Instead try:
+
+SEARCH
+^\n|\s+$
+
+REPLACE:
+(nothing)
+```
+
+### Break a long parameter list by commas onto separate lines (show in Rstudio) {-}
+
+```
+STRING:
+aes(x=area,y=richness,color=invasive,size=abundance,shape=taxon)
+
+FIND:
+,
+
+REPLACE:
+,\n\t\t
+```
+
+
+## Atomic Vector I {-}
+
+### History of R {-}
+- Early languages FORTRAN, C
+- S language in 1970s; programming plus stats, matrix algebra, graphics later
+- Open-source R in 1992; first stable version in 2000
+
+### Advantages of R {-}
+- interpreted (for interactive use)
+- graphics, statistics
+- very active community of contributors
+- works on multiple platforms
+
+### Disadvantages of R {-}
+- interpreted (slow speed)
+- lazy evaluation
+- functions hard to learn
+- poorly documented
+- unreliable packages
+- problems with big data
+   - subroutines coded for C or Fortran
+   - Julia?
+
+### R as a general programming language {-}
+- data structures and types
+- writing functions
+- for loops
+- if..then, while statements
+- structured programming
+- annotation
+- naming of variables
+- using random numbers
+- structured programming
+- pseudocode
+
+### Using the assignment operator {-}
+
+```{r, eval=FALSE}
+## Using the assignment operator
+x <- 5 ## preferred
+y = 4 ## legal but not used except in function defaults
+y = y + 1.1
+print(y)
+y <- y + 1.1
+print(y)
+```
+
+### Variable names {-}
+
+```{r}
+z <- 3 ## Begin with lower case letter 
+plantHeight <- 10 ## option "camelCaseFormatting"
+plant.height <- 4.2 ## avoid periods
+plant_height <- 3.3  ## optimal "snake_case_formatting"
+. <- 5.5 ## reserve this for a generic temporary variable (more later)
+```
+
+### R's Four Data Types {-}
+
+Dimensions  | Homogeneous | Heterogeneous
+------------- | ------------- | -------------
+1-dimension  | Atomic Vector | List
+2-dimensions  | Matrix | Data Frame
+n-dimenions   | (array) |          |
+
+### Types of Atomic Vectors {-}
+- character strings
+- integers
+- double
+- integers, doubles are "numeric"
+- logical
+- (factor)
+- vector of lists!
+
+### One dimensional atomic vectors {-}
+```{r, eval=FALSE}
+## the combine function
+z <- c(3.2, 5, 5, 6) 
+print(z)
+typeof(z)
+is.numeric(z)
+
+## c() always "flattens" to an atomic vector
+z <- c(c(3,4),c(5,6)) 
+print(z)
+
+## character strings with single or double quotes
+z <- c("perch","bass",'trout') 
+print(z)
+
+## use both with an internal quote
+z <- c("This is only 'one' character string", 'a second')
+print(z)
+typeof(z)
+is.character(z)
+
+## building logicals
+## Boolean, not with quotes, all caps
+z <- c(TRUE,TRUE,FALSE) 
+## avoid abbreviations T, F which will work
+print(z)
+typeof(z)
+is.logical(z)
+is.integer(z)
+
+```
+### Three Properties of a Vector {-}
+
+###Type {-}
+
+```{r, eval=FALSE}
+z <- c(1.1, 1.2, 3, 4.4)
+typeof(z) ## gives type
+is.numeric(z) ## is. gives logical
+as.character(z) ## as. coerces variable
+print(z)
+typeof(z)
+
+```
+
+###Length {-}
+```{r, eval=FALSE}
+length(z) ## gives number of elements
+length(y) ## throws error if variable does not exist
+
+```
+
+###Names {-}
+```{r, eval=FALSE}
+z <- runif(5)
+## optional attribute not initially assigned
+names(z) 
+print(z)
+## add names later after variable is created
+names(z) <- c("chow","pug","beagle","greyhound","akita")
+print(z)
+
+## add names when variable is built (with or without quotes)
+ z2 <- c(gold=3.3, silver=10, lead=2)
+print(z2)
+
+## reset names
+names(z2) <- NULL
+
+## names can be added for only a few elements
+## names do not have to be distinct, but often are
+names(z2) <- c("copper","zinc")
+print(z2)
+
+```
+
+###Special Data Types {-}
+```{r, eval=FALSE}
+
+## NA values for missing data
+z <- c(3.2,3.3,NA) ## NA is a missing value
+typeof(z)
+length(z)
+typeof(z[3]) ## what is the type of third element
+
+z1 <- NA
+typeof(z1) ##different NA types
+
+is.na(z) ## logical operator to find missing values
+mean(z) ## won't work because of NA
+is.na(z)## evaluate to find midding values
+!is.na(z) ## use ! for NOT missing values
+mean(!is.na(z)) ## wrong answer based on TRUE FALSE!!
+mean(z[!is.na(z)]) ## correct use of indexing
+##-----------------------------
+
+## NaN, -Inf, and Inf from numeric division
+z <-  0/0   ## NaN
+typeof(z)
+print(z)
+z <- 1/0   ## Inf
+print(z)
+z <-1/0  ## - Inf
+print(z)
+##-------------------------------
+## NULL is an object that is nothing!
+## a reserved word in R
+z <- NULL
+typeof(z)
+length(z)
+is.null(z) ## only operation that works on a null
+```
+### Three Notable Features of Atomic Vectors {-}
+
+###Coercion {-}
+
+```{r, eval=FALSE}
+## All atomics are of the same type
+## if they are different, R coerces them
+## logical -> integer -> double -> character
+
+a <- c(2, 2.0)
+print(a)
+typeof(a) ## technically integer coerced to numeric
+
+b <- c("purple","green")
+typeof(b)
+
+d <- c(a,b)
+print(d)
+typeof(d)
+
+## "Mistakes" in numeric variables convert to strings
+## Very useful when working with logical variables
+
+a <- runif(10)
+print(a)
+
+## Comparison operators yield a logical result
+a > 0.5
+
+## do math on a logical and it coerces to an integer!
+
+## How many elements are greater than 0.5?
+sum(a > 0.5)
+
+## What proportion of the vector elements are greater than 0.5?
+
+mean(a > 0.5)
+
+## Break down the result
+. <- a > 0.5
+print(.)
+. <- as.integer(.)
+print(.)
+print(sum(.))
+print(mean(.))
+
+##Qualifying exam question! Approximately what proportion of observations drawn from a normal (0,1) distribution are larger than 2.0?
+
+mean(rnorm(1000) > 2)
+```
+
+
+###Vectorization {-}
+
+```{r, eval=FALSE}
+## adding a constant to a vector
+z <- c(10,20,30)
+z + 1
+
+## what happens when vectors are added?
+
+y <- c(1,2,3)
+z + y
+
+## results is an "element by element" operation on the vector
+## most vector operations can be done this way
+
+z^2
+
+```
+
+
+
+###Recycling {-}
+```{r, eval=FALSE}
+## but what if vector lengths are not equal?
+z <- c(10,20,30)
+x <- c(1,2)
+z + x
+
+## warning is issued by calculation is still made
+## shorter vector is always "recycled"
+## works with scalars (= vector of length(1))
+
+```
+
+
+
+
+## Atomic Vector II {-}
+
+
+### Creating Vectors {-}
+
+###Creating an empty vector and adding to it (avoid) {-}
+
+```{r, eval=FALSE}
+## create an empty vector, specify mode & length
+z <- vector(mode="numeric",length=0)  
+print(z)
+
+## now add elements to it
+
+z <- c(z,5)
+print(z)
+## This "dynamic sizing" is very SLOW!
+
+```
+
+
+###Creating a vector of predefined length (preferred) {-}
+
+###Better to create a vector of pre-defined length {-}
+
+```{r, eval=FALSE}
+## has 100 0s in a numeric vector
+z <- rep(0,100) 
+head(z)
+
+## but would be better to start with NAs
+z <- rep(NA,100)
+head(z)
+
+## but what is its type?
+typeof(z)
+
+## take advantage of coercion!
+z[1] <- "Washington"
+head(z)
+typeof(z)
+```
+
+### Efficiently creating a vector with many names {-}
+```{r, eval=FALSE}
+my_vector <- runif(100)
+my_names <- paste("Species",seq(1:length(my_vector)),sep="")
+names(my_vector) <- my_names
+head(my_vector)
+str(my_vector)
+```
+
+### Using rep to repeat elements and create vectors {-}
+
+```{r, eval=FALSE}
+## rep for repeating elements
+rep(0.5,6) ## give the element (or vector!) and number of times to repeat
+rep(x=0.5,times=6) ## using the argument names is always prudent
+rep(times=6,x=0.5) ## with argument names, order is not important
+my_vec <- c(1,2,3)
+rep(x=my_vec,times=2) ## applies to entire vectors
+rep(x=my_vec,each=2) ## repeat each element individually
+rep(x=my_vec,times=my_vec) ## what does this do?
+rep(x=my_vec,each=my_vec) ## and this?
+```
+
+### Using seq to create regular sequences {-}
+
+```{r, eval=FALSE}
+seq(from=2, to=4) ## set limits for integer sequences
+2:4 ## very common short cut with no explicit function wrappers
+seq(from=2,to=4,by=0.5) ## use a by function can generate real numbers
+x <- seq(from=2, to=4,length=7) ## sometimes easier to just specify the length
+my_vec <- 1:length(x) ## commonly used, but actually slow
+print(my_vec)
+seq_along(my_vec) ## much faster for models and big data!
+seq_len(5) ## this is also faster than 1:5
+```
+
+### Using rnorm and runif to create vectors of random numbers {-}
+```{r, eval=FALSE}
+runif(5) ## 5 random uniform values betweeon 0 and 1
+runif(n=3,min=100, max=101) ## 3 random uniform values between 100 and 101
+
+rnorm(6) ## 6 random normal values with mean 0 and standard deviation 1
+rnorm(n=5, mean=100, sd=30) ## 5 random normal values with mean 100 and sd 30
+
+### Explore distributions by sampling and plotting
+library(ggplot2) ## do this at the very start
+z <- runif(1000) ##default uniform (0,1)
+qplot(x=z)
+z <- rnorm(1000) ##default normal (0,1)
+qplot(x=z)
+```
+
+### Using sample to draw random values from an existing vector {-}
+
+```{r, eval=FALSE}
+long_vec <- seq_len(10)
+typeof(long_vec)
+str(long_vec)
+
+sample(x=long_vec) ## with no other params, this reorders the vector
+sample(x=long_vec, size=3) ## specify a number (sampling without replacement)
+sample(x=long_vec,size=16,replace=TRUE) ## can generate duplicates
+my_weights <- c(rep(20,5),rep(100,5)) ## create a set of non-zero positive weights (integer or real)
+print(my_weights)
+sample(x=long_vec,replace=TRUE,prob=my_weights) ## sampling with replacement and weights
+sample(x=long_vec,replace=FALSE,prob=my_weights) ## sampling without replacement and weights
+sample(x=long_vec,replace=TRUE,prob=long_vec) ## what does this do?
+```
+
+### Techniques for subsetting atomic vectors {-}
+
+```{r,eval=FALSE}
+z <- c(3.1, 9.2, 1.3, 0.4, 7.5)
+
+## positive index values
+z[c(2,3)]
+
+## negative index values to exclude elements
+z[-c(2,3)]
+
+## create a vector of logical elements to select conditions
+
+z[z<3]
+
+## equivalent to the following
+tester <- z<3
+print(tester)
+z[tester]
+
+## also use which() function to find subscript indicators
+which(z<3)
+
+## this works, but is overkill; just use the boolean operator
+z[which(z<3)]
+
+## can also use length() for relative positioning to last element
+z[-(length(z):(length(z)-2))]
+
+## also can subset using named vector elements
+names(z) <- letters[1:5]
+z[c("b","c")]
+
+
+```
+
+### Relational operators in R {-}
+
+```{r eval=FALSE}
+## <   less than
+## >   greater than
+## <=  less than or equal to
+## >=  greater than or equal to
+## ==  equal to
+```
+
+### Logical operators {-}
+```{r eval=FALSE}
+## ! not
+## & and (vector)
+## | or (vector)
+## xor(x,y)
+## && and (only for first element)
+## || or (only for first element)
+
+x <- 1:5
+y <- c(1:3,7,7)
+x == 2
+x != 2
+x == 1 & y == 7
+x == 1 | y == 7
+x == 3 | y == 3
+xor(x==3, y==3)
+x == 3 && y == 3
+```
+
+### Subscripting with missing values {-}
+
+```{r, eval=FALSE}
+set.seed(90)
+z <- runif(10) ## simple integer sequence
+print(z)
+
+z < 0.5 ## create logical vector
+z[z < 0.5] ## use as index call
+which(z < 0.5) ## use to get indices for logical
+z[which(z < 0.5)] ## does same as above
+
+zD <- c(z,NA,NA) ## contaminate it
+zD[zD < 0.5] ## NA values carried along!
+zD[which(zD < 0.5)] ## NA values dropped
+
+```
+
+
+## Metrics, Lists, & Data Frames {-}
+
+
+### Matrices {-}
+
+```{r, eval=FALSE}
+## a matrix is an atomic vector that is organized into rows and columns
+
+my_vec <- 1:12
+
+m <- matrix(data=myvec,nrow=4)
+print(m)
+
+m <- matrix(data=myvec,ncol=3)
+print(m)
+
+m <- matrix(data=myvec,ncol=3,byrow=TRUE)
+print(m)
+```
+### Lists {-}
+
+```{r,eval=FALSE}
+## Lists are atomic vectors but each element 
+## can hold things of different types and different sizes
+
+myList <- list(1:10, matrix(1:8,nrow=4,byrow=TRUE), letters[1:3],pi)
+str(myList)
+print(myList)
+
+
+## using [] gives you a single item, which is of type list
+myList[4]
+myList[4] - 3 ## no, can't subtract a number from a list!
+
+
+## single brackets gives you only the element in that slot, which is always of type list
+
+## to grab the object itself, use [[]]
+myList[[4]]
+myList[[4]] - 3 ## now we have the contents
+
+## if a list has 10 elements it is like a train with 10 cars
+## [[5]] gives you the contents of car ##5
+###[c(4,5,6)] gives you a little train with cars 4, 5, and 6
+
+## once the double bracket is called, you can access individual elements as before
+
+myList[[2]]
+myList[[2]][4,1]
+
+## name list items when they are created
+
+myList2 <- list(Tester=FALSE,littleM=matrix(1:9,nrow=3))
+
+## named elements can be accessed with dollar sign
+
+myList2$littleM[2,3] ## get row 2, column3
+myList2$littleM ## show whole matrix
+myList2$littleM[2,] ## show second row, all columns
+myList2$littleM[2] ## what does this give you?
+
+## The "unlist" strings everything back into
+## a single atomic vector; coercion is used if there are mixed data types
+unRolled <- unlist(myList2)
+print(unRolled)
+
+
+## The most common use of list: output from a linear model is a list
+
+library(ggplot2)
+yVar <- runif(10)
+xVar <- runif(10)
+myModel <- lm(yVar~xVar)
+qplot(x=xVar,y=yVar)
+
+## look at output in myModel
+print(myModel)
+
+## full results are in summary
+print(summary(myModel))
+
+## drill down into summary to get what we want
+str(summary(myModel))
+summary(myModel)$coefficients
+summary(myModel)$coefficients["xVar","Pr(>|t|)"]
+summary(myModel)$coefficients[2,4]
+
+## use unlist instead
+
+u <- unlist(summary(myModel))
+print(u)
+
+mySlope <- u$coefficients2
+myPval <- u$coefficients8
+
+```
+
+### Data Frames {-}
+
+```{r,eval=FALSE}
+## a data frame is a list of equal-lengthed vectors, each of which is a column
+
+varA <- 1:12
+varB <- rep(c("Con","LowN","HighN"),each=4)
+varC <- runif(12)
+dFrame <- data.frame(varA,varB,varC,stringsAsFactors=FALSE)
+print(dFrame)
+str(dFrame)
+
+## add another row with rbind
+## make sure you add a list, with each item corresponding to a column
+
+## newData <- data.frame(list(varA=13,varB="HighN",varC=0.668),stringsAsFactors=FALSE)
+newData <- list(varA=13,varB="HighN",varC=0.668)
+print(newData)
+str(newData)
+
+## now bind them
+dFrame <- rbind(dFrame,newData)
+str(dFrame)
+tail(dFrame)
+
+
+## adding another column is a little easier
+
+##newVar <- data.frame(varD=runif(13))
+newVar <- runif(13)
+dFrame <- cbind(dFrame,newVar)
+head(dFrame)
+
+```
+
+### Important Distinctions Between Lists and Matrices {-}
+
+```{r, eval=FALSE}
+
+## create a matrix and data frame with same structures
+zMat <- matrix(data=1:30,ncol=3,byrow=TRUE)
+zDframe <- as.data.frame(zMat) ## coerce it
+
+str(zMat)    ## an atomic vector with 2 dimensions
+str(zDframe) ## note horizontal layout of variabes!
+
+head(zDframe) ## note automatic variable names
+head(zMat) ## note identical layout
+
+## element referencing is the same in both
+zMat[3,3]
+zDframe[3,3]
+
+## so is column referencing
+
+zMat[,3]
+zDframe[,3]
+zDframe$V3 ## note use of $ and named variable column
+## and row referencing
+zMat[3,]
+zDframe[3,] ## note variable names and row number shown
+
+## what happens if we reference only one dimension?
+
+zMat[2] ## takes the second element of atomic vector (column fill)
+zDframe[2] ## takes second atomic vector (= column) from list
+zDframe["V2"]
+zDframe$V2
+```
+
+### Eliminating missing values {-}
+```{r, eval=FALSE}
+## use complete.cases with atomic vector
+print(zD)
+
+complete.cases(zD)
+
+zD[complete.cases(zD)] ## clean them out
+
+which(!complete.cases(zD)) ## find NA slots
+
+## use with a matrix
+
+m <- matrix(1:20,nrow=5)
+m[1,1] <- NA
+m[5,4] <- NA
+print(m)
+
+m[complete.cases(m),] 
+
+## now get complete cases for only certain columns!
+m[complete.cases(m[,c(1,2)]),] ## drops row 1
+m[complete.cases(m[,c(2,3)]),] ## no drops
+m[complete.cases(m[,c(3,4)]),] ## drops row 4
+m[complete.cases(m[,c(1,4)]),] ## drops 1&4
+
+```
+
+
+
+### Techniques for assignments and subsetting matrices and data frames {-}
+
+```{r,eval=FALSE}
+## same principle applied to both dimensions of a matrix
+m <- matrix(data=1:12,nrow=3)
+dimnames(m) <- list(paste("Species",LETTERS[1:nrow(m)],sep=""),paste("Site",1:ncol(m),sep=""))
+print(m)
+
+## subsetting based on elements
+m[1:2,3:4]
+## same subsetting based on character strings (but no negative elements)
+m[c("SpeciesA","SpeciesB"), c("Site3","Site4")]
+
+## use blanks before or after comma to indicate full rows or columns
+m[1:2, ]    
+
+m[ ,3:4]
+
+## use logicals for more complex subsetting
+
+## e.g. select all columns for which the totals are > 15
+
+## first try this logical
+colSums(m) > 15
+m[ , colSums(m) > 15]
+
+
+## e.g. select all rows for which the row total is 22
+m[rowSums(m)==22, ]
+
+## note == for logical equal and != for logical NOT equal
+m[rowSums(m)!=22, ]
+
+## e.g., choose all rows for which numbers for site 1 are less than 3
+## AND choose all columns for which the numbers for species A are less than 5
+
+## first, try out this logical for rows
+m[ ,"Site1"]<3
+
+## add this in and select with all columns
+m[m[ ,"Site1"]<3, ]
+
+## and try this logical for columns
+m["SpeciesA", ]<5
+
+## add this in and select with all rows
+m[ ,m["SpeciesA", ]<5]
+
+## now combine both
+m[m[ ,"Site1"]<3,m["SpeciesA", ]<5]
+
+## and compare with full m
+print(m)
+
+
+## caution! simple subscripting to a vector changes the data type!
+z <- m[1, ]
+print(z)
+str(z)
+
+## to keep this as a matrix, must add the drop=FALSE option
+
+z2 <- m[1, ,drop=FALSE]
+print(z2)
+str(z2)
+
+## caution ##2, always use both dimensions, or you will select a single matrix element
+
+m2 <- matrix(data=runif(9),nrow=3)
+print(m2)
+m2[2, ]
+
+## but now this will just pull the second element
+m2[2]
+
+## probably should specify row and column indicators
+m2[2,1]
+## also use logicals for assignments, not just subsetting
+m2[m2>0.6] <- NA
+print(m2)
+
+
+## A few changes for working with data frames:
+
+data <-read.csv(file="antcountydata.csv",header=TRUE,sep=",",stringsAsFactors=FALSE)
+str(data)
+
+## the data frame is a list of vectors, so it is set up like a matrix
+data[3,2]
+
+## you can specify just the column names
+
+dataNames <- data[c("state","county")]
+str(dataNames)
+
+## or in matrix style
+dataNames <- data[ ,c("county", "ecoregion")]
+str(dataNames)
+
+
+## as before, with matrices, selecting only a single column changes it
+## from a data frame to a vector
+dataNames <- data[ ,"county"]
+str(dataNames)
+
+```
+
+
+## Probability Distributions {-}
+
+### Probability distributions in R {-}
+###Discrete distributions {-}
+
+- Poisson
+    * Range: [0,$\infty$]
+    * Parameters: size = number of events, rate = $\lambda$
+    * Interpretation: Distribution of events that occur during a fixed time interval or sampling effort with a constant rate of independent events; resembles normal with large $\lambda$, or exponential with small $\lambda$
+    
+- Binomial
+    * Range: [0, ## of trials]
+    * Parameters: size= number of trials; p = probability of positive outcome
+    * Interpretation: Distribution of number of successful independent dichotomous trials, with constant p
+    
+- Negative Binomial
+    * Range: [0, $\infty$]
+    * Parameters: size=number of successes; p = probability of success
+    * Interpretation: Distribution of number of failures in a series of independent Bernouli trials, each with p = probability of a success. Generates a discrete distribution that is more heterogeneous ("overdispersed") than Poisson
+    
+###Continuous distributions {-}
+
+- Uniform
+    * Range: [min,max]
+    * Parameters: min = minimum boundary; max = maximum boundary
+    * Interpretation: Distribution of a value that is equally likely within a specified range
+    
+- Normal
+    * Range: [$-\infty,\infty$]
+    * Parameters: mean = central tendency; SD = standard deviation
+    * Interpretation: Symmetric bell-shaped curve with unbounded tails
+    
+- Gamma $\Gamma$
+    * Range: [0,$\infty$]
+    * Parameters: shape, scale
+    * Interpretation: mean=$shape*scale$, variance=$shape*scale^2$; generates a variety of shapes (including normal and exponential) for positive continuous variables
+    
+- Beta $\beta$
+    * Range: [0,1] (can be rescaled to any range by simple multiplication and addition)
+    * Paramters: shape1, shape2
+    * Interpretation: if shape1 and shape 2 are integers, interpret as a coin toss, with shape1 = ## of successes + 1, shape2 = ## of failures + 1. Gives distribution of value of p, estimated from data, which can range from exponential through uniform through normal (but all are bounded). Setting shape1 and shape2 <1 yields u-shaped distributions.
+
+### The "grammar" of probability distributions in R {-}
+- `d` gives probability density function
+- `p` gives cumulative distribution function
+- `q` gives quantile function (the inverse of `p`)
+- `r` gives random number generation
+
+Combine these with the base name of the function. For example `rbinom` gives a set of random values drawn from a binomial, whereas `dnorm` gives the density function for a normal distribution. There are many probability distributions available in R, but we will discuss only 7 of them.
+
+###Poisson distribution {-}
+
+```{r}
+library(ggplot2)
+library(MASS)
+##-------------------------------------------------
+## Poisson distribution
+## Discrete X >= 0
+## Random events with a constant rate lambda
+## (observations per time or per unit area)
+## Parameter lambda > 0
+
+## "d" function generates probability density
+hits <- 0:10
+myVec <- dpois(x=hits,lambda=1)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+myVec <- dpois(x=hits,lambda=2)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+hits <- 0:15
+myVec <- dpois(x=hits,lambda=6)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+
+hits <- 0:15
+myVec <- dpois(x=hits,lambda=0.2)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+sum(myVec)  ## sum of density function = 1.0 (total area under curve)
+
+## for a Poisson distribution with lambda=2, 
+## what is the probability that a single draw will yield X=0?
+
+dpois(x=0,lambda=2)
+
+## "p" function generates cumulative probability density; gives the 
+## "lower tail" cumulative area of the distribution
+
+hits <- 0:10
+myVec <- ppois(q=hits,lambda=2)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+
+## for a Poisson distribution with lambda=2, 
+## what is the probability of getting 1 or fewer hits?
+
+ppois(q=1, lambda=2)
+
+
+## We could also get this through dpois
+p_0 <- dpois(x=0,lambda=2)
+p_0
+p_1 <- dpois(x=1,lambda=2)
+p_1
+p_0 + p_1
+
+
+## The q function is the inverse of p
+## What is the number of hits corresponding to 50% of the probability mass
+qpois(p=0.5,lambda=2.5)
+qplot(x=0:10,y=dpois(x=0:10,lambda=2.5),geom="col",color=I("black"),fill=I("goldenrod"))
+
+## but distribution is discrete, so this is not exact
+ppois(q=2,lambda=2.5)
+
+## finally, we can simulate individual values from a poisson
+ranPois <- rpois(n=1000,lambda=2.5)
+qplot(x=ranPois,color=I("black"),fill=I("goldenrod"))
+
+
+## for real or simulated data, we can use the quantile
+## function to find the empirical  95% confidence interval on the data
+
+quantile(x=ranPois,probs=c(0.025,0.975))
+```
+
+###Binomial distribution {-}
+
+```{r}
+##-------------------------------------------------
+## Binomial distribution
+## p = probability of a dichotomous outcome
+## size = number of trials
+## x = possible outcomes
+## outcome x is bounded between 0 and number of trials
+
+## use "d" binom for density function
+hits <- 0:10
+myVec <- dbinom(x=hits,size=10,prob=0.5)
+qplot(x=0:10,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+
+
+## and how does this compare to an actual simulation of 50 tosses of 100 coins?
+
+myCoins <- rbinom(n=50,size=100,prob=0.5)
+qplot(x=myCoins,color=I("black"),fill=I("goldenrod"))
+quantile(x=myCoins,probs=c(0.025,0.975))
+
+```
+
+###Negative Binomial distribution {-}
+
+```{r}
+##-------------------------------------------------
+## negative binomial: number of failures (values of MyVec)
+## in a series of (Bernouli) with p=probability of success 
+## before a target number of successes (= size)
+## generates a discrete distribution that is more 
+## heterogeneous ("overdispersed") than Poisson
+hits <- 0:40
+myVec <- dnbinom(x=hits, size=5, prob=0.5)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+## geometric series is a special case where N= 1 success
+## each bar is a constant fraction 1 - "prob" of the bar before it
+myVec <- dnbinom(x=hits, size=1, prob=0.1)
+qplot(x=hits,y=myVec,geom="col",color=I("black"),fill=I("goldenrod"))
+
+
+## alternatively specify mean = mu of distribution and size, 
+## the dispersion parameter (small is more dispersed)
+## this gives us a poisson with a lambda value that varies
+## the dispersion parameter is the shape parameter in the gamma
+## as it increases, the distribution has a smaller variance
+## just simulate it directly
+
+nbiRan <- rnbinom(n=1000,size=10,mu=5)
+qplot(nbiRan,color=I("black"),fill=I("goldenrod"))
+
+nbiRan <- rnbinom(n=1000,size=0.1,mu=5)
+qplot(nbiRan,color=I("black"),fill=I("goldenrod"))
+```
+
+###Uniform distribution {-}
+
+```{r}
+##-------------------------------------------------
+## uniform
+## params specify minimum and maximum
+
+##runif for random data
+qplot(x=runif(n=100,min=0,max=5),color=I("black"),fill=I("goldenrod"))
+qplot(runif(n=1000,min=0,max=5),color=I("black"),fill=I("goldenrod"))
+##-------------------------------------------------
+```
+###Normal distribution {-}
+
+```{r}
+## normal 
+myNorm <- rnorm(n=100,mean=100,sd=2)
+qplot(myNorm,color=I("black"),fill=I("goldenrod"))
+
+## problems with normal when mean is small but zero is not allowed.
+myNorm <- rnorm(n=100,mean=2,sd=2)
+qplot(myNorm,color=I("black"),fill=I("goldenrod"))
+summary(myNorm)
+tossZeroes <- myNorm[myNorm>0]
+qplot(tossZeroes,color=I("black"),fill=I("goldenrod"))
+summary(tossZeroes)
+```
+
+###Gamma distribution {-}
+
+``` {r}
+##-------------------------------------------------
+## gamma distribution, continuous positive values, but bounded at 0
+
+myGamma <- rgamma(n=100,shape=1,scale=10)
+qplot(myGamma,color=I("black"),fill=I("goldenrod"))
+
+## gamma with shape= 1 is an exponential with scale = mean
+
+## shape <=1 gives a mode near zero; very small shape rounds to zero
+myGamma <- rgamma(n=100,shape=0.1,scale=1)
+qplot(myGamma,color=I("black"),fill=I("goldenrod"))
+
+## large shape parameters moves towards a normal
+myGamma <- rgamma(n=100,shape=20,scale=1)
+qplot(myGamma,color=I("black"),fill=I("goldenrod"))
+
+## scale parameter changes mean- and the variance!
+qplot(rgamma(n=100,shape=2,scale=100),color=I("black"),fill=I("goldenrod"))
+qplot(rgamma(n=100,shape=2,scale=10),color=I("black"),fill=I("goldenrod"))
+qplot(rgamma(n=100,shape=2,scale=1),color=I("black"),fill=I("goldenrod"))
+qplot(rgamma(n=100,shape=2,scale=0.1),color=I("black"),fill=I("goldenrod"))
+
+
+## unlike the normal, the two parameters affect both mean and variance
+
+## mean = shape*scale
+## variance= shape*scale^2
+```
+
+###Beta distribution {-}
+
+```{r}
+##-------------------------------------------------
+
+## beta distribution 
+## bounded at 0 and 1
+## analagous to a binomial, but result is a continuous distribution of probabilities
+## parameter shape1 = number of successes + 1
+## parameter shape2 = number of failures + 1
+## interpret these in terms of a coin you are tossing
+
+## shape1 = 1, shape2 = 1 = "no data"
+myBeta <- rbeta(n=1000,shape1=1,shape2=1)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+
+## shape1 = 2, shape1 = 1 = "1 coin toss, comes up heads!"
+myBeta <- rbeta(n=1000,shape1=2,shape2=1)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+## two tosses, 1 head and 1 tail
+myBeta <- rbeta(n=1000,shape1=2,shape2=2)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+## two tosses, both heads
+myBeta <- rbeta(n=1000,shape1=2,shape2=1)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+## let's get more data
+myBeta <- rbeta(n=1000,shape1=20,shape2=20)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+myBeta <- rbeta(n=1000,shape1=500,shape2=500)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+## if the coin is biased
+myBeta <- rbeta(n=1000,shape1=1000,shape2=500)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+myBeta <- rbeta(n=1000,shape1=10,shape2=5)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+
+
+## shape parameters less than 1.0 give us a u-shaped distribution
+myBeta <- rbeta(n=1000,shape1=0.1,shape2=0.1)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+myBeta <- rbeta(n=1000,shape1=0.5,shape2=0.2)
+qplot(myBeta,xlim=c(0,1),color=I("black"),fill=I("goldenrod"))
+```
+
+
+
+
+
+
+
+## Data curation {-}
+
+
+
+* GitHub repository   
+* Metadata   
+* [Metadata template](https://gotellilab.github.io/Bio381/Scripts/Feb02/ExcelDataTemplate.xlsx)   
+* Example of Laurens data 
+
+### Exporting and importing data {-}
+
+First create a tiny data set in Excel:
+```
+## comments at the top
+## beaucoup metadata
+ID, Treatment, Biomass, Notes
+1, Control, 30.3, 
+2, HighN, 13.0, 
+3, HighN, NA, broken scale
+4, Control, 35.3,
+```
+- Save as .csv
+- Inspect in RStudio Editor
+
+### Use `read.table` to bring in data {-}
+```{r, eval=FALSE}
+my_data <- read.table(file="path/to/data.csv",
+                    header=TRUE,
+                    sep=",",
+                    comment.char="##")
+
+## inspect object
+str(my_data)
+
+## now add a column
+my_data$newVar <- runif(4)
+head(my_data)
+```
+
+### Use `write.table` to export to a data file {-}
+
+```{r, eval=FALSE}
+
+write.table(x=my_data,
+            file="Path/To/OutputFileName.csv",
+            HEADER=TRUE,
+            sep=",")
+```
+
+
+
+But this is not a good way to save or share data objects if we are working in R. Some researchers use the `save()` function, which preserves the whole environment, but once it is restored with `load()`, the variable names cannot be changed. It is better to use `saveRDS().
+
+### `saveRDS()`: useful when you are working only in R {-}
+```{r, eval=FALSE}
+saveRDS(my_data, file="Path/To/FileName.RDS") ## .RDS suffix is not required, but good for clarity
+```
+
+This only saves a single R object as a binary, but remember, you can bundle up many things into a single list!
+  
+  Use `readRDS()` to restore it.
+
+### `readRDS()` {-}
+```{r, eval=FALSE}
+data_in <-readRDS("FileName.RDS") 
+```
+
+## Experimental Design {-}
+
+### Archetype Experimental Designs {-}
+- independent versus dependent variables
+- discrete versus continuous variables
+- continuous variables (integer and real)
+- direction of cause and effect, x axis is independent
+- continuous versus discrete (natural or arbitrary or statistical bins)
+
+### Regression (dependent: continuous, independent: continuous) {-}
+- linear model of $y = a + bx$
+  - statistical tests for null of hypothesis of slope and/or intercept = 0
+- confidence and prediction intervals of uncertainty
+- goodness of fit tests for linearity
+
+### Set-up {-}
+```{r}
+library(tidyverse)
+
+```
+
+
+### Data Frame construction for Regression Data {-}
+
+```{r}
+n = 50  ## number of observations (rows)
+
+
+varA <- runif(n) ## random uniform values (independent)
+varB <- runif(n) ## a second random column (dependent)
+varC <- 5.5 + varA*10 ## a noisy linear relationship with varA
+ID <- seq_len(n) ## creates a sequence from 1:n (if n > 0!)
+regData <- data.frame(ID,varA,varB,varC)
+head(regData)
+str(regData)
+```
+
+### Basic regression analysis in R {-}
+```{r}
+## model
+regModel <- lm(varB~varA,data=regData)
+
+## model output
+regModel ## printed output is sparse
+str(regModel) ## complicated, but has "coefficients"
+head(regModel$residuals) ## contains residuals
+
+## 'summary' of model has elements
+summary(regModel) ## 
+summary(regModel)$coefficients
+str(summary(regModel))
+
+## best to examine entire matrix of coefficients:
+summary(regModel)$coefficients[] ##shows all
+
+## can pull results from this, but a little wordy
+summary(regModel)$coefficients[1,4]   ##p value for intercept
+summary(regModel)$coefficients["(Intercept)","Pr(>|t|)"] ## uggh
+
+
+## alternatively unfurl this into a 1D atomic vector with names
+z <- unlist(summary(regModel))
+str(z)
+z
+z$coefficients7
+
+## grab what we need and put into a tidy  list
+
+regSum <- list(intercept=z$coefficients1,
+               slope=z$coefficients2,
+               interceptP=z$coefficients7,
+               slopeP=z$coefficients8,
+               r2=z$r.squared)
+
+## much easier to query and use
+print(regSum)
+regSum$r2
+regSum[[5]]
+
+```
+
+### Basic ggplot of regression model {-}
+
+```{r}
+regPlot <- ggplot(data=regData,aes(x=varA,y=varB)) +
+  geom_point() +
+  stat_smooth(method=lm,se=0.99) ## default se=0.95 
+print(regPlot)
+## ggsave(filename="Plot1.pdf",plot=regPlot,device="pdf")
+```
+
+### Data frame construction for one-way ANOVA {-}
+
+```{r}
+nGroup <- 3 ## number of treatment groups
+nName <- c("Control","Treat1", "Treat2") ## names of groups
+nSize <- c(12,17,9) ## number of observations in each group
+nMean <- c(40,41,60) ## mean of each group
+nSD <- c(5,5,5) ## standardd deviation of each group
+
+ID <- 1:(sum(nSize)) ## id vector for each row
+resVar <- c(rnorm(n=nSize[1],mean=nMean[1],sd=nSD[1]),
+            rnorm(n=nSize[2],mean=nMean[2],sd=nSD[2]),
+            rnorm(n=nSize[3],mean=nMean[3],sd=nSD[3]))
+TGroup <- rep(nName,nSize)
+ANOdata <- data.frame(ID,TGroup,resVar)
+str(ANOdata)
+```
+
+### Basic ANOVA in R {-}
+```{r}
+ANOmodel <- aov(resVar~TGroup,data=ANOdata)
+print(ANOmodel)
+print(summary(ANOmodel))
+z <- summary(ANOmodel)
+str(z)
+aggregate(resVar~TGroup,data=ANOdata,FUN=mean)
+unlist(z)
+unlist(z)[7]
+ANOsum <- list(Fval=unlist(z)[7],probF=unlist(z)[9])
+ANOsum
+
+
+```
+
+
+### Basic ggplot of ANOVA data {-}
+
+```{r}
+ANOPlot <- ggplot(data=ANOdata,aes(x=TGroup,y=resVar,fill=TGroup)) +
+  geom_boxplot()
+print(ANOPlot)
+## ggsave(filename="Plot2.pdf",plot=ANOPlot,device="pdf")
+```
+
+
+### Data frame construction for logistic regression {-}
+```{r}
+
+xVar <- sort(rgamma(n=200,shape=5,scale=5))
+yVar <- sample(rep(c(1,0),each=100),prob=seq_len(200))
+lRegData <- data.frame(xVar,yVar)
+
+```
+### Logistic regression analysis in R {-}
+
+```{r}
+lRegModel <- glm(yVar ~ xVar,
+                 data=lRegData,
+                 family=binomial(link=logit))
+summary(lRegModel)
+summary(lRegModel)$coefficients
+
+```
+
+### Basic ggplot of logistic regression {-}
+```{r}
+lRegPlot <- ggplot(data=lRegData, aes(x=xVar,y=yVar)) +
+  geom_point() +
+  stat_smooth(method=glm, method.args=list(family=binomial))
+print(lRegPlot)
+
+```
+
+### Data for contingency table analysis {-}
+```{r}
+## integer counts of different data groups
+vec1 <- c(50,66,22)
+vec2 <- c(120,22,30)
+dataMatrix <- rbind(vec1,vec2)
+rownames(dataMatrix) <- c("Cold","Warm")
+colnames(dataMatrix) <-c("Aphaenogaster",
+                         "Camponotus",
+                         "Crematogaster")
+str(dataMatrix)
+```
+
+### Basic contingency table analysis in R {-}
+
+```{r}
+print(chisq.test(dataMatrix))
+```
+
+### Plotting contingency table analyses {-}
+
+```{r}
+## some simple plots using baseR
+mosaicplot(x=dataMatrix,
+           col=c("goldenrod","grey","black"),
+           shade=FALSE)
+barplot(height=dataMatrix,
+        beside=TRUE,
+        col=c("cornflowerblue","tomato"))
+
+
+dFrame <- as.data.frame(dataMatrix)
+dFrame <- cbind(dFrame,list(Treatment=c("Cold","Warm")))
+dFrame <- gather(dFrame,key=Species,Aphaenogaster:Crematogaster,value=Counts) 
+
+p <- ggplot(data=dFrame,aes(x=Species,y=Counts,fill=Treatment)) + geom_bar(stat="identity",position="dodge",color=I("black")) +
+  scale_fill_manual(values=c("cornflowerblue","coral"))
+print(p)
+```
+
+
+
+
+## Functions {-}
+
+### Functions in R {-}
+
+- Everything in R is a function
+```{r, eval=FALSE}
+sum(3,2) ## a "prefix" function
+3 + 2 ## an "operator", but it is actually a function
+`+`(3,2) ## the operator is an "infix" function
+
+y <- 3
+print(y)
+
+`<-`(yy,3) ## another "infix" function
+print(yy)
+
+## to see contents of a function, print it
+print(read.table)
+
+sd ## shows the code
+sd(c(3,2)) ## call the function with parameters
+## sd() ## call function with default values for parameters
+```
+
+### The Anatomy Of A User-Defined Function {-}
+```
+functionName <- function(parX=defaultX,parY=defaultY,parZ=defaultZ) { 
+  
+  ## curly bracket open marks the start of the function body
+  
+  ## Body of the function goes here
+  ## Lines of R code and annotations
+  ## May also call functions
+  ## May also create functions
+  ## May also create local variables
+  
+  return(z)  ## returns from the function a single element (z could be a list)
+  
+  ## curly bracket close marks the end of the function body
+} 
+
+## prints the function body
+functionName 
+
+## calls the function with default values and returns object z
+functionName() 
+
+## calls the function with user-specified values for each paramater
+functionName(parX=myMatrix,parY="Order",parZ=c(0.3,1.6,2,6))
+```
+### Stylistic Conventions For Programming Functions {-}
+- Use prominent hash character fencing at start and at finish
+- Give a header with the function name, description input, and output
+- names inside functions can be short
+- functions should be simple and short, no more than a screenful
+- if too complex, break into multiple shorter functions
+- provide default values for all function arguments
+- ideally use random numbers as defaults for rapid testing
+
+### A Sample Function For Hardy-Weinberg Equilibrium {-}
+```{r, eval=FALSE}
+###################################################
+## FUNCTION: HardyWeinberg
+## input: an allele frequency p (0,1)
+## output: p and the frequencies of the 3 genotypes AA, AB, BB
+##------------------------------------------------- 
+HardyWeinberg <- function(p=runif(1)) {
+  q <- 1 - p
+  fAA <- p^2
+  fAB <- 2*p*q
+  fBB <- q^2
+  vecOut <- signif(c(p=p,AA=fAA,AB=fAB,BB=fBB),digits=3)
+  return(vecOut)
+}
+###################################################
+HardyWeinberg()
+HardyWeinberg(p=0.5) ## pass to the parameter the value p
+## print(p) ## error because p does not exist in the global environment
+pp <- 0.6 ## variable pp is stored in global environment
+HardyWeinberg(p=pp) ## pass contents of variable pp to function parameter p
+print(pp) ## variable pp is still stored in memory
+```
+
+### Use Multiple `return()` Statements For Different Possible Return Values {-}
+```{r, eval=FALSE}
+###################################################
+## FUNCTION: HardyWeinberg2
+## input: an allele frequency p (0,1)
+## output: p and the frequencies of the 3 genotypes AA, AB, BB
+##------------------------------------------------- 
+HardyWeinberg2<- function(p=runif(1)) {
+  if (p > 1.0 | p < 0.0) {
+    return("Function failure: p must be >= 0.0 and <= 1.0")
+  }
+  q <- 1 - p
+  fAA <- p^2
+  fAB <- 2*p*q
+  fBB <- q^2
+  vecOut <- signif(c(p=p,AA=fAA,AB=fAB,BB=fBB),digits=3)
+  return(vecOut)
+}
+###################################################
+HardyWeinberg2()
+HardyWeinberg2(1.1) ## OK, print error to screen
+z <- HardyWeinberg2(1.1) ## uggh no error printed
+print(z) ## Error message was saved to variable z!
+```
+
+### Use `Stop` For True Error Trapping {-}
+```{r, eval=FALSE}
+################################################ 
+## FUNCTION: HardyWeinberg3
+## input: an allele frequency p (0,1)
+## output: p and the frequencies of the 3 genotypes AA, AB, BB
+##-------------------------------------------------
+HardyWeinberg3<- function(p=runif(1)) {
+  if (p > 1.0 | p < 0.0) {
+    stop("Function failure: p must be >= 0.0 and <= 1.0")
+  }
+  q <- 1 - p
+  fAA <- p^2
+  fAB <- 2*p*q
+  fBB <- q^2
+  vecOut <- signif(c(p=p,AA=fAA,AB=fAB,BB=fBB),digits=3)
+  return(vecOut)
+}
+################################################ 
+HardyWeinberg3()
+##  z <- HardyWeinberg3(1.1) 
+
+```
+
+### Scoping In Functions {-}
+- global variables: visible to all parts of the code; declared in main body
+- local variables: visible only within function; declared in function or passed to function through parameters
+- functions "can" see variables in global environment
+- global environment cannot see variables in function environment
+
+```{r, eval=FALSE}
+myFunc <- function(a=3,b=4) {
+  z <- a + b
+  return(z)
+}
+myFunc()
+
+myFuncBad <-function(a=3) {
+  z <- a + b
+  return(z)
+}
+myFuncBad() ## crashes because it can't find b
+b <- 100
+myFuncBad() ## OK now because b exists as a global variable
+
+## But it is fine to create variables locally
+myFuncOK <- function(a=3) {
+  bb <- 100
+  z <- a + bb
+  return(z)
+}
+
+myFuncOK() ## no problems now
+print(bb) ## but this variable is still hidden from the global environment
+```
+
+### Simple regression function {-}
+
+```{r, eval=FALSE}
+###################################################
+## FUNCTION: fitLinear 
+## fits simple regression line
+## inputs: numeric vector of predictor (x) and response (y)
+## outputs: slope and p-value
+##------------------------------------------------- 
+fitLinear <- function(x=runif(20),y=runif(20)) {
+  myMod <- lm(y~x) ## fit the model
+  myOut <- c(slope=summary(myMod)$coefficients[2,1],
+             pValue=summary(myMod)$coefficients[2,4])
+  plot(x=x,y=y) ## quick and dirty plot to check output
+  return(myOut)
+}
+###################################################
+fitLinear()
+```
+
+### Creating a more complex default value {-}
+```{r, eval=FALSE}
+###################################################
+## FUNCTION: fitLinear2       
+## fits simple regression line
+## inputs: numeric vector of predictor (x) and response (y)
+## outputs: slope and p-value
+##------------------------------------------------- 
+fitLinear2 <- function(p=NULL) {
+  if(is.null(p)) {
+    p <- list(x=runif(20),y=runif(20))
+  }
+  myMod <- lm(p$x~p$y) ## fit the model
+  myOut <- c(slope=summary(myMod)$coefficients[2,1],
+             pValue=summary(myMod)$coefficients[2,4])
+  plot(x=p$x,y=p$y) ## quick and dirty plot to check output
+  return(myOut)
+}
+
+###################################################
+fitLinear2()
+myPars <-list(x=1:10,y=runif(10))
+fitLinear2(myPars)
+```
+
+### Using `do.call` To Pass A List Of Parameters To A Function {-}
+```{r, eval=FALSE}
+z <- c(runif(99),NA)
+mean(z) ## oops, mean doesn't work if there is an NA
+mean(x=z,na.rm=TRUE) ## change the default value for na.rm
+mean(x=z,na.rm=TRUE,trim=0.05) ## check out the "trim" option in help
+l <- list(x=z,na.rm=TRUE,trim=0.05) ## bundle paramaters as a list
+do.call(mean,l) ## use the do.call function with the function name and the parameter list
+```

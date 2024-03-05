@@ -1,0 +1,3447 @@
+
+# 2021 {-}
+
+
+## Github Tutorial {-}
+
+  Note: you can choose to use github on your browser, or your desktop through the app. You do not need to do both.
+If youve already made a repository you can skip *Making a Github Repository* and go to the last step of *Adding additional files to your repo*
+
+Make a github account (https://github.com/) and download github desktop (https://desktop.github.com/)
+
+### Making a Github Repository {-}
+
+
+#### On your browser {-}
+1. Navigate to your profile
+2. Click the Repositories link at the top of the page
+3. Select the green *New* button in the top right corner of your screen
+4. Name your repository and select the green *Create Repository* button at the bottom of the screen
+
+#### Add to the desktop app {-}
+1. In the blue box titled "Quick setup" click the *setup in desktop* button
+2. This should prompt your Github Desktop to open. Select the button on the pop-up that says *clone repository*
+3. The repository should show up in the left panel on the desktop app. To find the path to where this repository was made on your local machine, right click and select *show in finder*.
+4. You may want to move your repository to a more convenient location (possibly where all your Ecological Genomics files live)
+
+
+### Uploading initial files {-}
+
+#### On your browser {-}
+1. In the blue quick setup box, select the *uploading an existing file* link
+2. Select files to add to your repository <br /> 
+3.Click the green *commit changes* button
+
+#### On the desktop app  {-}
+1. Move files to your github repository folder on your desktop (The file should show up in the left panel of your app)
+2. Add a description of the file youre adding next to your github icon
+3. Select the *commit to master* button
+4. Click the *publish branch* button
+5. Adding additional files is done the same way, but the button will say *push to origin*
+  
+  ### Adding additional files to your repo {-}
+  
+  #### On your browser {-}
+  1. At the top of your repository page, select the *add file* button
+2. Select files to add to your repository <br /> 
+  3.Click the green *commit changes* button
+
+#### On the desktop app {-}
+1. Move files to your github repository folder on your desktop (The file should show up in the left panel of your app)
+2. Add a description of the file youre adding next to your github icon
+3. Select the blue *commit to master* button <br />
+4.Select the *push to origin* button at the top of your screen
+
+
+
+#### Getting Started in Ecological Genomics {-}
+
+
+[Back to main page](https://pespenilab.github.io/Ecological-Genomics/)
+
+### Things you'll need to download: {-}
+1. [R](https://www.r-project.org/) and [Rstudio](https://www.rstudio.com/) (be sure to install and load the "knitr"" package)
+2. Create a [github](https://github.com/) account and download github [desktop](https://desktop.github.com/)
+
+
+### Common code you'll need to word process in (R)markdown  {-}
+
+1. To embed a link, all you need is the URL, implemented in the following way:   
+```
+[hyperlinked words](URL)
+```
+
+2. To embed an image, you'll need a URL of the image, implemented similarly as above:
+```
+![](URL)
+```
+To get a URL in (R)markdown:
+    * go to your github repository and click **"Issues"**    
+    * Click **"New"**    
+    * Include a title (Pictures); click and drag any image you'd like into the comment section
+    * Click **"Submit New Issue"** 
+    * You will see the image, right click it and copy the URL.     
+
+3. To include a table, it is best if you format it first as a csv(comma separated values). (Note, if on a mac, make sure the file type is unicode and unix). With the knitr package, you can generate tables easily from the csv. Here is an example: 
+
+Grab a dataset real fast (in R)    
+
+```{r}
+#packages for reading in data
+library(data.table)
+#grab dataset online
+dat<-fread("https://raw.githubusercontent.com/adnguyen/HelmsCahan_CBP-partA_2016/master/Script_Analyses/Sampling_sites_table.csv")
+#making a table
+knitr::kable(dat[1:3])
+```
+
+
+
+For a good option to use markdown for taking notes, try [Typora](https://typora.io/) 
+
+
+
+[Back to main page](https://pespenilab.github.io/Ecological-Genomics/)
+
+
+## 16S microbiome #1 {-}
+
+#### Learning Objectives for today and over the course of the microbiome module {-}
+
+1. Recount and describe the types of nucleic acids that can be sequenced and why each material would be sequenced.
+2. Learn about [_Pycnopodia helianthoides_](https://www.centralcoastbiodiversity.org/sunflower-star-bull-pycnopodia-helianthoides.html) and the experimental design.
+3. Articulate the questions we can address and hypotheses we can test with this experimental design.
+4. Learn the general work flow or "pipeline" for processing and analyzing 16S microbiome data.
+5. Review how to make/write a bash script and develop a system for keeping well-annotated code or an electronic lab notebook.
+6. Visualize and interpret Illumina data quality (view .fastq files).
+7. Become familiar with and start using the [Qiime2](https://docs.qiime2.org/2021.8/) microbiome analysis package.
+8. Import *.fq.gz files into Qiime to visualize quality, determine filtering parameters, filter, visualize.
+9. Develop and test hypotheses about sunflower sea star microbial diversity!
+  10. Add to your growing list of bioinformatics tricks (take notes!).
+
+
+### Sampling the sunflower star as Sea Star Wasting Disease first reached Alaska.{-}
+
+The sunflower star, _Pycnopodia helianthoides_, is the largest sea star with over 20 arms, weighing over 10 lbs, and a 2.5 foot diameter. Not surprisingly, theyre the fastest sea star using their 15,000 tubefeet to cruise at a rate of 6 ft/min to overcome their prey - urchins, abalone, anything that is not faster than them. They live from the cold waters of Alaska to the warmer waters of Baja California, Mexico. They play a critical role in ecosystem functioning as a predator of urchins they are guardians of kelp forests, which in turn are important nurseries for fish. 
+
+In July 2016, Kyle Hebert, Alask Department of Fish & Game, was reading his UVM alum newsletter and came across our work on Sea Star Wasting Disease (*Note: the importance of communicating about your science!). He volunteerd to collect samples for us in AK! My former postdoc, Melanie Lloyd was able to join them on the research vessel leaving out of Juneau to cruise around the islands Southeast Alaska!
+  
+  
+Experimental Design: 
+  
+  In the summer of 2016, sea stars in Alaska were just beginning to show signs of Wasting Disease even though the epidemic started further south in 2013/2014. Some sites in SE Alaska had been impacted, some sites were naive. Our ideal design was to have epidermal biopsy samples from twenty individuals from both naive and impacted sites. At impacted sites, samples would ideally include biopsies from both healthy and sick individuals. See table below for actual samples.
+
+1. Seven sites total; five impacted, two naive.
+
+2. Sea star health status: Healthy, sick
+
+### Realized number of pycnopodia samples collected and sequenced:  N=85 {-}
+
+
+
+|Site num. | Site state  |Star health    |Num. ind.  |
+  |-----------|-------------|-------|-------|
+  |Site 01    |Naive      | healthy     |23      |
+  |Site 02    |Naive      | healthy     |24      |
+  |Site 08    |Impacted   | healthy    |0      |
+  |Site 08    |Impacted   | sick     |2      |
+  |Site 12    |Impacted   | healthy     |4      |
+  |Site 12    |Impacted   | sick    |2      |
+  |Site 13    |Impacted    | healthy     |6      |
+  |Site 13     |Impacted   | sick     |4      |
+  |Site 14     |Impacted   | healthy    |0      |
+  |Site 14    |Impacted    | sick     |2      |
+  |Site 15   |Impacted    | healthy     |10      |
+  |Site 15    |Impacted   | sick    |8      |
+  |-----------|-------------|-------|-------|
+  |Total      |             |       |85     |
+  
+  
+  
+GPS coordinates of collection sites: 
+  
+  
+  |Site num. | Lat./Long.   |
+  |-----------|-----------|
+  |Site 01    |58.4926	-134.7912	      | 
+  |Site 02    |58.4929	-134.7894      | 
+  |Site 08    |57.8090	-134.9527	   | 
+  |Site 12    |57.8887	-135.1344   | 
+  |Site 13    |57.9218	-135.176	   | 
+  |Site 14    |57.9354	-135.1663	   | 
+  |Site 15    |57.9065	-135.0762   | 
+  
+  
+  
+  
+  
+  
+
+  
+  ### Library prep and sequencing {-}
+  * Biopsies of aboral epidermal tissue (size of a grain of rice) were saved in RNAlater (and ethanol). For stars with signs of wasting, biopsy was taken at the edge of a lesion.
+* RNA was extracted using TRIzol and assessed for quality by gel electrophoresis and Bioanalyzer.
+* cDNA was made by reverse transcription; V3-V4 region of 16S ribosomal RNA was amplified.
+* Sequencing libraries were prepared using the Illumina 16S metagenomic sequencing library preparation kit and protocol.
+* Libraries were sent to RapidGenomics (FL) for sequencing on an Illumina MiSeq to generate 2 x 300 bp overlapping paired-end (PE) reads 
+
+### What questions can we ask/address with these data? {-}
+
+
+### Data Processing Pipeline:{-} 
+
+Become familiar with [Qiime2](https://docs.qiime2.org/2021.8/) and the extensive web-based resources.
+
+* Install miniconda and Qiime on server.
+* Transfer data to server.
+* Create a metadata file (called "manifest" in Qiime2)
+* Import the data into Qiime to make an "artifact".
+* Visualize the quality using [Qiime2view](https://view.qiime2.org/).
+* Based on visualization, decide how to filter and trim reads.
+* "Denoise" the data using [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) within Qiime2 to filter out noisy sequences, correct errors in marginal sequences, remove chimeric sequences, remove singletons, join denoised paired-end reads, and then dereplicate those sequences. DADA2 makes artifacts containing the feature table, corresponding feature sequences, and DADA2 denoising stats. 
+
+Excellent tutorials can be found here [general](https://docs.qiime2.org/2021.8/tutorials/moving-pictures/) and here [with example data](https://docs.qiime2.org/2021.8/tutorials/atacama-soils/).
+
+Tips/notes: 
+  * Filenames that end in `.qza` are artifact files the hold a lot of information; filenames that end in `.qzv` are visualization files that can be viewed in [Qiime2view](https://view.qiime2.org/). Since Qiim2view is a web-based application, you must transfer these .qzv files to your local machine (your computer) to be able to view them using a web browser.
+* Commands usually require input files called for with `--i` and generate output files that you name with `--o`.
+
+
+### Check out Illumina data! Explore the .fastq (or .fq) file type {-}
+
+Lets take a peak into a file and learn something about what a .fastq file is:
+  
+  ```bash
+$ zcat SS15_08_R2.fq.gz | head -n4
+@M05470:16:000000000-B6H2P:1:1101:11929:1133 2:N:0:NGAGGCTG+NTAAGGAG
+GACTACTAGGGTATCTAATCCTGTTCGCTCCCCACGCTTTCGTGCCTCAGCGTCAGTTACAGTCTGGCAAGCTGCCTTCGCTATCGGTGTNCTGTGTTATATCTAAGCATTTCACCGCTACACAACNCATTCCGCCTGCCTCGTCTGTACTCAAGCTCTACAGTTTCAATAGCACGTNCGAAGTTGAGCTTCGAGATTTCACTACTGACTTTNNNNNCCGCCTACGCACCCTTTAAACCCAATAANACCGGATAACGCTTGAATCCTCCGTATTACCGCGACTGCTAGGACGGAGTTACCC
++
+  CCCCCGGGGGGGGGGGGFGGGGGGGGGGGGEFFFGGGGGGGGGFGGGGF@FGGGGFFFFGGGGGCFGGGGGGGGGGGGFFGGGGGGFFGG#:A<A<FGGGGGGGGFGGGGGGGGGGGGDEEGFFF:#:B<FEFFEGGGGFEFCGEFGGGGFCDDEF88;FDFGGGGGFFGFGGGGGG#36++=+3,,5?FGGGGE@)@CGFC+7@DCCFFG+#####48/8<)-7AD=2>C*,=*@9*-5:A(5;#((8/=>*:8*,1*3/6;5E34.2-2(,.66<:09(-(-16))(.),((2-,-)).
+```
+
+```bash
+$ zcat SS15_08_R1.fq.gz | head -n4
+@M05470:16:000000000-B6H2P:1:1101:11929:1133 1:N:0:NGAGGCTG+NTAAGGAG
+NCTACGGGGGGCAGCAGTGAGGAATATTGGTCAATGGTCGAAAGACTGAACCAGCCATGTCGCGTGAAGGATGACGGCCCTATGGGTTGTAAACTTCTTTTGTATGGGAAGAAAAGCAGTTACGTGTAACTGTCTGCNGGTACCATACGAATAAGGATCGGCTAACTCCGTGCCAGCAGCCGCGGTAATACGGAGGATTCAAGCGTTATCCGGATTGATTGGGTTTAAAGGGTGCGTAGGCGGCTCTATAAGGCAGTANTNNANNNNCGAAGCTCAACTTCGAACGTGNNNNTGAAACTGT
++
+  8ACCGEFFF08888CFCFFGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGFFEFFFGGGGFFGGGGGGFGGGGGGGGGGFGGGGGG:CFGGCFFGGGGGGGGFGGGGEFCGFGGGGCFFGG>FGGCCFGGGGGG#6=CFGGGGGGGFFFCFGEFBEBCEFFGGGEGGGGGFGGCFCEFGGGG8>CGFGGECEECFGG7:F,>EC5>?FCGE*1,,<AAGG*AC8<FFFB8C/?*C5C4C;>*:09:?4C+788:)#*##-####*)-2;:<77<:C<,28C591:####(--A>CFF+
+```
+
+*Note:* `zcat` lets us open a .gz (gzipped) file like `cat`; we then "pipe" `|` this output from `zcat` to the `head` command and print just the top 4 lines `-n4`
+
+The fastq file format** has 4 lines for each read: 
+  
+  | Line | Description                              |
+  | ---- | ---------------------------------------- |
+  | 1    | Always begins with @ and then information about the read |
+  | 2    | The actual DNA sequence                  |
+  | 3    | Always begins with a + and sometimes the same info in line 1 |
+  | 4    | A string of characters which represent the **quality** scores; always has same number of characters as line 2 |
+  
+  Line 1 breakdown:
+  ```
+@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos> <read>:<is filtered>:<control number>:<sample barcode>
+  ```
+
+[Heres a useful reference for understanding Quality (Phred) scores](https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm).  If P is the probability that a base call is an error, then:
+  
+  P = 10^(–Q/10)
+
+Q = –10 log10(P)
+
+So:
+  
+  | Phred Quality Score | Probability of incorrect base call | Base call accuracy |
+  | ------------------- | ---------------------------------- | ------------------ |
+  | 10                  | 1 in 10                            | 90%                |
+  | 20                  | 1 in 100                           | 99%                |
+  | 30                  | 1 in 1000                          | 99.9%              |
+  | 40                  | 1 in 10,000                        | 99.99%             |
+  
+  ***The Phred Q score is translated to ASCII characters so that a two digit number can be represented by a single character.*** So clever! 
+  
+  ```
+Quality encoding: !"#$%&()*+",-./0123456789:;<=>?@ABCDEFGHI
+|         |         |         |         |
+  Quality score: 0........10........20........30........40   
+```
+
+*What kinds of characters do you want to see in your quality score?* 
+  
+  ### Microbial diversity data analyses{-}
+  1. The first step is to **build a phylogentic tree** among all the identified taxa in our samples using `qiime phylogeny align-to-tree-mafft-fasttree`. This step is not visualized, but the output files will be used to calculate diversity metrics.
+
+2. **Calculate core diversity metrics:** Qiime2 will calculate a wide range of diversity metrics with one command `qiime diversity core-metrics-phylogenetic`. But we need to make one important decision first - how far down to we want to rarify or subsample our data to set our `--p-sampling-depth`. To make this decision, lets look at the feature counts in the "interactive sample detail" tab of the `table.qzv` using [Qiime2view](https://view.qiime2.org/).
+
+- Alpha diversity - "within-sample" diversity
+- Shannon’s diversity index (a quantitative measure of community richness)
+- Observed Features (a qualitative measure of community richness)
+- Faith’s Phylogenetic Diversity (a qualitiative measure of community richness that **incorporates phylogenetic relationships** between the features)
+- Evenness (or Pielou’s Evenness; a measure of community evenness)
+
+- Test for differences in alpha diversity among groups, correlations with factors.
+
+- Beta diversity - "between-sample" diversity - dissimilarity
+- Jaccard distance (a qualitative measure of community dissimilarity)
+- Bray-Curtis distance (a quantitative measure of community dissimilarity)
+- unweighted UniFrac distance (a qualitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)
+- weighted UniFrac distance (a quantitative measure of community dissimilarity that incorporates phylogenetic relationships between the features) - *weighted* means it takes into account the abundance of each sequence
+
+- Perform beta diversity ordination using PCoA
+- Test for differences in beta diversity among groups, correlations with factors.
+
+3. **Assign taxonomies** - whos there?
+  
+  4. **Test for differential abundance** using ANCOM or gneiss
+
+5. **Export and make pretty plots in R using ggplot2**
+  
+  
+  ## Data processing commands{-}
+  ### Install Qiime{-}
+  Instructions [here](https://docs.qiime2.org/2021.8/install/)
+
+1. First, install miniconda
+`wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh`
+`./conda update conda`
+
+Close and reopen terminal for conda to be found in $PATH
+
+2. Install qiime
+Follow instructions [here](https://docs.qiime2.org/2021.8/install/)
+
+
+### Importing data to Qiime{-}
+Make the qiime "artifact" .qza file 
+
+
+```
+qiime tools import \
+--type SampleData[PairedEndSequencesWithQuality] \
+--input-path pyc_subset_manifest \
+--input-format PairedEndFastqManifestPhred33V2 \
+--output-path demux-paired-end.qza
+```
+Make a file to visualize the metadata (not necessary)
+```
+qiime metadata tabulate \
+--m-input-file pyc_subset_manifest \
+--o-visualization tabulated-pyc_sub-metadata.qzv
+
+```
+Generate quality summary plots
+```
+qiime demux summarize \
+--i-data demux-paired-end.qza \
+--o-visualization demux-pyc-sub.qzv
+```
+
+From my machine, move vis (.qzv) file to my computer to be able to view online at [https://view.qiime2.org/](https://view.qiime2.org/).
+```
+scp mpespeni@pbio381.uvm.edu:/data/project_data/tabulated-pyc_sub-metadata.qzv .
+scp mpespeni@pbio381.uvm.edu:/data/project_data/demux-pyc-sub.qzv .
+
+```
+Use the web-based viewer and interactive plots to determine any trimming needed.
+PE 300bp sequencing on Illumina MiSeq of amplified V3-V4 regions of 16S rRNA
+On the forward reads, trim 16 from beginning, 13 from end (base 289).
+On the reverse reads, trim 0 from beginning, 45 from end (base 257).
+
+### Filtering data by quality - Denoise the data with DADA2{-}
+
+"Denoising" using [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) is a method to filter out noisy sequences, correct errors in marginal sequences, remove chimeric sequences, remove singletons, join denoised paired-end reads, and then dereplicate those sequences.
+
+The features produced by denoising methods are often called “amplicon sequence variant” (ASV).
+
+Note: the step below is important, big, and takes a long time. Run with a `screen`.
+
+```
+conda activate qiime2-2021.8
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs demux-paired-end.qza \
+--p-n-threads 20 \
+--p-trim-left-f 16 \
+--p-trim-left-r 0 \
+--p-trunc-len-f 289 \
+--p-trunc-len-r 257 \
+--o-table table.qza \
+--o-representative-sequences rep-seqs.qza \
+--o-denoising-stats denoising-stats.qza
+
+```
+Above got an error (see below). May be permissions, since I made another directory or CPUs or not enough space in the tmp directory.
+```
+1) Filtering Error in writeFastq(fqF, fout[[1]], "a", compress = compress) :
+  failed to write record 10224
+Execution halted
+```
+```
+cat /proc/cpuinfo # see how many cores our server has (24!)
+lscpu
+```
+
+Make a "tmp" directory for temporary files within /data/ because the /tmp directory is too small. Necessary for running DADA2 (and perhaps importing all files into qiime would work with this new tmpdir).
+```
+cd /data/project_data/16S
+mkdir tmptmpdir
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+```
+
+
+
+DADA2 makes artifacts containing the feature table, corresponding feature sequences, and DADA2 denoising stats. The following code generates summaries of these files.
+
+```
+qiime feature-table summarize \
+--i-table table.qza \
+--o-visualization table.qzv \
+--m-sample-metadata-file pyc_subset_manifest
+
+qiime feature-table tabulate-seqs \
+--i-data rep-seqs.qza \
+--o-visualization rep-seqs.qzv
+
+qiime metadata tabulate \
+--m-input-file denoising-stats.qza \
+--o-visualization denoising-stats.qzv
+```
+
+Looking at the table.qzv, the sample with the fewest feature counts in SS15_03 with 13547 features.
+
+Need to generate a phylogentic tree among all the identified taxa in our samples using `qiime phylogeny align-to-tree-mafft-fasttree`. This step is not visualized, but the output files will be used to calculate diversity metrics.
+
+```
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences rep-seqs.qza \
+--o-alignment aligned-rep-seqs.qza \
+--o-masked-alignment masked-aligned-rep-seqs.qza \
+--o-tree unrooted-tree.qza \
+--o-rooted-tree rooted-tree.qza
+```
+
+```
+qiime diversity core-metrics-phylogenetic \
+--i-phylogeny rooted-tree.qza \
+--i-table table.qza \
+--p-sampling-depth 13000 \
+--m-metadata-file pyc_subset_manifest \
+--output-dir core-metrics-results
+```
+Move over the .qzv files to check out the results on Qiime2view!
+  ```
+scp mpespeni@pbio381.uvm.edu:/data/project_data/16S/core-metrics-results/*.qzv .
+```
+
+Test for associations between categorical metadata columns and alpha diversity data. We’ll do that here for the Faith Phylogenetic Diversity (a measure of community richness) and evenness metrics.
+
+```
+qiime diversity alpha-group-significance \
+--i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
+--m-metadata-file pyc_subset_manifest \
+--o-visualization core-metrics-results/faith-pd-group-significance.qzv
+
+qiime diversity alpha-group-significance \
+--i-alpha-diversity core-metrics-results/evenness_vector.qza \
+--m-metadata-file pyc_subset_manifest \
+--o-visualization core-metrics-results/evenness-group-significance.qzv
+```
+
+
+## 16S microbiome #2 {-}
+
+### Learning Objectives for today and to be continued over the course of the microbiome module {-}
+  
+  1. Brief review of what we did in the hands-on coding session last time.
+2. Import `*.fq.gz` files into the [Qiime2](https://docs.qiime2.org/2021.8/) microbiome analysis package to visualize quality, determine filtering parameters, filter, visualize.
+3. Run commands and develop a system for keeping well-annotated code or an electronic lab notebook. Try R markdown.
+4. Articulate the questions we can address and hypotheses we can test with this experimental design.
+5. Develop and test hypotheses about sunflower sea star microbial diversity!
+  6. Add to your growing list of bioinformatics tricks (take notes!).
+
+### Recall what we did in the last coding session  {-}
+
+1. Introduced the _"star"_ of the show and the experimental design.
+
+2. Reviewed the Qiime2 data analysis pipeline, .qza and .qzv files, and available resources.
+
+3. Signed on to the server. 
+From PuTTy on a PC, sign into the server "pbio381.uvm.edu" using your net id. 
+
+From terminal on a mac, use ssh:
+  ```bash
+ssh YOURUSERNAME@pbio381.uvm.edu
+```
+Enter your password associated with your netid
+
+4. Explored the server working in command line in a linux environment! 
+  - You landed in your home directory, noted with `~`. 
+- Practiced navigated among directories (aka folders) and listing files, using `cd` for "change directory" and `ll`, short for `ls -l` for list in long format, showing the details of ownership and date last modified. `cd ..` moves you back one directory, `cd ../..` moves you back two directories, etc. You can go backwards and forwards in one command!
+  - We learned that using the tab button to auto-fill a filename or path is WONDERFUL thing! Not only does it save time, but it ensures that your file or directory is indeed where you think it is. Computers are painfully literal, always.
+- Another tip: type `man` followed by a space and the command that you want to learn more about to see the 'man'ual for that program. For example, `man zcat`. You can navigate these pages with up and down arrows, the space bar, and `q` to quit.
+- Check out the linux cheat sheet and game for learning posted on Slack!
+  
+  5. Viewed and learned the format and function of a `.fastq` or `.fq` (same thing) file. 
+- We used `zcat FILENAME.fq.gz | head -n4` to view the first four lines of the gzipped .fastq file.
+
+
+### Let's work in groups of three students to analyze  {-}
+One person can be the navigator, one person can be the note-taker, and one person can be the back-seat driver. And you can rotate positions.
+
+0. Set up your work station. We suggest you have three programs/windows open: 1) terminal or PuTTy, 2) R studio for taking notes, and 3) the tutorial webpage.
+1. Sign in to the server.
+2. Navigate from your home directory (~) to:
+  ```cd /data/project_data/16S```
+3. Check out the manifest or metadata file about our samples: `less pyc_subset_manifest`. Type `q` to quit out of the file.
+4. Navigate back to your home directory where you will be working from and storing your results files:
+  ```cd ~```
+3. Make a directory to keep your results
+```mkdir myresults```
+4. Navigate into that directory: `cd myresults`
+5. Set up conda and qiime2 to work from your server spaces:
+  - ```/data/popgen/miniconda3/bin/conda activate qiime2-2021.8```
+- ```/data/popgen/miniconda3/bin/conda init bash```
+- Close terminal/PuTTy
+- Type ```conda activate qiime2-2021.8``` to see if you conda is working for you to access qiime
+- Your prompt should look like ```(qiime2-2021.8) [mpespeni@pbio381 16S]$``` if youre in, and no "not found" errors.
+
+
+
+
+
+#### Import the .fq.gz data files into Qiime  {-}
+Make the qiime "artifact" .qza file 
+Whenever you start a new terminal session you need to activate qiime with this command:
+  
+```
+conda activate qiime2-2021.8
+```
+First, redirect the temporary directory because the /tmp directory on the server is too small. This file should be filling with the program is running, and empty at the end.
+
+```
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+echo $TMPDIR 
+```
+
+```
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path /data/project_data/16S/pyc_manifest \
+  --input-format PairedEndFastqManifestPhred33V2 \
+  --output-path demux-paired-end_full.qza
+```
+
+
+### Breakdown of the code above  {-}
+- qiime tools import \ #### this is the command for importing data, note the slash means the line or command continues on the next line  {-}
+    - type 'SampleData[PairedEndSequencesWithQuality]' \ #### this specifies the file type, can list options  {-}
+    - input-path /data/project_data/16S/pyc_subset_manifest \ #### this provides the path to the input metadata file  {-}
+    - input-format PairedEndFastqManifestPhred33V2 \ #### this specifies the format of the data, can list options  {-}
+    - output-path demux-paired-end.qza #### this names the output file that this command will generate, it can be anything, but you will need to use it for future inputs  {-}
+  
+
+
+### Generate summary plots on the data quality!  {-}
+```
+qiime demux summarize \
+  --i-data demux-paired-end.qza \         
+  --o-visualization demux-pyc-sub.qzv      
+  
+```
+  - i = input file name (FROM PREVIOUS COMMAND!)
+  - o = output file name (can be whatever you want!), you can also specify a different path/directory if you want to keep all your vis .qzv files in a folder of their own.
+  
+Move the visualization file you just generated (*.qzv) file to your local machine/computer to be able to view online at [https://view.qiime2.org/](https://view.qiime2.org/).
+
+From terminal or Fetch or another file transfer platform on your local machine, you can pull data from the server onto your machine. For example, with scp on another window of terminal or PuTTy:
+```
+scp YOURUSERNAME@pbio381.uvm.edu:~/myresults/*.qzv .
+```
+`scp` is the program "secure copy". There are two inputs needed for scp: a path to the file you want and a location to put it. Note the server address followed by a colon, the use of the wildcard `*` to grab all files that end in `.qzv`, and the `.` means in the present working directory.
+
+
+### Use Qiime2view, the web-based viewer, and interactive plots to determine any trimming needed.  {-}
+
+### How many base pairs should we trim from the beginning and end of the forward and reverse reads? 4 decisions to be made!  {-}
+With decsions made, move on to the next step, a big one! Cleaning, assembling, and making the feature or OTU table!
+
+#### Filtering data by quality - Denoise the data with DADA2  {-}
+
+"Denoising" using [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) is a method to filter out noisy sequences, correct errors in marginal sequences, remove chimeric sequences, remove singletons, join denoised paired-end reads, and then dereplicate those sequences.
+
+The features produced by denoising methods are often called “amplicon sequence variant” (ASV).
+
+Note: the step below is important, big, and takes a long time. Run with a `screen`.
+
+`screen`
+```
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs demux-paired-end.qza \
+  --p-n-threads 4 \
+  --p-trim-left-f 16 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-f 289 \
+  --p-trunc-len-r 257 \
+  --o-table table.qza \
+  --o-representative-sequences rep-seqs.qza \
+  --o-denoising-stats denoising-stats.qza
+  
+```
+### Breakdown of the code above: {-}
+- qiime dada2 denoise-paired \                       #### the command {-}
+    - i-demultiplexed-seqs demux-paired-end.qza \    #### you input file {-}
+    - p-n-threads 4 \                                #### how many threads or cores to use. We have 24 on the server, so each group can use 4 cores {-}
+    - p-trim-left-f 16 \                             #### how many base pairs to trim from the left of the forward, then reverse reads {-}
+    - p-trim-left-r 0 \
+    - p-trunc-len-f 289 \                           #### which base pair to truncate to at the end of the forward and then reverse reads {-}
+    - p-trunc-len-r 257 \
+    - o-table table.qza \                            #### name your output table {-}
+    - o-representative-sequences rep-seqs.qza \      #### name your output representative sequences  {-}
+    - o-denoising-stats denoising-stats.qza         #### name your stats output file. {-}
+
+DADA2 makes artifacts containing the feature table, corresponding feature sequences, and DADA2 denoising stats. The following code generates summaries of these files.
+
+
+
+
+```
+qiime feature-table summarize \
+  --i-table table.qza \
+  --o-visualization table.qzv \
+  --m-sample-metadata-file pyc_subset_manifest
+
+qiime feature-table tabulate-seqs \
+  --i-data rep-seqs.qza \
+  --o-visualization rep-seqs.qzv
+
+qiime metadata tabulate \
+  --m-input-file denoising-stats.qza \
+  --o-visualization denoising-stats.qzv
+```
+
+##### 1. What questions can we ask/address with these data?  {-}
+
+
+### Now we can get into the microbial diversity data analyses  {-}
+1. The first step is to **build a phylogentic tree** among all the identified taxa in our samples using `qiime phylogeny align-to-tree-mafft-fasttree`. This step is not visualized, but the output files will be used to calculate diversity metrics.
+
+```
+qiime phylogeny align-to-tree-mafft-fasttree \
+  --i-sequences rep-seqs.qza \
+  --o-alignment aligned-rep-seqs.qza \
+  --o-masked-alignment masked-aligned-rep-seqs.qza \
+  --o-tree unrooted-tree.qza \
+  --o-rooted-tree rooted-tree.qza
+```
+
+2. **Calculate core diversity metrics:** Qiime2 will calculate a wide range of diversity metrics with one command `qiime diversity core-metrics-phylogenetic`. But we need to make one important decision first - how far down to we want to rarify or subsample our data to set our `--p-sampling-depth`. To make this decision, lets look at the feature counts in the "interactive sample detail" tab of the `table.qzv` using [Qiime2view](https://view.qiime2.org/).
+
+- Alpha diversity - "within-sample" diversity
+- Shannon’s diversity index (a quantitative measure of community richness)
+- Observed Features (a qualitative measure of community richness)
+- Faith’s Phylogenetic Diversity (a qualitiative measure of community richness that **incorporates phylogenetic relationships** between the features)
+- Evenness (or Pielou’s Evenness; a measure of community evenness)
+
+- Test for differences in alpha diversity among groups, correlations with factors.
+
+- Beta diversity - "between-sample" diversity - dissimilarity
+- Jaccard distance (a qualitative measure of community dissimilarity)
+- Bray-Curtis distance (a quantitative measure of community dissimilarity)
+- unweighted UniFrac distance (a qualitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)
+- weighted UniFrac distance (a quantitative measure of community dissimilarity that incorporates phylogenetic relationships between the features) - *weighted* means it takes into account the abundance of each sequence
+
+- Perform beta diversity ordination using PCoA
+- Test for differences in beta diversity among groups, correlations with factors.
+
+The next command calculates a whole suite of alpha and beta-diversity metrics!
+  ```
+qiime diversity core-metrics-phylogenetic \
+--i-phylogeny rooted-tree.qza \
+--i-table table.qza \
+--p-sampling-depth 13000 \
+--m-metadata-file pyc_subset_manifest \
+--output-dir core-metrics-results
+```
+
+
+
+3. **Assign taxonomies** - whos there?
+
+4. **Test for differential abundance** using ANCOM or gneiss
+
+5. **Export and make pretty plots in R using ggplot2**
+
+
+
+Test for associations between categorical metadata columns and alpha diversity data. We’ll do that here for the Faith Phylogenetic Diversity (a measure of community richness) and evenness metrics.
+
+```
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/evenness_vector.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --o-visualization core-metrics-results/evenness-group-significance.qzv
+```
+
+
+
+### Side notes:  {-}
+Count the number of reads in a .fq file
+```
+echo $(zcat FILENAME.fq.gz|wc -l)/4|bc
+``` 
+`echo` prints to screen, `zcat` reads out a zipped file, `wc` counts things, lines `-l` in this case, pipe `|` passes information to the next program, and `bc` performs calculations. 
+This is an example of the kinds of notes or "annotations" you can make about your code.
+
+Note: `#` hast tags "comment out" text, i.e., the computer wont pay attention to words after a `#` Great for annotating your code. See example here:
+  
+  
+  
+## 16S microbiome #3 {-}
+ ### Learning Objectives for today and to be continued over the course of the microbiome module  {-}
+  
+  1. Make sure everyone can run qiime, i.e., wrap up troubleshooting from last coding session ("initiate" conda and changed permissions on `tmptmpdir`).
+2. Import `*.fq.gz` files into the [Qiime2](https://docs.qiime2.org/2021.8/) microbiome analysis package to visualize quality, determine filtering parameters, filter, visualize.
+3. Create the feature table! (this step takes a while, so while it runs we will do the next two steps)
+4. Share on systems for keeping well-annotated code or an electronic lab notebook. (e.g., use a text editor like [Atom](https://atom.io/) or R studio) .
+5. Articulate the questions we can address and hypotheses we can test with this experimental design.
+6. Run analyses test hypotheses about sunflower sea star microbial diversity!
+  
+  #### 1. Let's work in groups of three students to analyze   {-}
+  One person can be the navigator, one person can be the note-taker, and one person can be the back-seat driver. And you can rotate positions.
+
+0. Set up your work station. We suggest you have three programs/windows open: 1) terminal or PuTTy, 2) R studio for taking notes, and 3) the tutorial webpage.
+1. Sign in to the server.
+2. Set up conda and qiime2 to work from your server spaces:
+  - ```/data/popgen/miniconda3/bin/conda activate qiime2-2021.8```
+- ```/data/popgen/miniconda3/bin/conda init bash```
+- Close terminal/PuTTy
+- Type ```conda activate qiime2-2021.8``` to see if you conda is working for you to access qiime
+- Your prompt should look like ```(qiime2-2021.8) [mpespeni@pbio381 16S]$``` if youre in, and no "not found" errors.
+
+#### 2. Import the .fq.gz data files into Qiime  {-}
+Make the qiime "artifact" .qza file 
+Whenever you start a new terminal session you need to activate qiime with this command:
+```
+conda activate qiime2-2021.8
+```
+First, redirect the temporary directory because the /tmp directory on the server is too small. This file should be filling with the program is running, and empty at the end.
+```
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+echo $TMPDIR 
+```
+
+```
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path /data/project_data/16S/pyc_manifest \
+  --input-format PairedEndFastqManifestPhred33V2 \
+  --output-path demux-paired-end_full.qza
+```
+#### Breakdown of the code above  {-}
+- qiime tools import \                                          #### this is the command for importing data, note the slash means the line or command continues on the next line  {-}
+    - type 'SampleData[PairedEndSequencesWithQuality]' \        #### this specifies the file type, can list options {-}
+    - input-path /data/project_data/16S/pyc_subset_manifest \     #### this provides the path to the input metadata file (CHOOSE WHICH YOU WANT TO USE!)  {-}
+    - input-format PairedEndFastqManifestPhred33V2 \          # this specifies the format of the data, can list options  {-}
+    - output-path demux-paired-end.qza                            #### this names the output file that this command will generate, it can be anything, but you will need to use it for future inputs {-}
+  
+#### Generate summary plots on the data quality!  {-}
+```
+qiime demux summarize \
+  --i-data demux-paired-end.qza \         
+  --o-visualization demux-pyc-sub.qzv      
+```
+  - i = input file name (FROM PREVIOUS COMMAND!)
+  - o = output file name (can be whatever you want!), you can also specify a different path/directory if you want to keep all your vis .qzv files in a folder of their own.
+  
+Move the visualization file you just generated (*.qzv) file to your local machine/computer to be able to view online at [https://view.qiime2.org/](https://view.qiime2.org/).
+
+From terminal, WinSCP, or Fetch or another file transfer platform on your local machine, you can pull data from the server onto your machine. For example, with scp on another window of terminal or PuTTy:
+```
+scp YOURUSERNAME@pbio381.uvm.edu:~/myresults/*.qzv .
+```
+`scp` is the program "secure copy". There are two inputs needed for scp: a path to the file you want and a location to put it. Note the server address followed by a colon, the use of the wildcard `*` to grab all files that end in `.qzv`, and the `.` means in the present working directory.
+
+#### Use [Qiime2view](https://view.qiime2.org/), the web-based viewer, and interactive plots to determine any trimming needed.  {-}
+
+#### How many base pairs should we trim from the beginning and end of the forward and reverse reads? 4 decisions to be made!  {-}
+With decsions made, move on to the next step, a big one! Cleaning, assembling, and making the feature or OTU table!
+
+### Filtering data by quality - Denoise the data with DADA2  {-}
+
+"Denoising" using [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) is a method to filter out noisy sequences, correct errors in marginal sequences, remove chimeric sequences, remove singletons, join denoised paired-end reads, and then dereplicate those sequences.
+
+The features produced by denoising methods are often called “amplicon sequence variant” (ASV). Read this [paper](https://www.nature.com/articles/ismej2017119) and this [blog](https://www.zymoresearch.com/blogs/blog/microbiome-informatics-otu-vs-asv) for a comparison of OTU (operational taxonomic unit) vs. ASV.
+
+Note: the step below is important, big, and takes a long time. Run with a `screen`. Screen is a linux program that allows a long-running task to continue running on a remote machine. See more info [here](https://linuxize.com/post/how-to-use-linux-screen/).
+
+`screen` to initiate the screen session. Once you are within screen, its like a new terminal session so you will need to re-lauch Qiime2 and re-export the TMPDIR path.
+```
+conda activate qiime2-2021.8
+
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+echo $TMPDIR
+
+qiime dada2 denoise-paired \
+--i-demultiplexed-seqs demux-paired-end.qza \
+--p-n-threads 1 \
+--p-trim-left-f 16 \
+--p-trim-left-r 0 \
+--p-trunc-len-f 289 \
+--p-trunc-len-r 257 \
+--o-table table.qza \
+--o-representative-sequences rep-seqs.qza \
+--o-denoising-stats denoising-stats.qza
+
+```
+`cntl` + `a` + `d` to detach from a `screen`
+
+`screen -r` to reattach
+
+#### Breakdown of the code above:  {-}
+- qiime dada2 denoise-paired \                       #### the command  {-}
+- i-demultiplexed-seqs demux-paired-end.qza \    #### your input file (CHECK FILENAME)  {-}
+- p-n-threads 1 \                                #### how many threads or cores to use. We have 24 on the server, so each person can use 1 core  {-}
+- p-trim-left-f 16 \                             #### how many base pairs to trim from the left of the forward, then reverse reads {-}
+- p-trim-left-r 0 \
+- p-trunc-len-f 289 \                            #### which base pair to truncate to at the end of the forward and then reverse reads {-}
+- p-trunc-len-r 257 \
+- o-table table.qza \                            #### name your output table (these can be whatever you want! Just keep track) {-}
+- o-representative-sequences rep-seqs.qza \      #### name your output representative sequences  {-}
+- o-denoising-stats denoising-stats.qza          #### name your stats output file. {-}
+
+DADA2 makes artifacts containing the feature table, corresponding feature sequences, and DADA2 denoising stats. The following code generates summaries of these files.
+
+```
+qiime feature-table summarize \
+--i-table table.qza \
+--o-visualization table.qzv \
+--m-sample-metadata-file pyc_manifest
+
+qiime feature-table tabulate-seqs \
+--i-data rep-seqs.qza \
+--o-visualization rep-seqs.qzv
+
+qiime metadata tabulate \
+--m-input-file denoising-stats.qza \
+--o-visualization denoising-stats.qzv
+```
+
+#### Copy the `.qzv` files to your local machine to be able to view the results using [Qiime2view](https://view.qiime2.org/)!  {-}
+
+#### 4. How are you keeping track of what you're doing on the server? Let's share on systems and "best practices."  {-}
+- Some best practices from a [2015 "Ten Simple Rules" PLoS Comp. Bio. paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004385) and more recent and general advice on [Science](https://www.science.org/careers/2019/09/how-keep-lab-notebook) and [NIH](https://www.training.nih.gov/assets/Lab_Notebook_508_(new).pdf).
+- Use a text editor like [Atom](https://atom.io/) or [Typora](https://typora.io/) or [BBEdit](https://www.barebones.com/products/bbedit/) or an R markdown file in R studio.
+- Integrate/post to your github.
+
+#### 5. What questions can we ask/address with these data?  {-}
+1.
+2.
+3.
+4.
+5.
+
+
+#### 6. Calculate alpha and beta diversity and more data analyses!  {-}
+1. The first step is to **build a phylogentic tree** among all the identified taxa in our samples using `qiime phylogeny align-to-tree-mafft-fasttree`. This step is not visualized, but the output files will be used to calculate diversity metrics.
+
+```
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences rep-seqs.qza \
+--o-alignment aligned-rep-seqs.qza \
+--o-masked-alignment masked-aligned-rep-seqs.qza \
+--o-tree unrooted-tree.qza \
+--o-rooted-tree rooted-tree.qza
+```
+
+2. **Calculate core diversity metrics:** Qiime2 will calculate a wide range of diversity metrics with one command `qiime diversity core-metrics-phylogenetic`. But we need to make one important decision first - how far down to we want to rarify or subsample our data to set our `--p-sampling-depth`. To make this decision, lets look at the feature counts in the "interactive sample detail" tab of the `table.qzv` using [Qiime2view](https://view.qiime2.org/).
+
+- Alpha diversity - "within-sample" diversity
+  - Shannon’s diversity index (a quantitative measure of community richness)
+  - Observed Features (a qualitative measure of community richness)
+  - Faith’s Phylogenetic Diversity (a qualitiative measure of community richness that **incorporates phylogenetic relationships** between the features)
+  - Evenness (or Pielou’s Evenness; a measure of community evenness)
+  
+  - Test for differences in alpha diversity among groups, correlations with factors.
+
+- Beta diversity - "between-sample" diversity - dissimilarity
+  - Jaccard distance (a qualitative measure of community dissimilarity)
+  - Bray-Curtis distance (a quantitative measure of community dissimilarity)
+  - unweighted UniFrac distance (a qualitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)
+  - weighted UniFrac distance (a quantitative measure of community dissimilarity that incorporates phylogenetic relationships between the features) - *weighted* means it takes into account the abundance of each sequence
+  
+  - Perform beta diversity ordination using PCoA
+  - Test for differences in beta diversity among groups, correlations with factors.
+
+The next command calculates a whole suite of alpha and beta-diversity metrics!
+```
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny rooted-tree.qza \
+  --i-table table.qza \
+  --p-sampling-depth 13000 \
+  --m-metadata-file pyc_manifest \
+  --output-dir core-metrics-results
+```
+
+Test for associations between categorical metadata columns and alpha diversity data. We’ll do that here for the Faith Phylogenetic Diversity (a measure of community richness) and evenness metrics.
+
+```
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file pyc_manifest \
+  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/evenness_vector.qza \
+  --m-metadata-file pyc_manifest \
+  --o-visualization core-metrics-results/evenness-group-significance.qzv
+```
+#### Copy the `.qzv` files to your local machine to be able to view the results using [Qiime2view](https://view.qiime2.org/)!  {-}
+
+For more ideas and 'how tos', there are excellent tutorials that can be found [here (more general)](https://docs.qiime2.org/2021.8/tutorials/moving-pictures/) and [here (with example data)](https://docs.qiime2.org/2021.8/tutorials/atacama-soils/).
+ 
+3. **Assign taxonomies** - whos there?
+  
+  4. **Test for differential abundance** using ANCOM or gneiss
+
+5. **Export and make pretty plots in R using ggplot2**
+
+
+## 16S microbiome #4 {-}
+ #### Learning Objectives for today!  {-}
+  
+  0. Make sure everyone was able to create the feature table. 
+1. Share on systems for keeping well-annotated code or an electronic lab notebook.
+2. Articulate the questions we can address and hypotheses we can test with this experimental design.
+3. Run analyses, explore the data, and test hypotheses about sunflower sea star microbial diversity!
+  
+  #### 0. Run DADA2 - Filter and denoise data, create feature table. {-}
+  
+  "Denoising" using [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) is a method to filter out noisy sequences, correct errors in marginal sequences, remove chimeric sequences, remove singletons, join denoised paired-end reads, and then dereplicate those sequences.
+
+The features produced by denoising methods are often called “amplicon sequence variant” (ASV). Read this [paper](https://www.nature.com/articles/ismej2017119) and this [blog](https://www.zymoresearch.com/blogs/blog/microbiome-informatics-otu-vs-asv) for a comparison of OTU (operational taxonomic unit) vs. ASV.
+
+Note: the step below is important, big, and takes a long time. Run with a `screen`. Screen is a linux program that allows a long-running task to continue running on a remote machine. See more info [here](https://linuxize.com/post/how-to-use-linux-screen/).
+
+`screen` to initiate the screen session. Once you are within screen, its like a new terminal session so you will need to re-lauch Qiime2 and re-export the TMPDIR path.
+```
+conda activate qiime2-2021.8
+
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+echo $TMPDIR
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs demux-paired-end.qza \
+  --p-n-threads 1 \
+  --p-trim-left-f 16 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-f 289 \
+  --p-trunc-len-r 257 \
+  --o-table table.qza \
+  --o-representative-sequences rep-seqs.qza \
+  --o-denoising-stats denoising-stats.qza
+  
+```
+`cntl` + `a` + `d` to detach from a `screen`
+
+`screen -r` to reattach
+
+### Breakdown of the code above:  {-}
+- qiime dada2 denoise-paired \                       #### the command {-}
+    - i-demultiplexed-seqs demux-paired-end.qza \    #### your input file (CHECK FILENAME) {-}
+    - p-n-threads 1 \                                #### how many threads or cores to use. We have 24 on the server, so each person can use 1 core {-}
+    - p-trim-left-f 16 \                             #### how many base pairs to trim from the left of the forward, then reverse reads {-}
+    - p-trim-left-r 0 \
+    - p-trunc-len-f 289 \                            #### which base pair to truncate to at the end of the forward and then reverse reads {-}
+    - p-trunc-len-r 257 \
+    - o-table table.qza \                            #### name your output table (these can be whatever you want! Just keep track) {-}
+    - o-representative-sequences rep-seqs.qza \      #### name your output representative sequences  {-}
+    - o-denoising-stats denoising-stats.qza          #### name your stats output file. {-}
+
+DADA2 makes artifacts containing the feature table, corresponding feature sequences, and DADA2 denoising stats. The following code generates summaries of these files.
+
+Lets try writing a script (here, simply a file with a series of commands) to carry out the commands sequentially.
+
+Open and name your script, e.g.: `dada_vis.sh`
+
+```
+#!/bin/bash      # tells the computer which language to use
+
+cd ~/myresults   # navigate to where qiime will be able to find the input files below
+
+qiime feature-table summarize \
+--i-table table.qza \
+--o-visualization table.qzv \
+--m-sample-metadata-file pyc_manifest
+
+qiime feature-table tabulate-seqs \
+--i-data rep-seqs.qza \
+--o-visualization rep-seqs.qzv
+
+qiime metadata tabulate \
+--m-input-file denoising-stats.qza \
+--o-visualization denoising-stats.qzv
+```
+
+##### Copy the `.qzv` files to your local machine to be able to view the results using [Qiime2view](https://view.qiime2.org/)! {-}
+
+### 1. How are you keeping track of what you're doing on the server? Let's share on systems and "best practices." {-}
+- Some best practices from a [2015 "Ten Simple Rules" PLoS Comp. Bio. paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004385) and more recent and general advice on [Science](https://www.science.org/careers/2019/09/how-keep-lab-notebook) and [NIH](https://www.training.nih.gov/assets/Lab_Notebook_508_(new).pdf).
+- Use a text editor like [Atom](https://atom.io/) or [Typora](https://typora.io/) or [BBEdit](https://www.barebones.com/products/bbedit/) or an R markdown file in R studio.
+- Integrate/post to your github.
+
+### 2. What questions can we ask/address with these data? {-}
+1.
+2.
+3.
+4.
+5.
+
+
+### 3. Calculate alpha and beta diversity and more data analyses! {-}
+1. The first step is to **build a phylogentic tree** among all the identified taxa in our samples using `qiime phylogeny align-to-tree-mafft-fasttree`. This step is not visualized, but the output files will be used to calculate diversity metrics.
+
+```
+qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences rep-seqs.qza \
+--o-alignment aligned-rep-seqs.qza \
+--o-masked-alignment masked-aligned-rep-seqs.qza \
+--o-tree unrooted-tree.qza \
+--o-rooted-tree rooted-tree.qza
+```
+
+2. **Calculate core diversity metrics:** Qiime2 will calculate a wide range of diversity metrics with one command `qiime diversity core-metrics-phylogenetic`. 
+- **But... we need to make one important decision first** - how far down to we want to rarify or subsample our data to set our `--p-sampling-depth`. 
+- To make this decision, lets look at the feature counts in the "interactive sample detail" tab of the `table.qzv` using [Qiime2view](https://view.qiime2.org/).
+  - At what depth would we start loosing samples? Play with changing the "Metadata category" and drag the "Sampling Depth" bar to see when samples drop off.
+
+#### Descriptions of diversity metrics calculated: {-}
+- Alpha diversity - "within-sample" diversity
+  - Shannon’s diversity index (a quantitative measure of community richness)
+  - Observed Features (a qualitative measure of community richness)
+  - Faith’s Phylogenetic Diversity (a qualitiative measure of community richness that **incorporates phylogenetic relationships** between the features)
+  - Evenness (or Pielou’s Evenness; a measure of community evenness)
+  
+  - Test for differences in alpha diversity among groups, correlations with factors.
+
+- Beta diversity - "between-sample" diversity - dissimilarity
+  - Jaccard distance (a qualitative measure of community dissimilarity)
+  - Bray-Curtis distance (a quantitative measure of community dissimilarity)
+  - unweighted UniFrac distance (a qualitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)
+  - weighted UniFrac distance (a quantitative measure of community dissimilarity that incorporates phylogenetic relationships between the features) - *weighted* means it takes into account the abundance of each sequence
+  
+  - Perform beta diversity ordination using PCoA
+  - Test for differences in beta diversity among groups, correlations with factors.
+
+The next command calculates a whole suite of alpha and beta-diversity metrics!
+```
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny rooted-tree.qza \
+  --i-table table.qza \
+  --p-sampling-depth 13000 \
+  --m-metadata-file pyc_manifest \
+  --output-dir core-metrics-results
+```
+An additional beta-diversity statistic that would be worth exploring is the Generalized UniFrac.
+
+Test for associations between categorical metadata columns and alpha diversity data. We’ll do that here for the Faith Phylogenetic Diversity (a measure of community richness) and evenness metrics.
+
+```
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/evenness_vector.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --o-visualization core-metrics-results/evenness-group-significance.qzv
+```
+
+Test for differences in beta diversity between groups:
+```
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --m-metadata-column site-animal-health \
+  --o-visualization core-metrics-results/weighted-unifrac-site-animal-health-significance.qzv \
+  --p-pairwise
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file pyc_subset_manifest \
+  --m-metadata-column site-status \
+  --o-visualization core-metrics-results/weighted-unifrac-site-status-group-significance.qzv \
+  --p-pairwise
+```
+
+Lets make an Alpha diversity rarefaction plot! Did we over do the sequencing effort?
+  
+  ```
+qiime diversity alpha-rarefaction \
+--i-table table.qza \
+--i-phylogeny rooted-tree.qza \
+--p-max-depth 100000 \
+--m-metadata-file pyc_subset_manifest \
+--o-visualization alpha-rarefaction.qzv
+```
+
+#### Copy the `.qzv` files to your local machine to be able to view the results using [Qiime2view](https://view.qiime2.org/)! {-}
+
+For more ideas and 'how tos', there are excellent tutorials that can be found [here (more general)](https://docs.qiime2.org/2021.8/tutorials/moving-pictures/) and [here (with example data)](https://docs.qiime2.org/2021.8/tutorials/atacama-soils/).
+
+3. **Assign taxonomies** - whos there?
+
+4. **Test for differential abundance** using ANCOM or gneiss
+
+5. **Export and make pretty plots in R using ggplot2**
+
+
+
+## 16S microbiome #5 {-}
+
+ ### Learning Objectives for today! {-}
+  
+  1. Make sure everyone was able to create the feature table and run the core diversity statistics. 
+2. Review additional analyses you can run in Qiime to test for differences in abundance of taxonomic groups.
+3. Review Homework Assignment #1!
+
+### 1. Catch up or troubleshooting of DADA2, diversity calculations, and testing for significant differences in diversity. {-}
+See the [Day 4 tutorial](2021-09-22_microbiome_Day4.html) for details!
+  
+### 2. Who's there?! Testing for differential abundances of specific taxa between groups.  {-}
+  Weve just started to have fun with our alpha and beta diversity plots and tests for differences in these diversity metrics between groups. However, one of the greatest opportunities with 16S data is the ability to test for differences in abundances of _specific_ taxa among our groups. Its also really tricky because of all of our estimates of "abundance" are relative to the amount of sequences per sample! There are a number of statistical methods that attempt to surmount this challenge that well review below. 
+
+Before getting to test for differences in abundance, we need to associate our features with bactrial taxa. We do this using a database of identified taxa and sequency homology. We use the Greengenes 16S database clustered at 99% sequence similarity for our project. We trim the database based on our amplified region, V3-V4. Then we run the classifier to make the `taxonomy.qza` file!
+
+These steps only need to be done once and I have carried out the steps and documented the work [here](2021_09_27_microbiome_supp_taxaID.html). However, the steps may need to be repeated using your table.qza and metadata files (i.e., you may have more taxa identified with the full rather than subset dataset).
+
+#### Make bar plots of taxa!  {-}
+Now we can view the taxonomic composition of our samples by making interactive bar plots! Make the .qzv file as shown below. 
+
+**NOTE:** Take care to update the code below to provide the paths to your specific input files (the `table.qza` you made with DADA2 and the `taxonomy.qza` file you just made), and to your correct manifest file. The manifest file can be found in `/data/project_data/16S/` or in your home directory if you copied `cp`d the file into your home `~` directory. 
+
+  - For the output, you can not provide a path and the output will be generated into whichever directory you were in when you ran the command, or if you might like to put it into another directory, you can provide the path and the name of your file. As before, you can name it anything you want, just keep track.
+```
+qiime taxa barplot \
+  --i-table ~/PATHTOYOURFILE/table.qza \
+  --i-taxonomy ~/PATHTOYOURFILE/taxonomy.qza \
+  --m-metadata-file /data/project_data/16S/pyc_manifest \
+  --o-visualization ~/PATHTO/OUTPUT/DIRECTORY/OFYOURCHOICE/taxa-bar-plots.qzv
+```
+Once youve made your `taxa-bar-plots.qzv` file, then move it to your local machine to open the file in Qiime2view (scp, WinSCP, or Fetch).
+
+Now we can choose what taxonomic level to show - lets start with Level 6, genus, for this study, and sort the samples by the metadata of interest! What do you notice?!
+
+### Test for differences in abundance {-}
+Testing for differences in the abundance of taxa in microbiome data is tricky because microbiome data is all ***relative**; recall the rareifying that we did to "normalize" our data based on the sequencing effort (i.e., amount of data generated per sample). There are two main ways that Qiime has built in to test for differences that take into account this challenge, ANCOM and gneiss. 
+
+ANCOM stands for [Analysis of composition of microbiomes](https://pubmed.ncbi.nlm.nih.gov/26028277/). A Qiime tutorial warns that ANCOM assumes <25% of the taxa are changing in abundance. We could expect more than 25% of our taxa to be changing between sample groups. However, [a recent review](https://www.nature.com/articles/s41522-020-00160-w) compares many different normalization and differential abundance analysis programs. This review/analysis finds ANCOM and ANCOM-BC among the best performing in terms of False Discovery Rate (FDR), power, and confidence intervals. I have ANCOM-BC installed on Qiime on our server, but Im still troubleshooting getting it to run models to test for differences in abundance.
+
+Alternatively, the data can be exported and analyzed in other programs, such as DESeq2 as we did in the Lloyd and Pespeni 2018 paper. DESeq2 was designed for analyzing RNAseq gene expression data and assumes the data have a negative binomial distribution where the variance is greater than the mean, which is true for gene expression data, but not usually true for microbiome composition data [Lin & Peddada](https://www.nature.com/articles/s41522-020-00160-w). 
+
+At this point ANCOM-BC isnt natively installed with Qiime2, but I did follow a Qiime developers installation instructions on [github](https://github.com/mortonjt/q2-ancombc). For directions on running ANCOMBC from within R, see brief tutorial [here](https://rdrr.io/github/FrederickHuangLin/ANCOMBC/man/ancombc.html). On our class server, you should not need to redo the installation.
+
+#### Here's code for using `ancom` to test for differences in abundance.  {-}
+The ancom function seems to take a long time, so start a screen!
+  
+  ```
+screen
+cd /data/project_data/16S/mprun/taxa
+conda activate qiime2-2021.8
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+
+qiime composition add-pseudocount \
+--i-table /data/project_data/16S/mprun/table.qza \
+--o-composition-table comp-table.qza
+
+qiime composition ancom \
+--i-table comp-table.qza \
+--m-metadata-file /data/project_data/16S/pyc_subset_manifest \
+--m-metadata-column site-animal-health \
+--o-visualization ancom-site-animal-health.qzv 
+```
+
+### Here's code for using `gneiss` to test for differences in abundance. {-}
+```
+qiime gneiss correlation-clustering \
+--i-table table.qza \
+--o-clustering gneiss_corr_clust_hierarchy.qza
+```
+To visualize the above clustering, choose a factor from our metadata table 
+```
+qiime gneiss dendrogram-heatmap \
+--i-table table.qza \
+--i-tree gneiss_corr_clust_hierarchy.qza \
+--m-metadata-file pyc_subset_manifest \
+--m-metadata-column site-animal-health \
+--p-color-map seismic \
+--o-visualization heatmap.qzv
+```
+### Here's code for using ANCOM-BC to test for differences in abundance. {-}
+Below is code for testing for differences in taxonomic abundances based on "site-animal-health", but its still giving errors.
+```
+conda activate qiime2-2021.8
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+
+qiime ancombc ancombc \
+    --i-table /data/project_data/16S/mprun/table.qza \
+    --m-metadata-file /data/project_data/16S/pyc_subset_manifest_ancombc \
+    --p-formula "site-animal-health" \
+    --o-differentials ancombc_differentials_an-health.qza
+    
+qiime metadata tabulate \
+ --i-input-file differentials.qza 
+ --i-input-file taxonomy.qza \
+ --o-visualization differentials.qzv
+```
+
+### Filtering the data/samples to run other analyses or test specific hypotheses {-}
+View the [filtering tutorial on the Qiime2 website](https://docs.qiime2.org/2021.8/tutorials/filtering/). For example see the filtering based on metadata section; there are many ways that the data can be filtered or subset explored in the Qiime tutorial.
+
+### Move data into R for better plotting {-}
+Heres [a package and tutorial for linking Qiime and R](https://forum.qiime2.org/t/tutorial-integrating-qiime2-and-r-for-data-visualization-and-analysis-using-qiime2r/4121).
+There are other methods, too; e.g., one by one downloading from each .qzv of interest.
+
+
+## 16S Microbiome #6 {-}
+
+### Identify taxonomic groups {-}
+
+### Training feature classifiers with q2-feature-classifier  {-}
+  The work below is based on the Qiime tutorial [here](https://docs.qiime2.org/2021.8/tutorials/feature-classifier/).
+
+### Obtaining and importing reference data sets {-}
+```
+mkdir training-feature-classifiers
+cd training-feature-classifiers
+wget ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz
+gunzip gg_13_8_otus.tar.gz
+tar -xvf gg_13_8_otus.tar
+```
+The files needed are 1) the fasta in `rep_sep` directory, the file with reference sequences clustered at 99% sequence similarity and 2) the corresponding taxonomy file in the `taxonomy` directory
+`/data/project_data/16S/training-feature-classifiers/gg_13_8_otus/rep_set/99_otus.fasta`
+
+`/data/project_data/16S/training-feature-classifiers/gg_13_8_otus/taxonomy/99_otu_taxonomy.txt`
+
+Import into qiime artifact:
+
+  ```
+conda activate qiime2-2021.8
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+
+qiime tools import \
+--type 'FeatureData[Sequence]' \
+--input-path /data/project_data/16S/training-feature-classifiers/gg_13_8_otus/rep_set/99_otus.fasta \
+--output-path /data/project_data/16S/training-feature-classifiers/99_otus.qza
+
+qiime tools import \
+--type 'FeatureData[Taxonomy]' \
+--input-format HeaderlessTSVTaxonomyFormat \
+--input-path /data/project_data/16S/training-feature-classifiers/gg_13_8_otus/taxonomy/99_otu_taxonomy.txt \
+--output-path /data/project_data/16S/training-feature-classifiers/ref-taxonomy.qza
+```
+
+The V3–V4 region was amplified using the S-D-Bact-0341-b-S-17 (5′- 3')
+CCTACGGGNGGCWGCAG
+
+and S-D-Bact-0785-a-A-21 (5′-3')
+GACTACHVGGGTATCTAATCC
+
+```
+qiime feature-classifier extract-reads \
+--i-sequences 99_otus.qza \
+--p-f-primer CCTACGGGNGGCWGCAG \
+--p-r-primer GACTACHVGGGTATCTAATCC \
+--p-min-length 100 \
+--p-max-length 500 \
+--o-reads ref-seqs.qza
+```
+
+Removed `--p-trunc-len` command as its not appropriate for the variable lengths of paired-end, joined reads. Set `--p-max-length` based on amplicon size of ~465 base pairs so that no off-target larger regions are identified and `p-min-length` to include smaller trimmed fragments that may offer taxonomic resolution.
+  
+### Train the classifier {-}
+Now we can train a Naive Bayes classifier by using the reference reads and taxonomy that we just created.
+```
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads ref-seqs.qza \
+  --i-reference-taxonomy ref-taxonomy.qza \
+  --o-classifier classifier.qza
+``` 
+
+### Test the classifier -START HERE WHEN USING A DIFFERENT SUBSET OF THE DATA {-}
+Now we verify that the classifier worked by classifying our representative sequences from our sunflower data and visualizing the resulting taxonomic assignments.
+
+```
+cd DIRECTORYWHEREYOUWANT/TO/RUN
+
+conda activate qiime2-2021.8
+export TMPDIR="/data/project_data/16S/tmptmpdir"
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier /data/project_data/16S/training-feature-classifiers/classifier.qza \
+  --i-reads ~/myresults/PATHTOYOURFILE/rep-seqs.qza \
+  --o-classification taxonomy.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy.qza \
+  --o-visualization taxonomy.qzv 
+```
+
+
+
+## RNAseq #1 {-}
+
+#### Learning Objectives for today (and for the rest of the RNAseq module!) {-}
+  
+  1. Review _Acartia hudsonica_ ecology and biogeography and the experimental evolution/transcriptomics experimental design.
+2. Articulate the questions we can address and hypotheses we can test with this experimental design.
+3. Understand the general work flow or "pipeline" for processing and analyzing RNAseq data.
+4. Visualize and interpret Illumina data quality (Run FastQC on raw and cleaned reads).
+5. Start _de novo_ transcriptome assembly using Trinity.
+
+6. Start mapping reads and quantifying abundance simultaneously using [Salmon](https://www.nature.com/articles/nmeth.4197).
+7. Import quant.sf files generated by Salmon into DESeq2 for analysis and visualization.
+8. Start mapping reads for single nucleotide polymorphism (SNP) identification. 
+9. Estimate allele frequencies and test for genetic differention.
+10. Add to your growing list of bioinformatics tricks (take notes!).
+
+
+### 1. Acartia hudsonica experimental evolution RNAseq experiment {-}
+
+_Acartia hudsonica_ is a calanoid copepod and is the cold-water-adapted sister species to _Acartia tonsa_, the copepod we read about this week in [Brennan et al.](https://www.biorxiv.org/content/10.1101/2020.01.29.925396v3). It is an estuarine and near-shore coastal species and is most abundant along the New England coast (ME, NH, MA, RI, CT), generally not further south than the Chesapeake Bay and not further north than Laborador/Newfoundland, Canada. Both Acartiid species play critical roles in ecosystem functioning at the base of the food chain as a primary consumers of phytoplankton and as a main prey item for many larval fish, including economically important fisheries. Not surprisingly, given faster development rates in warmer temperatures, studies have found a trend of body sizes decreases over the 70 years ([Rice, Dam & Stewart (2015)](https://link.springer.com/article/10.1007%2Fs12237-014-9770-0)).
+
+In the present study, we experimentally evolved _Acartia hudsonica_ to four sets of conditions: 
+  
+  1. ocean acidification (1000 micro-atm pCO2, ambient temperature, 13 degrees C)
+2. ocean warming (15 degrees C, 400 micro-atm pCO2)
+3. combined ocean acidification and warming (1000 micro-atm pCO2, 15 degrees C)
+4. ambient (13 degrees C, 400 micro-atm pCO2)
+
+#### Additional experimental details: {-}
+
+* Animals were collected from the Long Island Sound, CT and reared in the lab for 3 generations before the start of the experiment.
+* For each treatment, there were three replicate vessels with ~4,000 individuals per vessel. 
+* To sample for RNA, pools of 50 adults were taken at the end of the F0, F2, F4, and F11 generations. Water was removed and animals were flash frozen in liquid nitrogen. 
+* RNA was extracted using a modified TRIzol extraction protocol. 
+* Library preparation and sequencing was carried out by Novogene using standard Illumina RNAseq library prep protocols (TruSeq3).
+* Samples were sequenced 150 base pair paired-end reads (2 x 150bp) using the Novoseq 6000 platform (Illuminas next greatest sequencer after the HiSeq 4000) with >6 Gb (gigabase pairs, equivalent to >6 billion base pairs) per sample.  
+
+  
+#### Realized sample replication after sequencing:  N=38 x 2 = 76 (left and right reads) {-}
+
+|Trt        | Generation  |Nreps  |
+|-----------|-------------|-------|
+|Ambient (AA)    |F0      |3      |
+|Ambient (AA)    |F2      |2      |
+|Ambient (AA)    |F4      |3      |
+|Ambient (AA)    |F11     |3      |
+|Acidification (AH)    |F0       |3      |
+|Acidification (AH)    |F2       |3      |
+|Acidification (AH)    |F4      |3      |
+|Warming (HA)       |F0      |3      |
+|Warming (HA)       |F2      |3      |
+|Warming (HA)       |F4      |3      |
+|Acidification+Warming (HH)    |F0      |3     |
+|Acidification+Warming (HH)    |F4      |3    |
+|Acidification+Warming (HH)    |F11     |3    |
+|-----------|-------------|-------|
+|Total      |             |38     |
+
+In `/data/project_data/RNAseq/rawdata/`, there should be 76 files: N=38 x 2 = 76 (left and right reads, `_1.fq.gz`, `_2.fq.gz`)
+
+
+#### 2. What questions can we ask or hypotheses can we test with this experimental design, with these data?  {-}
+1.
+2.
+3.
+4.
+5.
+
+
+
+#### 3. Data Processing Pipeline: {-}
+
+* FastQC on raw reads --> Trimmomatic (trim based on base pair quality scores and clip adapter sequences) --> FastQC on cleaned reads
+* Generate a reference transcriptome assembly using [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
+* Evaluate transcriptome assembly for quality (length and completeness); Collapse isoforms to make a reference transcriptome.
+* **For gene expression analyses:**
+  * Use [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) to simulateously map reads to reference transcriptome and quantify abundance.
+  * [Import](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#3%E2%80%99_tagged_rna-seq) the data into [DESeq2](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) in R for data normalization, visualization, and statistical tests for differential gene expression.
+* **For allele frequency analyses:**
+  * Map cleaned reads to reference transcriptome using BWAmem
+  * Identify sequence variants (SNPs) using VarScan; filter for quality, MAF, biallelic, coverage.
+  * Visualize variation with PCA.
+  * Identify alleles with consistent changes in allele frequency between groups using CMH statistic.
+
+
+#### 4. Choose samples to visualize for quality (FastQC) and clean (Trimmomatic) {-}
+
+There are 13 groups of samples (based on the table above, 13 treatment x generation combinations). If every student takes one group to process, that should work out... This time we need to trim using the same specifications.
+ 
+#### FastQC  {-}
+Recall that .fastq (or .fq) files are sequence data files that include quality scores for each base pair. We checked out the reads from our 16S data using `zcat FILENAME.fq.gz | head -n 4`. Recall that letters early in the alphabet indicate good quality on the ASCII score ([see Day 1 microbiome tutorial](2021-09-13_microbiome_Day1.html)). How can we look at the quality more systematically for all reads in the file?  We can use [the program FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) (also already installed in our `/data/popgen/` directory and available to run from any directory).
+
+FastQC will accept multiple file names as input, so figure out which letters in the filename plus a wildcard (*) will capture just the files of your group of samples.
+
+```
+fastqc FILENAME*.fq.gz --outdir=/data/project_data/RNAseq/fastqc/
+```
+
+Now move the .html files to your local machine using your favorite file transfer method (WinSCP, Fetch, scp, etc.). Open the html file by double clicking and you should see your FastQC report! (one for each file)
+
+
+#### Clean the reads with Trimmomatic (ALREADY DONE THIS TIME) {-}
+
+[Heres a link to the Trimmomatic program](http://www.usadellab.org/cms/index.php?page=trimmomatic) that we'll use to clean the reads for each file. The program is already installed in our `/data/popgen/` directory.
+
+Already done, but for your reference, let's walk through the script:
+
+  ```trim_loop.sh
+#!/bin/bash   
+
+##### Below is a script to loop through the files in the /rawdata directory, identify matches,  
+##### and clean the fastq files, and direct output to /cleandata 
+
+cd /data/project_data/RNAseq/rawdata
+
+for f1 in *_1.fq.gz  
+
+do 
+
+f2=${f1%%_1.fq.gz}"_2.fq.gz"  
+
+java -classpath /data/popgen/Trimmomatic-0.39/trimmomatic-0.39.jar org.usadellab.trimmomatic.TrimmomaticPE \
+-threads 10 \
+-phred33 \
+"$f1" \
+"$f2" \
+/data/project_data/RNAseq/cleandata/"$f1"_left_clean_paired.fq \
+/data/project_data/RNAseq/cleandata/"$f1"_left_clean_unpaired.fq \
+/data/project_data/RNAseq/cleandata/"$f2"_right_clean_paired.fq \
+/data/project_data/RNAseq/cleandata/"$f2"_right_clean_unpaired.fq \
+ILLUMINACLIP:/data/popgen/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 \
+LEADING:20 \
+TRAILING:20 \
+SLIDINGWINDOW:6:20 \
+MINLEN:36 
+>> log.txt
+
+done 
+```
+#### Run FastQC on the clean reads to confirm improvement  {-}
+
+* What do we look for in this second run?
+  * [MULTIQC](https://multiqc.info/docs/) is a tool to generate a single summary html report file from all the fastqc reports generated.
+
+#### 5. Start de novo transcriptome assembly using Trinity  {-}
+Okay! Now that we know we have good quality, cleaned data to work with, we can move into making a de novo transcriptome assembly, which we will "map" to twice! - once to measure gene expression and once to identify genetic variants! This is a critical step for any species without a reference genome or transcriptome and is quite easy with the trinity package. The hardest parts come after the assembly: 1) settling on a final assembly - selecting a representative sequence among isoforms and 2) annotating the genes - figuring out what they are based on homology using BLAST.
+
+Trinity has remained at the "top of the market" for de novo transcriptome assemblers for the last 10 years. A [recent review](https://academic.oup.com/gigascience/article/8/5/giz039/5488105) finds this assembler performs consistently well across their (somewhat limited) range of datasets.
+
+[Heres a link to the Trinity website](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
+
+Heres the basic command to run Trinity:
+    ``
+  Trinity --seqType fq --left reads_1.fq --right reads_2.fq --CPU 6 --max_memory 20G 
+  ``
+  
+  Specifically, for our data: (BUT WE DONT ALL NEED TO DO THIS!)
+```
+screen
+/data/popgen/trinityrnaseq-v2.13.2/Trinity --seqType fq \
+--samples_file /data/project_data/RNAseq/assembly/ahud_samples.txt \
+--CPU 16 --max_memory 50G --bflyCalculateCPU --min_kmer_cov 2 > run.log 2>&1 &
+```
+Note: Well provide the path to the latest version of Trinity just out this month (Sept 2021) and installed, just to make sure were using the latest version. Its a little "messier", but it also helps us keep track of what version of the program we used.
+Another path note: In the ahud_samples.txt file, we need to provide the full path to all the samples. Check out the file with `vim`.
+                               
+Lets explore some some of the [assembly quality assessment tools that Trinity provides](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Transcriptome-Assembly-Quality-Assessment).
+
+
+## RNAseq #2 {-}
+
+ ### Learning Objectives for today  {-}
+  
+  1. Refresh on activities from the last coding session (experimental design, hypotheses, RNAseq pipeline, ran FastQC to check quality).
+2. Check Run FastQC on raw and cleaned reads.
+3. Start to map reads (to an existing reference transcriptome) and quantify abundance simultaneously using [Salmon](https://www.nature.com/articles/nmeth.4197).
+4. Import quant.sf files generated by Salmon into [DESeq2](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) for analysis and visualization.
+
+
+### 1. Acartia hudsonica experimental evolution RNAseq experiment {-}
+
+#### Realized sample replication after sequencing:  N=38 x 2 = 76 (left and right reads)  {-}
+
+|Trt        | Generation  |Nreps  |
+  |-----------|-------------|-------|
+  |Ambient (AA)    |F0      |3      |
+  |Ambient (AA)    |F2      |2      |
+  |Ambient (AA)    |F4      |3      |
+  |Ambient (AA)    |F11     |3      |
+  |Acidification (AH)    |F0       |3      |
+  |Acidification (AH)    |F2       |3      |
+  |Acidification (AH)    |F4      |3      |
+  |Warming (HA)       |F0      |3      |
+  |Warming (HA)       |F2      |3      |
+  |Warming (HA)       |F4      |3      |
+  |Acidification+Warming (HH)    |F0      |3     |
+  |Acidification+Warming (HH)    |F4      |3    |
+  |Acidification+Warming (HH)    |F11     |3    |
+  |-----------|-------------|-------|
+  |Total      |             |38     |
+  
+  In `/data/project_data/RNAseq/rawdata/`, there should be 76 files: N=38 x 2 = 76 (left and right reads, `_1.fq.gz`, `_2.fq.gz`)
+
+
+#### Questions can we ask with this experimental design and these data  {-}
+1. Additive impact of acidification and warming? Do these result in similar changes in gene expression?
+  2. How does gene expression change across generations? How much of this is heritable? Could only do this across all 4 at F4 generation
+3. How does gene expression change across time? Basically a time course to see if allele frequency and/or gene expression are headed in the same direction.
+4. What is the rate at which the alleles become fixed?
+  5. How does expression of specific gene classes change across time? This would be cool with multiple graphs for each gene class
+6. Plasticity in response for each treatment. We can compare the treatments to the ambient to figure this out and see if changes are maintained across generations.
+7. Check completeness of the transcriptome based on a set of housekeeping/core genes for eukaryotes. Isnt taxa specific.
+
+
+### 2. Compare quality using FastQC of raw and cleaned (Trimmomatic) reads  {-}
+ 
+#### FastQC  {-}
+To visualize the quality more systematically for all reads in the file, we can use [the program FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
+
+FastQC will accept multiple file names as input, so figure out which letters in the filename plus a wildcard (*) will capture just the files of your group of samples.
+
+**From last time:**
+```
+cd /data/project_data/RNAseq/rawdata
+fastqc FILENAME*.fq.gz --outdir=/data/project_data/RNAseq/fastqc/
+```
+
+One of us can also run `multiqc` to make one summary file for all of our .html fastQC files (really handy instead of flipping through 76 files!).
+Navigate to the directory with our fastqc .html files and simply run `multiqc .`, which means use all the `.html` files in this `.` directory!
+
+Now move the .html files to your local machine using your favorite file transfer method (WinSCP, Fetch, scp, etc.). Open the html files by double clicking and you should see your FastQC and multiqc reports! (one fastqc for each file and one multiqc for the whole dataset)
+
+
+#### Clean the reads with Trimmomatic (ALREADY DONE THIS TIME)  {-}
+
+[Heres a link to the Trimmomatic program](http://www.usadellab.org/cms/index.php?page=trimmomatic) that well use to clean the reads for each file. The program is already installed in our `/data/popgen/` directory.
+
+Already done, but for your reference, lets walk through the script:
+  
+  ```trim_loop.sh
+#!/bin/bash   
+
+#### Below is a script to loop through the files in the /rawdata directory, identify matches,  
+##### and clean the fastq files, and direct output to /cleandata 
+
+cd /data/project_data/RNAseq/rawdata
+
+for f1 in *_1.fq.gz  
+
+do 
+
+f2=${f1%%_1.fq.gz}"_2.fq.gz"  
+
+java -classpath /data/popgen/Trimmomatic-0.39/trimmomatic-0.39.jar org.usadellab.trimmomatic.TrimmomaticPE \
+-threads 10 \
+-phred33 \
+"$f1" \
+"$f2" \
+/data/project_data/RNAseq/cleandata/"$f1"_left_clean_paired.fq \
+/data/project_data/RNAseq/cleandata/"$f1"_left_clean_unpaired.fq \
+/data/project_data/RNAseq/cleandata/"$f2"_right_clean_paired.fq \
+/data/project_data/RNAseq/cleandata/"$f2"_right_clean_unpaired.fq \
+ILLUMINACLIP:/data/popgen/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 \
+LEADING:20 \
+TRAILING:20 \
+SLIDINGWINDOW:6:20 \
+MINLEN:36 
+>> log.txt
+
+done 
+```
+#### Run FastQC on the clean reads to confirm improvement  {-}
+
+* What do we look for in this second run?
+  * [MULTIQC](https://multiqc.info/docs/) is a tool to generate a single summary html report file from all the fastqc reports generated.
+
+Recall, use the letters in the filename plus a wildcard (*) that will capture just the files of your group of samples (use the same group of files as last time).
+```
+cd /data/project_data/RNAseq/cleandata
+fastqc FILENAME*.fq.gz --outdir=/data/project_data/RNAseq/fastqc/clean
+```
+
+Again, someone can run `multiqc .` once all of the fastqc files have been generated.
+
+We can move these (or just the multiqc.html) file/s to our local machines to see the .html output summary on the quality of our cleaned data.
+
+### 3. Use Salmon to quantify transcript abundance  {-}
+
+1. First step: Index the reference transcriptome.
+This only needs to be done once and has been done already, but heres the code:
+```
+cd /data/project_data/RNAseq/assembly/
+conda activate salmon
+
+salmon index -t Bridger.fasta -i hudsonica_index -p 8
+```
+`-p` says how many threads to use 
+
+2. Second step: Start quantification!
+Below is the basic command for running the quantification from the documentation, [Salmon tutorial](https://salmon.readthedocs.io/en/latest/salmon.html)
+```
+screen
+conda activate salmon
+```
+
+```
+#!/bin/bash
+######
+#
+# quantify each sample with salmon
+#
+#######
+
+# -i points to the index files already created
+# -l A tells salmon that it should automatically determine the library type of the sequencing reads (e.g. stranded vs. unstranded etc.)
+# -p 8 says uses 8 threads
+# -o indicates the directory and name of output
+# seqbias corrects for random hexamer priming
+# gcbias corrects for gcbias, but only when present.
+
+conda activate salmon
+
+for i in $(ls /data/project_data/RNAseq/cleandata | grep '.fq.gz' | cut -f 1-3 -d "_"| uniq);
+do
+
+    echo "starting sample ${i}"
+    #starting with only name of rep. need to pull out files
+
+    read1=$(ls /data/project_data/RNAseq/cleandata | grep ${i} | grep '_1.qc.fq.gz')
+    read2=$(ls /data/project_data/RNAseq/cleandata | grep ${i} | grep '_2.qc.fq.gz')
+
+    salmon quant -i /data/project_data/RNAseq/assembly/hudsonica_index \
+        -l A \
+         -1 /data/project_data/RNAseq/cleandata/${read1} \
+         -2 /data/project_data/RNAseq/cleandata/${read2} \
+         -p 8  \
+         --softclip \
+         --seqBias \
+         --gcBias \
+         -o /data/project_data/RNAseq/salmon/transcripts_quant/${i}
+
+    echo "sample ${i} done"
+
+done
+```
+
+
+The descriptions of all of the options can be found on the [Salmon github page](https://salmon.readthedocs.io/en/latest/salmon.html#description-of-important-options) and by using the command `salmon quant -h`.
+
+#### Explore mapping rate  {-}
+For each sample mapped, you now have a directory with several output files including a log of the run. In that log, the mapping rate (% of reads mapped with sufficient quality) is reported. We can view the contents of the file using `cat`. 
+We can also use `grep` (i.e., regular expressions) to pull out the mapping rate for all the samples. Though theres probably a more elegant solution, here is one:
+  ```
+grep -r --include \*.log -e 'Mapping rate'
+```
+* How could we save this output?
+  * What is our mapping rate? Is this good/enough? What factors could affect mapping rate?
+  
+  ## Combine individual `quant.sf` files from their respective directories into a counts data matrix with all 38 samples in one table
+  To do this, well use the R package `tximport` on our class server. 
+Heres a `tximport` [tutorial](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#salmon) by the creators of the two programs, Salmon and DESeq2. 
+Unless we decide to use multiple rounds of mapping (changing references, etc), only one person needs to make this compiled matrix.
+Heres an example of how it can be done. First start `R` on the server by typing capital `R` and enter. Exciting! Right? Load the libraries we need (already installed).
+```
+library(tximportData)
+library(tximport)
+
+#locate the directory containing the files. 
+dir <- "/data/project_data/RNASeq/salmon/"
+list.files(dir)
+
+# read in table with sample ids
+samples <- read.table("/data/project_data/RNASeq/salmon/hudsonica_samples.txt", header=TRUE)
+
+# now point to quant files
+all_files <- file.path(dir, samples$sample, "quant.sf")
+names(all_files) <- samples$sample
+
+# what would be used if linked transcripts to genes
+#txi <- tximport(files, type = "salmon", tx2gene = tx2gene)
+# to be able to run without tx2gene
+txi <- tximport(all_files, type = "salmon", txOut=TRUE)  
+names(txi)
+
+head(txi$counts)
+
+countsMatrix <- txi$counts
+dim(countsMatrix)
+# should be about 51,000 by 38
+
+# To write out
+write.table(countsMatrix, file = "AH_countsMatrix.txt", col.names = T, row.names = T, quote = F) 
+```
+Now we can move this counts data matrix to your individual machines using your perferred ftp (fetch, Winscp, scp). Also move the `hudsonica_samples.txt` file to your machine. This file is a table that associates each of our samples with their conditions (treatment, generation, replicate).
+
+#### Import Counts Matrix and Sample ID tables into R and DESeq2 on your local machine!  {-}
+
+Now we will work in R on our individual machines, each of us working with the complete data set (n=38, not just a subset of samples).
+
+To get set up for next time:
+```R
+
+## Import or install the libraries that we're likely to need
+                               library(DESeq2)
+                               library(dplyr)
+                               library(tidyr)
+                               library(ggplot2)
+                               library(scales)
+                               library(ggpubr)
+                               library(wesanderson)
+                               library(vsn)  ### First: BiocManager::install("vsn") AND BiocManager::install("hexbin")
+```
+`Tools` -> `Install packages` -> Search for the library of interest; Install including dependencies.
+
+
+## RNA-seq #3 {-}
+
+#### Learning Objectives for today  {-}
+  
+  1. Play with _Acartia tonsa_ reciprocal transplant gene expression data (from the Brennan et al paper we read!)!
+  2. Gain comfort and familarity working in R.
+3. Gain comfort and familarity working with [DESeq2](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) for analysis and visualization.
+
+
+### 1. Download the data onto your local machine from our server. {-}
+Copy the two files from `/data/project_data/RNAseq/tonsa_play` onto your local machine (scp, Winscp, Fetch, etc.)
+
+
+### 2 and 3. Import Counts Matrix and Sample ID tables into R and DESeq2 on your local machine! {-}
+
+Now we will work in R on our individual machines.
+
+To get set up:
+  ```R
+
+### Import or install the libraries that we're likely to need {-}
+library(DESeq2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(ggpubr)
+library(wesanderson)
+library(vsn)  ### First: BiocManager::install("vsn") AND BiocManager::install("hexbin")
+```
+`Tools` -> `Install packages` -> Search for the library of interest; Install including dependencies.
+
+From here, well do live coding together... nothing to copy and paste! =)
+
+
+
+## RNA-seq #4 {-}
+
+## Learning Objectives  {-}
+  
+  1. Test for differences in gene expression in the _Acartia tonsa_ reciprocal transplant data set (from the Brennan et al paper we read!)!
+  2. Gain comfort and familarity working in R.
+3. Gain comfort and familarity working with [DESeq2](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) for analysis and visualization.
+
+
+### 0. Installing and loading packages or libraries into your R working environment and importing the data into DESeq.  {-}
+You should have the code below based on our live coding in class on 10/6 and 10/11. Hopefully your code is even more annotated!
+  
+  ``` R
+# Class play time with RT tonsa data on 10/6/21
+# by Melissa Pespeni
+
+
+## Set your working directory
+setwd("~/github/hudsonica")
+
+getwd()
+# [1] "/Users/mpespeni/github/hudsonica"
+
+## Import the libraries that we're likely to need in this session
+library(DESeq2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(ggpubr)
+library(wesanderson)
+library(vsn)  ### First: BiocManager::install("vsn") AND BiocManager::install("hexbin")
+
+# Import the counts matrix
+countsTable <- read.table("DE_counts_F1.txt", header=TRUE, row.names=1)
+head(countsTable)
+dim(countsTable)
+#[1] 24362    16
+countsTableRound <- round(countsTable) # bc DESeq2 doesn't like decimals (and Salmon outputs data with decimals)
+head(countsTableRound)
+
+#import the sample discription table
+conds <- read.delim("RT_tonsa_F1_samples.txt", header=TRUE, stringsAsFactors = TRUE, row.names=1)
+head(conds)
+
+
+# Continued 10/11/21
+
+# Let's see how many reads we have from each sample
+colSums(countsTableRound)
+mean(colSums(countsTableRound))
+barplot(colSums(countsTableRound), names.arg=colnames(countsTableRound),cex.names=0.5, las=3,ylim=c(0,20000000))
+abline(h=mean(colSums(countsTableRound)), col="blue", lwd=2)
+
+# the average number of counts per gene
+rowSums(countsTableRound)
+mean(rowSums(countsTableRound)) # [1] 11930.81
+median(rowSums(countsTableRound)) # [1] 2226
+
+apply(countsTableRound,2,mean) # 2 in the apply function does the action across columns
+apply(countsTableRound,1,mean) # 1 in the apply function does the action across rows
+hist(apply(countsTableRound,1,mean),xlim=c(50000,150000), ylim=c(0,10),breaks=1000)
+
+
+#### Creat a DESeq object and definee the experimental design here with the tilda
+
+dds <- DESeqDataSetFromMatrix(countData = countsTableRound, colData=conds, 
+                              design= ~ line + environment + line:environment)
+
+dim(dds)
+
+# Filter out genes with too few reads - keep reads with average > 10 reads per sample
+dds <- dds[rowSums(counts(dds)) >160]
+dim(dds)
+
+# Run the DESeq model to test for differential gene expression
+dds <- DESeq(dds)
+
+# List the results you've generated
+resultsNames(dds)
+# [1] "Intercept"                  "line_combined_vs_ambient"   "environment_HH_vs_AA"      
+# [4] "linecombined.environmentHH"
+
+
+###############################################################
+# Let's start with a PCA to visualize global gene expression patterns
+vsd <- vst(dds, blind=FALSE)
+
+data <- plotPCA(vsd, intgroup=c("line","environment"), returnData=TRUE)
+percentVar <- round(100 * attr(data,"percentVar"))
+
+ggplot(data, aes(PC1,PC2, color=environment, shape=line)) +
+  geom_point(size=4, alpha=0.85) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme_minimal()
+# What patterns do we see? Clustering by groups, line and environment. 
+# What gene expression results do we expect for each factor, main effects and/or interactions?
+###############################################################
+
+
+###### Continue on dds model from before the PCA
+###### Order and summarize the results from specific contrasts
+
+resInteraction <- results(dds, alpha=0.05)
+resInteraction <- resInteraction[order(resInteraction$padj),]
+head(resInteraction)  
+# log2 fold change (MLE): linecombined.environmentHH 
+# Wald test p-value: linecombined.environmentHH 
+# DataFrame with 6 rows and 6 columns
+# baseMean   log2FoldChange             lfcSE
+# <numeric>        <numeric>         <numeric>
+#   TRINITY_DN115950_c0_g1 2245.96833710016 4.05236657027431  0.35849009363941
+# TRINITY_DN131561_c0_g1 3375.98585631527 4.64570323588784 0.439847092095126
+# TRINITY_DN137662_c0_g1 16743.2339417793 4.90199502543358 0.474582668629774
+# TRINITY_DN149842_c8_g4 25971.8234076635 4.27274070902778 0.420809331610128
+# TRINITY_DN129565_c0_g3 24258.7559645763 4.30552583036551 0.426036869169939
+# TRINITY_DN129401_c0_g5 11712.3126703744 4.46354575123161 0.446093532600069
+# stat               pvalue                 padj
+# <numeric>            <numeric>            <numeric>
+#   TRINITY_DN115950_c0_g1 11.3039848022981 1.25395982311055e-29 2.99445605758799e-25
+# TRINITY_DN131561_c0_g1 10.5620869601728 4.46620142043715e-26 5.33264449600196e-22
+# TRINITY_DN137662_c0_g1  10.329064564424  5.2065839941322e-25 4.14444085932923e-21
+# TRINITY_DN149842_c8_g4 10.1536263292431 3.19274527294018e-24 1.90606892794529e-20
+# TRINITY_DN129565_c0_g3  10.105993499469 5.19661481660706e-24 2.48190323641153e-20
+# TRINITY_DN129401_c0_g5  10.005851744175 1.43650165401076e-23 5.71727658296281e-20
+
+summary(resInteraction)
+# out of 24362 with nonzero total read count
+# adjusted p-value < 0.05
+# LFC > 0 (up)       : 2839, 12%
+# LFC < 0 (down)     : 1053, 4.3%
+# outliers [1]       : 9, 0.037%
+# low counts [2]     : 473, 1.9%
+
+# About 16% of genes tested show a significant interaction!
+
+```
+
+
+### 2. Run DESeq to test for differences in gene expression  {-}
+
+DESeq uses a negative binomial GLM, which is used for modeling count variables, usually for over-dispersed count outcome variables like gene expression data. For example, considering one gene, one sample may have 10,000 read counts (i.e., reads that mapped to that gene from that sample) while another sample may have 10 read counts that map to that gene.
+
+DESeq has two ways to test for significance, using the Wald test (standard) or using the Likelihood Ratio Test (LRT; useful for study designs where there may be an interaction between two factors, in this case line and environment). Using the LRT, however, we have to test for each effect separately. See code below.
+
+You can copy and paste the code below, but take the opportunity to annotate the code.
+
+```R
+
+#######################
+############################################## TEST FOR EFFECT OF ENVIRONMENT
+#######################
+
+dds <- DESeqDataSetFromMatrix(countData = countsTableRound, colData = conds, 
+                              design = ~ line + environment)
+
+dds <- DESeq(dds, test="LRT", reduced=~line)
+# List the results you've generated
+resultsNames(dds)
+
+# Order and list and summarize results from specific contrasts
+resEnv <- results(dds, alpha = 0.05)
+resEnv <- resEnv[order(resEnv$padj),]
+head(resEnv)
+
+summary(resEnv)
+
+resEnv <- resEnv[!is.na(resEnv$padj),]
+
+degsEnv <- row.names(resEnv[resEnv$padj < 0.05,]) 
+
+```
+### Now test for the other main effect, line: {-}
+``` R
+#######################
+##############################################  TEST FOR EFFECT OF LINE
+#######################
+
+dds <- DESeqDataSetFromMatrix(countData = countsTableRound, colData = conds, 
+                              design = ~ environment + line)
+
+dds <- DESeq(dds, test="LRT", reduced=~environment)
+resultsNames(dds)
+
+resLine <- results(dds, alpha = 0.05)
+resLine <- resLine[order(resLine$padj),]
+head(resLine)
+
+
+summary(resLine)
+
+
+resLine <- resLine[!is.na(resLine$padj),]
+
+degsline <- row.names(resLine[resLine$padj < 0.05,])
+
+```
+### Now test for an interaction: {-}
+```R
+
+#######################
+##############################################  TEST FOR INTERACTION
+#######################
+
+dds <- DESeqDataSetFromMatrix(countData = countsTableRound, colData = conds, 
+                              design = ~ environment + line + environment:line)
+
+dds <- DESeq(dds, test="LRT", reduced=~environment + line)
+resultsNames(dds)
+
+resInt <- results(dds, alpha = 0.05)
+resInt <- resInt[order(resInt$padj),]
+head(resInt)
+
+summary(resInt)
+
+
+resInt <- resInt[!is.na(resInt$padj),]
+
+degsInt <- row.names(resInt[resInt$padj < 0.05,])
+
+```
+
+#### Data visualization - Are our statistics working? {-}
+```R
+### Plot Individual genes ### 
+
+# Counts of specific top interaction gene! (important validatition that the normalization, model is working)
+d <-plotCounts(dds, gene="TRINITY_DN138549_c1_g2", intgroup = (c("line","environment")), returnData=TRUE)
+d
+
+p <-ggplot(d, aes(x=environment, y=count, color=line, shape=line, group=line)) + 
+  theme_minimal() + theme(text = element_text(size=20), panel.grid.major=element_line(colour="grey"))
+p <- p + geom_point(position=position_jitter(w=0.2,h=0), size=3)
+p <- p + stat_summary(fun = mean, geom = "line")
+p <- p + stat_summary(fun = mean, geom = "point", size=5, alpha=0.7) 
+p
+
+```
+
+#### More Data Visualization: Venn Diagrams, we finally get to make one ourselves! {-}
+Well use the Eulerr package because we all know how nice it is to have the circle scaled. For more info, read [here](https://cran.r-project.org/web/packages/eulerr/vignettes/introduction.html).
+
+```R
+
+#######################
+############################################## PLOT OVERLAPPING DEGS IN VENN DIAGRAM
+#######################
+
+library(eulerr)
+
+# Total
+length(degsEnv)  # 448
+length(degsline)  # 226
+length(degsInt)  # 3854
+
+# Intersections
+length(intersect(degsEnv,degsline))  # 37
+length(intersect(degsEnv,degsInt))  # 44
+length(intersect(degsInt,degsline))  # 34
+
+intEL <- intersect(degsEnv,degsline)
+length(intersect(degsInt,intEL)) # 7
+
+# Number unique
+448-44-37-7 # 360
+226-37-34-7 # 148
+3854-44-34-7 # 3769
+
+
+fit1 <- euler(c("Env" = 360, "Line" = 148, "Interaction" = 3769, "Env&Line" = 37, "Env&Interaction" = 44, "Line&Interaction" = 34, "Env&Line&Interaction" = 7))
+
+plot(fit1,  lty = 1:3, quantities = TRUE)
+
+plot(fit1, quantities = TRUE, fill = "transparent",
+     lty = 1:3,
+     labels = list(font = 4))
+     
+```
+
+### Make a heat map of the top differentially expressed genes {-}
+As with the PCA, well use the `vsd` function again. `vst` is a transformation implemented in DESeq2, which is "roughly similar to putting the data on the log2 scale, while also dealing with the sampling variability of low counts" (according the the package [manual](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)). It uses the design formula to calculate the within-group variability (if blind=FALSE) or the across-all-samples variability (if blind=TRUE).
+
+```R
+# Heatmap of top 20 genes sorted by pvalue
+
+library(pheatmap)
+
+# By environment
+
+topgenes <- head(rownames(resInt),20)
+mat <- assay(vsd)[topgenes,]
+mat <- mat - rowMeans(mat)
+df <- as.data.frame(colData(dds)[,c("line","environment")])
+pheatmap(mat, annotation_col=df)
+
+# By line
+
+topgenes <- head(rownames(resLine),20)
+mat <- assay(vsd)[topgenes,]
+mat <- mat - rowMeans(mat)
+df <- as.data.frame(colData(dds)[,c("line","environment")])
+pheatmap(mat, annotation_col=df)
+```
+
+## Population Genomics #1 {-}
+
+### Learning Objectives for Population & Landscape Genomics Module {-}
+  
+  1. To use a natural hybrid zone between species of *Populus* trees to explore admixture of genetic ancestry and the effects of introgression on adaptive traits
+2. To appreciate the different processes that structure genomic variation within and between species, including population structure & gene flow, recombination, and selection
+3. To gain proficiency working with large genome-wide polymorphism data
+
+  ### 1. Poplars as model systems for ecological genomics  {-}
+  <img src="https://thumbs.dreamstime.com/b/poplar-autumn-leaves-watercolor-hand-drawn-illustration-branch-poplar-leaves-sketch-126528295.jpg" height="400" align="right"> 
+  Poplars are fast-growing, deciduous trees that show great diversity in their genetics, the environments they grow in, and their ecological relationships with other species. They also have a relatively compact genome (ca. 480 Mb) and because of their potential to contribute to bioenergy, *Populus* was selected by the U.S. Department of Energy (DOE) to be the first tree to have its whole genome sequenced (Tuskan et al. 2006, Science). The genomic resources for poplar have grown to include:
+  
+  * a [well annotated reference genome](https://phytozome-next.jgi.doe.gov/info/Ptrichocarpa_v4_1), with >99% of sequence assembled into 19 chromosomes
+* a [genome browser maintained by JGI](https://phytozome-next.jgi.doe.gov/jbrowse/index.html?data=genomes%2FPtrichocarpa_v4_1&loc=Chr01%3A1..100000&tracks=Transcripts%2CAlt_Transcripts%2CPASA_assembly%2CBlastx_protein%2CBlatx_BasalMalvidae&highlight=) and additional annotation resources available at [Popgenie](https://popgenie.org)
+* [thousands of transcriptomes](https://www.ncbi.nlm.nih.gov/Traces/study/?query_key=6&WebEnv=MCID_616c3bc056e76b7be42c8fdc&o=acc_s%3Aa) exploring gene expression under different experimental conditions and tissue types
+* the ability to [create transgenics with *Agrobacterium*](https://www.frontiersin.org/articles/10.3389/fpls.2016.00296/full)
+* ease of clonal propagation using [rooted stem cuttings](https://www.nrs.fs.fed.us/sustaining_forests/conserve_enhance/bioenergy/rooting_genetics/) 
+* a large, international [research community focused on poplar genomics](https://link.springer.com/content/pdf/10.1007/978-1-4419-1541-2.pdf)
+
+This combination of genetic and ecological diversity along with available genomic resources have made poplars a good system for evolutionary biologists to study the genetic basis of local adaptation, especially in relation to climate gradients.
+
+### 2. Population and landscape genomics of adaptive introgression in a poplar hybrid zone {-}
+  
+  Poplars show a high propensity for hybridization between related species in the same section of the genus. This property is often utilized in selective breeding, where hybrids show abundant heterosis that is sued for bioenergy production. In North America, two species of closely related poplars have been studies extensively for their local adaptation to climate gradients -- *Populus trichocarpa* (Black Cottonwood) and *P. balsamifera* (Balsam Poplar). These two species are sister-taxa, having diverged recently (approx. 76,000 years ago) during the Pleistocene glacial period. 
+
+<img src="http://cronklab.wdfiles.com/local--files/armando-geraldes/tric_bals" width="700">
+  
+  <img src="https://tourismfernie.com/uploads/content/gallery/SO_1705-3220-1560web-vertical-medium.jpg" align="left" height="300"> 
+  <img src="https://www2.palomar.edu/users/warmstrong/images2/denali6b.jpg" aligh="left" height="300">
+  
+  
+  The two species have very different geographic distributions, with "Ptricho" mostly distributed along the Pacific Northwest coast in temperate rainforest environments, with cool summers and mild winters. In contrast, "Pbalsam" has a continental distribution across the entire northern tier of North America, inhabiting climatically more variable and extreme environments, with hot and sometimes dry summers, and very cold winters. 
+
+<img src="https://onlinelibrary.wiley.com/cms/asset/581011f0-9172-4d5c-8432-e7a4b34a1a57/jeb13174-fig-0003-m.jpg" width="550">
+  
+  *Meirmans et al. (2017) J. Evol. Biol., 30:2044*
+  
+  Where the two species ranges overlap, hybrids have been observed.  In fact, numerous studies have established that hybridization occurs naturally when the species are sympatric, particularly along the spine of the Rocky Mountains in western North America.
+
+With funding from the National Science Foundation, we are studying hybridization between poplars as a source of evolutionary novelty and adaptive genetic variation.  This is a collaboration between the Keller lab (UVM), the Holliday lab (VA Tech), the Hamilton lab (Penn State U.) and the Fitzpatrick lab (U. Maryland Center for Env. Sci.). 
+
+### Our overarching goals for this project are to use North American *Populus* hybrid zones as a "living laboratory" to address 3 Aims:   {-}
+
+* **Aim 1:** Understand the geographic structure of hybridization and its consequences for genomic diversity
+* **Aim 2:** Elucidate the role of particular genomic regions and their interactions with the environment in explaining hybrid fitness
+* **Aim 3:** Test the fitness effects of introgression through controlled hybrid crosses.
+
+For this module of the course, we will focus on elements from Aims (1) and (2).
+
+
+  
+  ### Sampling Design  {-}
+  * In winter of 2019-2020, we collected dormant stem cuttings from trees growing in natural forest stands spanning **6 transects** chosen to span the extent of overlap between *P. trichocarpa* and *P. balsamifera*  throughout their ranges.  
+<img src="https://github.com/stephenrkeller/Ecological_Genomics/blob/be3be9543f09fc1c0e9c3242806dbfa14dc28169/Fall_2021/tutorials/littleOvr.jpg?raw=true" height="500" align="right">
+  * Additional sampling of (putatively) pure *P. balsamifera* were obtained from the Agroforestry Centre of Agriculture and Agri-Food Canada
+* Total sampling yielded **N=575 samples** (plus 2 duplicates)
+* Cuttings were rooted in the greenhouse, and we extracted genomic DNA from leaf tissue. 
+* **Paired-end 2x150 genomic libraries** were prepared and sequenced on 9 lanes of an Illumina NovaSeq at Duke University. 
+* [**Example sequencing output from lanes 1 - 4**](http://seqweb.gcb.duke.edu/21/04/52dyb1nggrccw47_6826_210409B7.html)
+* **Common gardens containing 3 clonal reps of 542 genotypes** (all among the 574 unique genotypes sequenced) were planted at 3 different sites:  
+  (1) Fargo, ND
+(2) Burlington, VT
+(3) Critz, VA
+
+### What questions can we ask with these datasets? {-}
+
+1.   
+2. 
+3.
+4. 
+5. 
+
+
+  
+  
+### 3. Working with variant call format (VCF) files using [VCFtools](https://vcftools.github.io/man_latest.html) {-}
+  
+  * Prior to our course, the raw fastq data were demultiplexed, visualized for quality, and trimmed for adapter sequences and low quality bases (<Q30)
+* Cleaned reads were mapped to v4.1 of the *P. trichocarpa* reference genome [available here](https://phytozome-next.jgi.doe.gov/info/Ptrichocarpa_v4_1) using the Burrows-Wheeler Alignment [bwa](https://github.com/lh3/bwa) program
+* Sequence alignments were processed to remove PCR duplicates then used to call SNPs using the [GATK haplotype caller genotyping pipeline](https://gatk.broadinstitute.org/hc/en-us/articles/360035890411-Calling-variants-on-cohorts-of-samples-using-the-HaplotypeCaller-in-GVCF-mode)
+* The resulting variants were filtered to remove positions with >10% missingness and minor allele frequencies (MAF) <0.002. 
+* After filtering, missing values were imputed using the [BEAGLE v2.2](http://faculty.washington.edu/browning/beagle/beagle.html) imputation pipeline (Browning et al. 2021)
+* The final variant file was output in [Variant Call Format (VCF)](https://en.wikipedia.org/wiki/Variant_Call_Format)
+
+Well then use this VCF file today and throughput the rest of this module to explore diversity, population structure, and selection in this hybrid zone!
+
+The VCF file can be found on the pbio381 server here:
+`/data/project_data/PopGenomics/poplar_hybrids.vcf.gz`
+
+Lets take a peek inside the vcf file first.  Note, because it's large, we've zipped in (the .gz extension) and would prefer not to unzip it. We can still work on the unzipped version if we use the right tools.
+
+```
+cd /data/project_data/PopGenomics
+
+zcat poplar_hybrids.vcf.gz | head -n 11
+
+##fileformat=VCFv4.2
+##filedate=20210624
+##source="beagle.27Jul16.86a.jar (version 4.1)"
+##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated ALT Allele Frequencies">
+##INFO=<ID=AR2,Number=1,Type=Float,Description="Allelic R-Squared: estimated squared correlation between most probable REF dose and true REF dose">
+##INFO=<ID=DR2,Number=1,Type=Float,Description="Dosage R-Squared: estimated squared correlation between estimated REF dose [P(RA) + 2*P(RR)] and true REF dose">
+##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed marker">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DS,Number=A,Type=Float,Description="estimated ALT dose [P(RA) + P(AA)]">
+##FORMAT=<ID=GP,Number=G,Type=Float,Description="Estimated Genotype Probability">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	201	202  ......
+```
+
+*Note:* `zcat` lets us open a .gz (gzipped) file; we then "pipe" `|` this output from `zcat` to the `head` command and print as many lines as we want `-n #`
+
+The metadata for each sample is located in the same directory as the vcf file.  Lets also take a peek in that file:
+
+`Combined_Transect_Sampling_Data_2020.txt`
+
+We often work with VCF files to calculate nucleotide diversity statistics, and we often want to analyze only part of the entire file. For example, we might want to look at just a certain chromosome or list of positions within the genome. Alternatively, we may want to calculate diversity on a particular subset of our samples.  Using [VCFtools](https://vcftools.github.io/man_latest.html) (and its companion, [BCFtools](https://samtools.github.io/bcftools/bcftools.html#query)) makes this easy. Both are very flexible programs to read, manipulate, and output stats from VCF files.  Get familiar with them -- we'll use them all the time!
+```
+vcftools --gzvcf poplar_hybrids.vcf.gz --maf <float> --chr <chromosome ID> --out ~/myresults/pi_chrX_mafX_winX
+```
+VCFTools also can calculate a genome-wide measure of individual heterozygosity using the `--het` flag. 
+ ```
+vcftools --gzvcf poplar_hybrids.vcf.gz --maf <float> --het --out ~/myresults/het_mafX
+```
+How might this be expected to vary with hybrid status, or along the transects between the parental species ranges?
+We can transfer these files to our laptops using Fetch or WinSCP (or `scp` at the commandline) and bring into R for plotting.
+#### If there's time... {-}
+* We can explore parsing the vcf file for individuals belonging to just certain transects using `grep` followed by the VCFTools option `keep`
+
+
+
+## Population Genomics #2 {-}
+
+  
+  ### Learning Objectives {-}
+  
+1. Familiarize ourselves with working with VCF files
+2. Calculate nucleotide diversity and individual-level heterozygosity
+3. Identify potential hybrids using Admixture analysis
+
+
+  
+  #### 1. From raw fastq sequences to SNP genotypes:  {-}
+  
+  * Prior to our course, the raw fastq data were demultiplexed, visualized for quality, and trimmed for adapter sequences and low quality bases (<Q30)
+* Cleaned reads were mapped to v4.1 of the *P. trichocarpa* reference genome [available here](https://phytozome-next.jgi.doe.gov/info/Ptrichocarpa_v4_1) using the Burrows-Wheeler Alignment [bwa](https://github.com/lh3/bwa) program
+* Sequence alignments were processed to remove PCR duplicates then used to call SNPs using the [GATK haplotype caller genotyping pipeline](https://gatk.broadinstitute.org/hc/en-us/articles/360035890411-Calling-variants-on-cohorts-of-samples-using-the-HaplotypeCaller-in-GVCF-mode)
+* The resulting variants were filtered to remove positions with >10% missingness and minor allele frequencies (MAF) <0.002. 
+* After filtering, missing values were imputed using the [BEAGLE v5.2](http://faculty.washington.edu/browning/beagle/beagle.html) imputation pipeline (Browning et al. 2021)
+* The final variant file was output in [Variant Call Format (VCF)](https://en.wikipedia.org/wiki/Variant_Call_Format)
+
+Well then use this VCF file today and throughput the rest of this module to explore diversity, population structure, and selection in this hybrid zone!
+
+The VCF file can be found on the pbio381 server here:
+`/data/project_data/PopGenomics/poplar_hybrids.vcf.gz`
+
+Lets take a peek inside the vcf file first.  Note, because its large, weve compressed it (the .gz extension) and would prefer not to unzip it. We can still work on the compressed version if we use the right tools.
+
+```
+cd /data/project_data/PopGenomics
+
+zcat poplar_hybrids.vcf.gz | head -n 11
+
+##fileformat=VCFv4.2
+##filedate=20210624
+##source="beagle.27Jul16.86a.jar (version 4.1)"
+##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated ALT Allele Frequencies">
+##INFO=<ID=AR2,Number=1,Type=Float,Description="Allelic R-Squared: estimated squared correlation between most probable REF dose and true REF dose">
+##INFO=<ID=DR2,Number=1,Type=Float,Description="Dosage R-Squared: estimated squared correlation between estimated REF dose [P(RA) + 2*P(RR)] and true REF dose">
+##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed marker">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DS,Number=A,Type=Float,Description="estimated ALT dose [P(RA) + P(AA)]">
+##FORMAT=<ID=GP,Number=G,Type=Float,Description="Estimated Genotype Probability">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	201	202  ......
+```
+
+*Note:* `zcat` lets us open a .gz (gzipped) file; we then "pipe" `|` this output from `zcat` to the `head` command and print as many lines as we want `-n #`
+
+The metadata for each sample is located in the same directory as the vcf file.  Lets also take a peek in that file:
+
+`Combined_Transect_Sampling_Data_2020.txt`
+
+
+### 2. Working with VCF files using VCFtools {-}
+
+We often work with VCF files to calculate nucleotide diversity statistics, and we often want to analyze only part of the entire file. For example, we might want to look at just a certain chromosome or list of positions within the genome. Alternatively, we may want to calculate diversity on a particular subset of our samples.  Using [VCFtools](https://vcftools.github.io/man_latest.html) (and its companion, [BCFtools](https://samtools.github.io/bcftools/bcftools.html#query)) makes this easy. Both are very flexible programs to read, manipulate, and output stats from VCF files.  Get familiar with them -- we'll use them all the time!
+`vcftools --gzvcf poplar_hybrids.vcf.gz <OPTIONS>`
+* How many SNPs (and samples) are there?
+* We can see if many of these are rare variants at low frequency by including a minor allele frequency filter `--maf <float>`...what value should we try?
+* What if we just wanted to look at the SNPs for a particular chromosome?  `--chr <chromosome ID>`
+
+One of the classic estimators nucleotide diversity in genomic data is ["pi" -- the average number of pairwise differences between DNA sequences](https://en.wikipedia.org/wiki/Nucleotide_diversity). We can use VCFtools to calculate pi in windows along the chromosome of a specified length using the `windowed-pi` flag.  We can set a window of 50 kb. Well also want to add the ``--out ~/path/outputname` flag to redirect and name the output to our home directory:
+
+```
+vcftools --gzvcf poplar_hybrids.vcf.gz \
+--chr <chromosome ID> \
+--maf <float> \
+--windowed-pi 50000 \
+--out ~/myresults/pi_chrX_mafX_win50K
+```
+Since were interested in hybrids, lets also use VCFtools to calculate a genome-wide measure of individual heterozygosity using the `--het` flag. 
+
+```
+vcftools --gzvcf poplar_hybrids.vcf.gz \
+--maf <float> \
+--het \
+--out ~/myresults/het_mafX
+```
+How might this be expected to vary with hybrid status, or along the transects between the parental species ranges?
+
+We can transfer these files to our laptops using Fetch or WinSCP (or `scp` at the commandline) and bring into R for plotting.
+
+```
+setwd()
+
+pi <- read.table("filename.windowed.pi",sep="\t",header=T)
+
+plot(pi$BIN_START,pi$PI,type="l",col="blue")
+
+### You can use xlim=c(,) to zoom in on certain sections of chromosome  {-}
+
+het <- read.table("poplar_het.het", sep="\t",header=T)
+
+meta <- read.table("Combined_Transect_Sampling_Data_2020.txt", sep="\t",header=T)
+
+het2 <- merge(het,meta,by.x="INDV",by.y="ID")
+het2$rel_heterozygosity=1-((het2$O.HOM.-het2$E.HOM.)/het2$E.HOM.)
+
+library(ggplot2)
+
+ggplot(het2, aes(x=Transect, y=rel_heterozygosity, fill=Transect)) +
+  geom_dotplot(binaxis='y', binwidth=0.005, stackdir='center')
+
+ggplot(het2, aes(x=Longitude, y=Latitude, color=rel_heterozygosity)) +
+  geom_point(size=3, shape=1)
+
+```
+
+### 3. Identifying ancestry with Admixture analysis {-}
+
+As weve seen from papers weve read in this class (and probably others), Admxiture analyses try to estimate what fraction of an individuals ancestry dervies from one or more populations that vary in allele frequencies. These methods do so by taking a user-defined number of clusters (K) and attempting to allocate individuals proportional ancestry to each cluster so as to **maximize Hardy-Weinberg and linkage equilibrium**.  
+Well use the Software [ADMIXTURE](https://dalexander.github.io/admixture/publications.html) for this, based on the method published by [Alexander et al. (2009)](https://genome.cshlp.org/content/19/9/1655.full).  It has a mere ~4500 citations... .  ADMIXTURE is fast (much faster than *Structure*). We can test varying levels of K, and use cross-validation to look for which K levels have the most support.
+
+Recall that linkage disequilibrium (LD) due to physical linkage along chromosomes can bias the interpretation of many popgen analyses, and thats definitely true for ADMIXTURE (which assumes no physical LD).  So, well need to filter out SNPs  that show LD before running ADMIXTURE. 
+
+**Heres our approach (Working in groups of 2):**
+* **Filter for `maf` using VCFtools and export a new vcf file using the `--recode` option**  (STEVE WILL DO THIS ONCE FOR EVERYONE)
+* **Estimate which SNP sites show no LD across the genome using [Plink v2.0](https://www.cog-genomics.org/plink/2.0/)**
+```
+# Set the path and filename to the vcf file filtered for minor allele frequency (maf)
+VCF=/data/project_data/PopGenomics/poplar_hybrids.maf05.vcf.gz
+cd ~/myresults
+plink2 --vcf $VCF \
+--threads 3 \
+--double-id \
+--allow-extra-chr \
+--set-missing-var-ids @:# \
+--indep-pairwise 50 10 0.1 \ 
+--out poplar_hybrids_noLD
+# The filename ending with "prune.in" contains the SNP IDs that are in approx linkage equilibrium
+ ```
+* **Use Plink2.0 to convert from VCF to ADMIXTURE format and subset for no LD SNPs**
+```
+mkdir Admixture
+FILE=poplar_hybrids
+plink2 --vcf $VCF \
+--threads 3 \
+--allow-extra-chr \
+--make-bed \
+--out Admixture/$FILE 
+plink2 --bfile Admixture/$FILE \
+--threads 3 \
+--allow-extra-chr \
+--set-missing-var-ids @:# \
+--extract poplar_hybrids_noLD.prune.in \
+--make-bed \
+--out Admixture/$FILE.LDpruned 
+# Replace column 1 Chr #'s with 0's, since ADMIXTURE doesn't like them
+cd Admixture
+FILE2=poplar_hybrids.LDpruned
+awk '{$1=0;print $0}' $FILE2.bim > $FILE2.bim.tmp
+mv $FILE2.bim.tmp $FILE2.bim
+ ```
+* **Run ADMIXTURE!** Well use cross-validation (default = 5-fold) and customize our level of K per group. j = number of threads
+
+```
+# Run Admixture 
+
+K=<your value>
+
+admixture -j3 --cv $FILE2.bed $K >log${K}.out
+
+```
+
+If you wanted to run multiple values of K in a loop **(not recommended for today)**, you could do:
+
+```
+for K in {2..5}
+do
+ admixture -j3 --cv $FILE2.bed $K >log${K}.out
+done
+```
+Once youre analysis is done running, you can look through the log.out file to get the CV error, or simply use `grep "CV" log.out` to search for the line containing the search term in "" and print it to your screen.
+ * **Plot individual ancestries on the map in R**
+Download your file ending in ".Q" which contains the ancestry coefficients to your laptop. Youll also need to download the `Combined_Transect_Sampling_Data_2020.txt` metadata file (available in /data/project_data/PopGenomics/). Once you have the files downloaded, open up R.
+
+```
+library(maps)  # If you don't have this library, you'll need to run install.packages("maps") first
+library(plotrix) # If you don't have this library, you'll need to run install.packages("plotrix") first
+
+setwd()  #set the path to where your downloaded files are on your laptop
+
+meta <- read.table("Combined_Transect_Sampling_Data_2020.txt", sep="\t",header=T)  
+
+Qscores <- read.table("yourfilename.Q", sep=" ",header=F)
+names(Qscores) <- c("K1","K2", ...)  # Customize to your level of K!
+
+tiff("Admix.tiff", width = 10, height = 7, units = "in",
+     res = 300)
+map("world",xlim=c(-160,-100),ylim=c(40,70),fill=T, col="lightgrey")
+title("Admixture K=X")
+map.axes(cex.axis=1.5)
+for(i in 1:nrow(meta)){
+  floating.pie(meta$Longitude[i], meta$Latitude[i], 
+               c(Qscores$K1[i],Qscores5$K2[i],...),
+               col=c("yellow","green",...),
+               radius=0.5)
+}
+
+# Customize the above to your level of K wherever you see the ellipses (...)!
+
+dev.off()
+
+# File will get automatically saved as a Tiff image within your working directory.  Open it up and take a look!
+```
+
+
+## Population Genomics #3 {-}
+### Learning Objectives {-}
+  
+  1. Finish identifying potential hybrids using Admixture analysis (make maps)
+2. Relate degree of admixture to genome-wide heterozygosity
+
+
+  
+  ### 1. Here's where we left off last week: {-}
+  
+  * **Run ADMIXTURE!** Well use cross-validation (default = 5-fold) and customize our level of K per group. j = number of threads
+
+```
+# Run Admixture 
+
+K=<your value>
+
+admixture -j3 --cv $FILE2.bed $K >log${K}.out
+
+```
+
+Once youre analysis is done running, you can look through the log.out file to get the CV error, or simply use `grep "CV" log.out` to search for the line containing the search term in "" and print it to your screen.
+
+* **Plot individual ancestries on the map in R**
+  
+  Download your file ending in ".Q" which contains the ancestry coefficients to your laptop. Youll also need to download the metadata on the samples:
+
+`/data/project_data/PopGenomics/Combined_Transect_Sampling_Data_2020.txt` 
+
+Once you have the files downloaded, open up R.
+
+```
+library(maps)  # If you don't have this library, you'll need to run install.packages("maps") first
+library(plotrix) # If you don't have this library, you'll need to run install.packages("plotrix") first
+
+setwd()  #set the path to where your downloaded files are on your laptop
+
+meta <- read.table("Combined_Transect_Sampling_Data_2020.txt", sep="\t",header=T)  
+
+Qscores <- read.table("yourfilename.Q", sep=" ",header=F)
+names(Qscores) <- c("K1","K2", ...)  # Customize to your level of K!
+
+tiff("Admix.tiff", width = 10, height = 7, units = "in",
+     res = 300)
+map("world",xlim=c(-160,-100),ylim=c(40,70),fill=T, col="lightgrey")
+
+title("Admixture K=X") # Change for your value of K
+map.axes(cex.axis=1.5)
+for(i in 1:nrow(meta)){
+  floating.pie(meta$Longitude[i], meta$Latitude[i], 
+               c(Qscores$K1[i],Qscores$K2[i],...),
+               col=c("yellow","green",...),
+               radius=0.5)
+}
+
+# Customize the above to your level of K wherever you see the ellipses (...)!
+
+dev.off()
+
+# Don't forget to save your R script!
+  
+  ```
+
+The image file will get automatically saved as a Tiff image within your working directory.  
+
+Open it up and take a look, then post to the EG Slack under #results so we can discuss together
+
+One prediction we can make is that heterozygosity across the genome should increase under admixture, as loci with divergent allele frequencies in different lineages are combined. When this occurs at loci that harbor mildly deleterious alleles with divergent frequencies between lineages, the resulting complementation is one explanation for the genetic basis of hybrid vigor or [heterosis](https://en.wikipedia.org/wiki/Heterosis). 
+
+We can test if admixture between lineages is increasing heterozygosity genome-wide by correlating (1) the extent of an individuals ancestry diversity with (2) individual-level heterozygosity across the genome.  We have (1) already; now lets get (2)
+
+Well go back to the server and use VCFtools to calculate genome-wide individual heterozygosity using the `--het` flag. Well use our vcf file filtered for maf=0.05. Lets discuss why it makes sense NOT to thin for LD here...
+
+```
+vcftools --gzvcf /data/project_data/PopGenomics/poplar_hybrids.maf05.vcf.gz \
+--het \
+--out ~/myresults/het_maf05
+```
+
+**For Discussion:**  What value of K should we use from our ADMIXTURE analysis? Lets agree as a class, and one of us will place the corresponding .Q file in:
+  
+  `/data/project_data/PopGenomics/shared`
+
+Use Fetch or WinSCP (or `scp` at the commandline) to transfer:
+  
+  * The .Q file for the level of K weve agreed upon
+* Your het_maf05.het file
+
+Once on your laptop, we can bring these data into R for plotting. Lets continue to add to the previous script we developed for the ADMIXTURE analysis.
+
+
+```
+library(ggplot2)
+
+Qscores_new <- read.table("newfilename.Q", sep=" ",header=F) # Rename to the new file!
+names(Qscores_new) <- c("K1","K2", ...)  # Customize to the level of K!
+
+# Calculate Shannon Diversity across the K different Q-scores per individual
+
+K=X  # Change X to the level of K we're investigating
+
+tmp=numeric()
+
+for(i in 1:nrow(Qscores_new)){
+  for(j in 1:K){
+    tmp[j] = Qscores_new[i,j]*log(Qscores_new[i,j])
+  }
+  Qscores_new$ShDiv[i] = -1*sum(tmp)
+}
+```
+
+Now lets bring in the heterozygosity data:
+
+```
+het <- read.table("het_maf05.het", sep="\t",header=T)
+
+str(het) # What's in this dataframe?  
+  ```
+**What do these values mean?**
+  
+  * INDV = Individual sample ID
+* O.HOM. = Number of sites genome-wide that were observed to be homozygous (either 0|0 or 1|1)
+* E.HOM. = Number of sites genome-wide predicted to be homozygous based on Hardy-Weinberg expectations (=1-2pq across all loci)
+* N_SITES = Number of SNPs included in the calculation
+* F = [Inbreeding coefficient (=1-obsHet/expHet)](https://en.wikipedia.org/wiki/F-statistics)
+
+Well use F as our measure of how heterozygous individuals are relative to expectations if *P. trichocarpa* and *P. balsamifera* were randomly mating with each other (F=0)
+
+```
+# Combine the meta data, heterozygosity, and admixture data
+
+het2 <- cbind(meta,het,Qscores_new) #bind the het results with the meta data
+
+# How does F vary within each transect?
+
+ggplot(het2, aes(x=Transect, y=F, color=Transect)) +
+  geom_dotplot(binaxis='y', binwidth=0.01, stackdir='center')
+
+```
+
+Looks like transects vary in their extent of heterozygosity -- lets relate this to ancestry diversity at the individual-level.  To do this, well calculate an index of how mixed an individuals genome is for ancestry fraction using the [Shannon Diversity index](https://en.wikipedia.org/wiki/Diversity_index#Shannon_index).
+```
+# Plot admixture diversity spatially
+ggplot(het2, aes(x=Longitude, y=Latitude, color=ShDiv)) +
+geom_point(size=4, shape=20)
+# And finally, are more admixed individuals more heterozygous in their genomes?
+ggplot(het2, aes(x=F, y=ShDiv, color=Transect)) +
+cor.test(het2$F,het2$ShDiv)
+ ```
+ 
+ 
+## Population Genomics #4 {-}
+ 
+ 
+#### Learning Objectives {-}
+  
+  1. Test for signatures of selective sweeps in the poplar hybrid zone
+2. Estimate and visualize nucleotide diversity and divergence (Fst) along chromosomes
+3. Investigate interesting candidate regions using the available Poplar genome annotation
+
+### 1. Natural selection leaves signatures in the genome {-}
+  
+  Weve discussed previously in class how genomic data can be used to investigate regions where selection may have acted along chromosomes.  There are many different approaches to identify such regions, and in part they depend on...
+
+1. The form of selection we want to investigate (e.g., directional selection, balancing selection, local adaptation, background selection)
+2. The type of genetic data available (whole-genomes, GBS/RAD, single genes, ...)
+3. The design and biological scale of sampling (individuals, populations, species)
+
+Obviously, the question of interest should drive all of these considerations, and the most powerful studies match a question with (1), and then design (2) and (3) to get at the answer.
+
+For this tutorial, were going to ask the questions, "What genomic regions experienced recent strong selection in poplar, and do they show evidence of reduced divergence between the species, consistent with introgression?"
+
+### Detecting "selective sweeps" (a.k.a., hitch-hiking selection) in genomic data {-}
+
+When a new or existing variant comes under positive selection, its frequency will increase in the population at a rate that is proportional to its effect on fitness. New beneficial mutations tend to occur on a single haplotype background initially. As a result, very strong selection on new mutations will also tend to increase the frequency nearby linked polymorphisms, even if they are neutral themselves.  The resulting "hitch-hiking" effect has several important consequences: (1) it will decrease the overall nucleotide diversity at the selected locus and linked sites nearby, and (2) it will cause a temporary increase in linkage disequilibrium until recombination has time to break up the association between the target of selection and linked sites.
+
+The characteristic elimination of diversity near a target of selection is known as a **selective sweep**.
+
+<img src="https://febs.onlinelibrary.wiley.com/cms/asset/1af28f43-dd1f-4194-8c13-c908046a8862/feb213447-fig-0001-m.jpg" width="700">
+
+We might expect selective sweeps to occur independently in different populations (or species). If the fitness benefits of the variant are conditionally dependent on the local environment, then we might see a signature of elevated divergence (Fst) when we compare allele frequencies near the selected region between different populations (species). Alternatively, if the fitness effects are more broadly beneficial (less context dependence), then we might expect to see a positively selected site spread from one population (species) to another when their is gene flow (hybridization).  
+
+*What predictions might we make for our poplar hybrid zone?* 
+
+#### On to the nuts and bolts... {-}
+
+Well test for selective sweeps using the program [RAiSD](https://github.com/alachins/raisd), or "Raised Accuracy in Sweep Detection". The original paper is [described here](https://www.nature.com/articles/s42003-018-0085-8).
+
+RAiSD integrates the signatures of a selective sweep (namely, reduced polymorphism, and elevated LD) into a single test statistic, 'u' (pronounces "mu").  It is *very* fast computationally, which makes it ideal for genome-scale datasets, and has very good statistical properties (low false positive rate, robust to model mis-specification) compared to related methods for detecting selective sweeps.
+
+Heres our general workflow for using RAiSD to detect sweeps:
+
+1. Divide and conquer the analysis by chromosome. Each person will pick one chromosome to investigate (I'll do any that don't get picked)
+2. Use VCFtools to parse your maf-filtered vcf file by chromosome
+3. Use `grep` to grab the centromere coordinates for your chromosome
+4. Run RAiSD for your chromosome, masking the centromere
+5. Compare the selective sweep signals to nucleotide diversity and Fst, using VCFtools to calculate the latter for our chromosome
+6. Bring the results into R and make beautiful plots!
+
+#### Step 1 -- pick a chromosome, any chromosome (there are 19 in poplar) {-}
+
+#### Step 2: Generate your parsed vcf file: {-}
+
+```
+# Rename value in <> to your chromosome number! Include the zero only if your chromosome # is <10
+
+myChr=<Chr0X>  
+
+# myChr=Chr02  # I used Chr02 for my test run...
+
+
+cd /data/project_data/PopGenomics
+
+# Run VCFtools to subset the big vcf file for just your chromosome
+
+vcftools --gzvcf poplar_hybrids.maf05.vcf.gz \
+--chr $myChr \
+--out shared/$myChr \
+--recode
+```
+#### Step 3: Grab the coordinates of the centromere region {-}
+
+I obtained the centromeric locations for each of poplars 19 chromosomes from this awesome paper: [Weighill et al. (2019)](https://www.frontiersin.org/articles/10.3389/fgene.2019.00487/full)
+
+I downloaded their Table S1 and have it available on the server:
+  
+  ```
+# Extract the centromere coordinates for your chromosome so you can exclude those regions from your sweep analysis
+
+grep $myChr poplar_centromeres.txt > shared/${myChr}_centromere.txt # grab the centromere location for your chromosome
+
+cd shared/
+  
+  mkdir ${myChr}_sweeps  # make a new directory for your chromosome analyses
+
+mv *${myChr}* ${myChr}_sweeps # clean up the space by moving all files into your the directory you just made
+
+cd ${myChr}_sweeps
+
+```
+
+#### Step 4 -- Run RAiSD to detect selective sweeps! {-}
+
+```
+# Test for selective sweeps
+
+RAiSD -n $myChr \
+-I ${myChr}.recode.vcf \
+-f -t -R -P -D -A 0.99 \
+-X ${myChr}_centromere.txt
+
+```
+
+#### Step 5.1 -- Estimate nucleotide diversity using 50 kb sliding windows {-}
+
+VCFtools can get the job done...
+
+```
+# Estimate nucleotide diversity (pi) in sliding windows of 50kb
+
+vcftools --vcf ${myChr}.recode.vcf \
+--chr $myChr \
+--window-pi 50000 \
+--out $myChr
+```
+
+#### Step 5.2:  Calculate Fst between species using 50kb sliding windows {-}
+
+For estimating Fst, we need to define groups!  For this analysis, were going to define groups based on the K=5 Admixture run:
+
+<img src="https://github.com/stephenrkeller/Ecological_Genomics/blob/c36553261acf89249304492fd47c091487d223a8/Fall_2021/tutorials/Admix_K5.jpg?raw=true">
+
+Here we see a clearly identifiable P. balsamifera group (the 4th (orange) group in the K=5 analysis), and the other groups which represent P. trichocarpa and different subpopulations and admixed fractions.  We can use the K=5 Q-scores to parse individuals into 1 of 2 groups based on the fraction of balsamifera ancestry.  
+
+To do this, well use R, but rather than waste time transferring to your laptops, and then back to the server again, well just run an interacive session of R right on the server.  It may look a little different than what youre used to, but its still R under the hood!
+
+```
+# First, need to subset the metadata file for just those individuals with balsamifera ancestry
+# We can do this using an interactive R session at the commandline. 
+# An alternative is to put these R commands in a script, save it with the ".r" extension, 
+# and at the commandline type "Rscript myscript.r"
+
+R # Opens an interactive R session within Unix...
+Qscores <- read.table("../poplar_hybrids.LDpruned.5.Q", sep=" ",header=F)
+names(Qscores) = c("K1","K2","K3","K4","K5")
+
+meta <- read.table("../../Combined_Transect_Sampling_Data_2020.txt",sep="\t",header=T)
+
+merged <- cbind(meta,Qscores)
+str(merged)
+
+Bals_Inds <- merged[which(merged$K4>0.5),1]  
+length(Bals_Inds) # Should net you 188 individuals
+
+Tricho_Inds <- merged[which(merged$K4<=0.5),1]
+length(Tricho_Inds) # Should net you 388 individuals
+
+# Write out your Bals and Tricho lists as tab-delimited text files
+write.table(Bals_Inds, "Bals_Inds.txt", quote=F, row.names=F, col.names=F)
+
+write.table(Tricho_Inds, "Tricho_Inds.txt", quote=F, row.names=F, col.names=F)
+
+quit()
+
+# When prompted with: "Save workspace image? [y/n/c]"  choose: n
+```
+
+Then once youve got your list of sample names for each species, youre ready to run the Fst analysis in VCFtools:
+
+```
+# Calculate Fst between Balsam and Tricho using sliding windows of 50kb
+
+vcftools --vcf ${myChr}.recode.vcf \
+--weir-fst-pop Bals_Inds.txt \
+--weir-fst-pop Tricho_Inds.txt \
+--fst-window-size 50000 \
+--out Bals_Tricho_All
+
+```
+
+#### Step 6: Transfer files to your laptops and plot in R! {-}
+
+Use Fetch, Winscp, or `scp` at the commandline to transfer all the files **EXCEPT THE VCF FILE** to your laptop.  
+
+Heres some R code to get you started.  Youll probably want to customize it.  At the least, make sure you change the title of the ggplot to reflect your chromosome number.
+
+```
+library(ggplot2)
+library(gridExtra) # If needed, install.packages("gridExtra")
+
+setwd("~/OneDrive - University of Vermont/PBIO381/Fall2021/Module3_PopLandscapeGenomics/Selection/")
+
+pi <- read.table("Chr02.windowed.pi",sep="\t", header=T)
+str(pi)
+
+fst <- read.table("Bals_Tricho_All.windowed.weir.fst", sep="\t",header=T)
+str(fst)
+
+cent <- read.table("Chr02_centromere.txt", sep="\t",header=F)
+centromere = mean(c(cent$V2,cent$V3))
+
+raisd <- read.table("RAiSD_Report.Chr02.Chr02", sep="\t",header=F)
+str(raisd)
+
+p1 <- ggplot(pi,aes(x=BIN_START,y=PI/mean(PI))) +
+      geom_line(size=0.25, color="blue") + 
+      geom_point(aes(x=centromere,y=1, size=100), show.legend=F) +
+      xlim(0,max(pi$BIN_START)) +
+      ggtitle("Chomosome 2: Nucleotide diversity and Fst in 10kb sliding windows") +
+      xlab("") +
+      ylab("Scaled nucleotide diversity")
+
+p2 <- ggplot(fst,aes(x=BIN_START,y=MEAN_FST/mean(MEAN_FST))) +
+        geom_line(size=0.25, color="red") +
+        geom_point(aes(x=centromere,y=1, size=100), show.legend=F) +
+        xlim(0,max(fst$BIN_START)) + 
+        ylab("Scaled Fst")
+
+p3 <- ggplot(raisd,aes(x=V1,y=V7/mean(V7))) +
+      geom_point(size=0.25, color="black") +
+      xlim(0,max(raisd$V3)) + 
+      xlab("Position along chromosome (bp)") +
+      ylab("RAiSD u-stat")
+
+grid.arrange(p1, p2, p3, nrow = 3)
+
+```
+
+### Post-analysis tinkering  {-}
+
+* Try adjusting your ggplot xlim settings to zero in on interested regions and get coordinates
+* use the R function `quantile` to determine regions in the upper nth percentile of the distributions of u-stat, nucleotide diversity, or Fst. Example: `quantile(pi$PI, 0.01)` or `quantile(fst$MEAN_FST, 0.01)` to get the 1 % tails of interest for each distribution
+* Use the Phytozome [JBrowse for Populus trichocarpa](https://phytozome-next.jgi.doe.gov/jbrowse/index.html?data=genomes/Ptrichocarpa_v4_1) to look at what gene models are located within the region
+
+
+## Population Genomics #5 {-}
+
+### Learning Objectives {-}
+  
+  1. Evaluate the overlap between chromosomal regions with evidence of selective sweeps and levels of genetic divergence (Fst) between species
+2. Learn to work with Genomic Ranges and extract genome annotation
+3. Test for functional enrichment of candidate genes
+
+### Reviewing where we left off last time: {-}
+
+We (hopefully) have produced the following for each of our chromosomes:
+  
+  * RAiSD tests for selective sweeps
+* Fst in sliding windows of 50 kb (*oops -- need to update the ggplot titles!*)
+* Nucleotide diversity in sliding windows of 50 kb (*ditto!*)
+
+
+<img src="https://github.com/stephenrkeller/Ecological_Genomics/blob/a44611952a40b570ff882f5c30225846729a2896/Fall_2021/tutorials/Chr02_sweeps.jpeg?raw=true">
+  
+  We zoomed in on a couple of interesting regions that showed evidence for selective sweeps (based on the Manhattan plots of the RAiSD u-stat). For example, heres Chr02 zoomed in on that first RAiSD peak:
+
+<img src="https://github.com/stephenrkeller/Ecological_Genomics/blob/244f32d465c9eb61976bf6da6c52102edbe8b6c2/Fall_2021/tutorials/Chr02_sweeps_zoomed.jpeg?raw=true">
+
+Right now were just eye-balling it. How can we get a test for association between RAiSD sweep regions and regions of low Fst? 
+  
+  #### Enter the GenomicRanges() R package {-}
+  
+  GenomicsRanges is a very versatile R package for defining feature sets in genomic data (defined by ranges, in bp) and looking for overlaps between different sets.
+
+Note, you'll need to uncomment the first few lines if you don't have GenomicRanges and GenomicFeatures installed already.
+```
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# BiocManager::install("GenomicRanges")
+# BiocManager::install("GenomicFeatures")
+
+library(GenomicRanges)
+library(GenomicFeatures)
+
+```
+Heres our workflow:
+
+1. Bring in the Fst outputs we generated last week and identify windows with low Fst
+2. Bring in the RAiSD outputs and identify very high values of the u-stat (candidates for selection)
+3. Use GenomicRanges() to find their overlaps
+4. Test for significance by randomizing the values of meanFst among the windows many times, and estimate how much overlap there is in the randomized distribution
+
+#### Step 1: Import Fst and threshold for low values {-}
+
+```
+####### Randomization test for Fst and sweep outliers {-}
+
+setwd("~/OneDrive - University of Vermont/PBIO381/Fall2021/Module3_PopLandscapeGenomics/") # Customize to where your Fst, Pi, and RAiSD files are located on your laptop
+
+fst <- read.table("Selection/Bals_Tricho_All.windowed.weir.fst", sep="\t",header=T) # Import the Fst results
+
+cent <- read.table("Selection/Chr02_centromere.txt", sep="\t",header=F) # Import the centromere coordinates
+
+fst <- fst[-which(fst$BIN_START>cent$V2 & fst$BIN_END<cent$V3),] # Mask Fst windows in the centromere region
+
+
+# Calculate Genomic Ranges for outlier bins
+
+CHR="Chr02"  # Customize to your chromosome.  Make sure syntax is exact!
+
+# Define the genomic ranges of the Fst bins
+fstGR <- GRanges(CHR,IRanges(fst[,"BIN_START"],fst[,"BIN_END"]))
+
+# Define what should be a "low" value of Fst.  Here, we'll try the lowest 10% of windows that don't incude the centromere.  Can play with this if you want (choosing the last value in the quantile function call). 
+fstThreshold = quantile(fst$MEAN_FST,0.1)
+
+# Call outliers (=1) or non-outliers (=2) based on fst Threshold
+fstGR$outlier <- ifelse(fst$MEAN_FST<fstThreshold,1,2)
+
+# Grab just the outlier Fst windows
+fstCand <- subset(fstGR, outlier==1)
+
+```
+### Step 2: Import RAiSD and threshold for candidate sweeps {-}
+
+```
+raisd <- read.table(paste0("Selection/RAiSD_Report.",CHR,".",CHR), sep="\t",header=F) # Import the RAiSD results
+
+# Define RAiSD genomic ranges based on first and last SNP within the RAiSD windows of 50 SNPs each.   How deos this relate to the Fst window size?
+raisdGR <- GRanges(CHR,IRanges(raisd[,2],raisd[,3]))
+
+# Define RAiSD outliers, based on the upper 1% of SNPs
+raisdThreshold = quantile(raisd$V7,0.99)
+  
+raisdGR$outlier <- ifelse(raisd$V7>raisdThreshold,"outlier","non")
+
+```
+
+Since the RAiSD results are 1 per SNP, and adjacent SNPs have highly similar values (because of linkage), we want to merge runs of adjacent outlier positions together into outlier windows.
+
+```
+raisdGR_out <- unlist(reduce(split(raisdGR, ~outlier)))
+raisdGR_out$outlier <- names(raisdGR_out)
+raisdCand <- subset(raisdGR_out, outlier=="outlier")
+
+```
+### Step 3: Find the overlaps betweeen low Fst windows and high RAiSD windows {-}
+
+```
+# Use GenomicRanges to pull out the RAiSD outlier windows that overlap the lowest Fst windows
+overlap <- subsetByOverlaps(raisdCand, fstCand)
+
+length(overlap) # Number of the RAiSD sweep candidate loci that overlap with the lowest n% of Fst windows
+
+```
+How many windows overlap between RAiSD and Fst?
+
+*How much is a lot?  How few is a little?*
+
+### Step 4: Test for significance of observed overlapping bins by randomizing the Fst values and recalculting the overlap {-}
+
+```
+# A little code I wrote to permute Fst values randomly among the 50kb windows, and re-calculate the overlap with the RAiSD outliers. 
+# Can set number of permutation replicates (NumPerm)
+# 1000 permutations seems to give a decent randomized distribution
+
+NumPerm=1000
+
+Perm = NA
+for(i in 1:NumPerm){
+  FstSamp = cbind(fst[,c(2,3)], fst[sample(nrow(fst)),6])
+  names(FstSamp) = c("Start", "Stop", "FST")
+  FstRand = FstSamp[which(FstSamp[3]<fstThreshold),]  
+  FstRand_ranges <- GRanges(seqnames=CHR, ranges=IRanges(FstRand[,1],FstRand[,2]))
+  FstRand_ranges_red <- reduce(FstRand_ranges)
+  Perm[i] = sum(countOverlaps(raisdCand, FstRand_ranges_red))
+}
+
+# Plot the random distribution with a blue line marking the observed overlap
+hist(Perm, col="gray", main="Randomization test", xlab="Overlapping windows of Fst and RAiSD outliers")
+abline(v=length(overlap), col="blue", lwd=3)
+
+# Calculate the p-pvalue based on the rank of the observed value in the randomized distribution.
+# Note the 1-tailed test here (alpha = 0.05)
+
+p_value = 1-ecdf(Perm)(length(overlap))
+p_value
+
+```
+
+#### Now let's grab the poplar genome annotation to figure out which genes are in the overlapping lowFst/highRAiSD windows  {-}
+
+For this, well need to download from the server a copy of the poplar GFF file. The GFF format is the standard for storing information on genomic feature intervals, like the start and stop of transcripts, exons, introns, UTRs, etc.
+
+Download a copy of the file from the server using Fetch, WinSCP, or `scp` at the commandline:
+
+`/data/project_data/PopGenomics/Annotation/Ptrichocarpa_533_v4.1.gene.gff3.gz`
+
+Once its on your laptop, well need to import it to R and create a transcript database (txdb) using the `makeTxDbFromGFF` function.
+
+```
+# Import the GFF annotation file and make a transcript database
+txdb <- makeTxDbFromGFF("Annotation/Ptrichocarpa_533_v4.1.gene.gff3.gz", format="gff3")
+
+txdb
+
+# How many chromosomes are present?
+head(seqlevels(txdb))
+
+# Subset the database for just your chromosome of interest
+seqlevels(txdb) <- CHR # subset for just your chromosome
+
+# Reduce the transcript database to just the non-redundant gene names, instead of multiple entries for all the variant transcript types per gene
+genes <- unlist(reduce(transcriptsBy(txdb, by="gene"))) 
+genes$geneID <- names(genes)
+
+```
+
+Now well use GenomicRanges() just like before to find the genes that overlap in the intervals of our candidate regions of overlapping lowFst/highRAiSD
+
+```
+candGenes <- subsetByOverlaps(genes, overlap)
+
+write.table(candGenes$geneID, paste0("Annotation/candGenes",CHR,".txt"), quote=F, col.names=F, row.names=F, sep=",")
+
+```
+
+### Functional enrichment analysis {-}
+
+Now lets see if there is evidence of functional enrichment for these sets of genes in our candidate regions for selection. 
+
+Theres several (many!) ways of approaching this problem, but for today well try the user-friendly Fishers Exact Test available at [Popgenie.org](https://popgenie.org).  
+
+Youll need to open up your text file of candidate genes that you exported above, copy the list, and then make a new "active" gene list on Popgenie.  
+
+Once youve got your candidate genes in a new list on Popgenie, go to `Analysis Tools > Enrichment`
+
+## Population Genomics #6 {-}
+
+### Learning Objectives {-}
+1. Estimate local ancestry along chromosomes
+2. Build additional expertise with bash scripting (file parsing and loops) 
+3. Position ourselves for testing adaptive introgression (next week)!
+  
+### Local Ancestry Inference (LAI) {-}
+  
+  Weve talked about how admixture results in mixtures of genetic ancestry from different source populations. When we ran *ADMIXTURE* previously, this estimated the fractional ancestry for each individual across the *entire* genome, but this analysis doesnt focus down to how ancestry varies along the chromosome.  
+
+**Thats the focus of Local Ancestry Inference (LAI).**
+
+LAI methods estimate the source of ancestry *for each locus* along the chromosome for admixed individuals. Because of linkage, nearby positions along chromosomes often derive ancestry from the same source population. When recombination occurs between homologs in admixed individuals, then chromosomes become mosaics of genetic ancestry, with 0, 1, or 2 allele copies (in diploids) derived from a given source population. 
+
+
+
+<img src="https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/mbe/35/9/10.1093_molbev_msy126/1/msy126f1.jpeg?Expires=1638923187&Signature=UmBQCxkwXSxYHDmGUWOUt-ADM2DrIqrBI6gVQLjj930FA6hgt6L4oU-KJDU-Nh5FYmmnguMsKwgMz9j-sNtzt~KcqfH2QZsp0G9ES6uNQ-WhQQZ790TUkAKIZwOBU0Es18YunYQ-lpXqKCkmewbUc2uc23GUBSHHumEUYy2DdwZqZEgHDKCuvIdD699FMBB2WBbLyrtT7OhkZk9Mzh1iS9YhwaY4cJK0x7NgAG8Xk6bfKr-HdGBgfOM~0bsBteOeau3ltpYQ-0VuoY~59LOUdwFy362q8P6ReMsXhSDgrzgZbVRVmzvN6LnOpPxOGI9Fq8a~c32wKiv5TPTC7juEIg__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA">
+**From Dias-Alves et al. 2018 -- Figure 1:** *Example of local ancestry inference for four simulated Populus individuals resulting from admixture between two Populus species, which are Populus trichocarpa and Populus balsamifera (Suarez-Gonzalez et al. 2016). For an admixed individual, local ancestry at a given locus corresponds to the number of copies that has been inherited from the species P. trichocarpa. LAI software require haplotypes from putative source populations and process haplotypes or genotypes from admixed population to return local ancestry of admixed individuals.*
+
+
+
+LAI is also sometimes referred to "chromosome painting", and has inspired some really cool artistic interpretations! [Check this one out by an art professor at Reed College](https://www.reed.edu/art/ondrizek/)
+
+
+#### LAI can be used to study many interesting questions, including: {-}
+
+* From which population or species did a specific gene or genomic region derive its ancestry along the chromosome?
+* What regions of the genome are especially permeable to introgression, and hence may be candidates for adaptive introgression?
+* Which genomic regions are resistant to introgression, and therefore may contribute to reproductive isolation between lineages?
+
+There are several different methods for the estimation of LAI, and they are all computationally *INTENSIVE*. 
+
+[A recent paper](https://peerj.com/articles/10090/) compared several different LAI methods against each other. The methods differ in how flexible they are to working with different study systems, in part based on:
+
+* knowing the age of the admixture event (some methods only work on very recent admixture)
+* the number of lineages (populations, species) that contributed ancestry (some methods only work for K=2)
+* the necessity of a having genetic map in units of recombination distances (cM) (we often dont have one)
+* prior knowledge of the recombination rate and mutation rate (we often dont know these)
+
+The LAI program *Loter* by [Dias-Alves et al. 2018](https://academic.oup.com/mbe/article/35/9/2318/5040668) is designed to be very flexible for non-model organisms, with minimal parameter requirements (i.e., it doesnt require, for example, time since admixture, recombination or mutation rates).
+
+*Loter* works by specifying a set of phased haplotypes from each of the ancestral populations, and then assigning admixed individuals ancestry along chromosomes based on haplotypes matching.
+
+<img src="https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/mbe/35/9/10.1093_molbev_msy126/1/msy126f2.jpeg?Expires=1638926363&Signature=GlReRiBd6y6Btw46Xt5Khs3CMetjR7xSjqfndTJcsj~DwV0zIXCse982~0dRdBh9JBMANtMeib7v85z6zCe4YB7v4Avmb~RYySD1TwOyXx-LhUHV537j-eeZ0Edwu2Q8T28T5VMu05r8rjyUi7Jf0eIXNPGeIEwu2gFmebpuCkMGk7g8ADgaPbXqwMranarUfH~UvfyONtoE8R3Z9saSn8CNH8MYpRAuqIkbGsyn4kp-Ymmr48mseQeG6MzjeT8eIvP4HQNfJA5N~X0gYqEJmgrLDxOOZbaYcgGIK6lGZwG8ynNVIvIUWhPhIKGJqHB2X8dDIbf8R9C~hLNAzXDcwA__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA">
+  
+  Well use *Loter* to for LAI along each of our poplar chromosomes in the hybrid zone, using the previous K=5 ADMIXTURE run to define ancestral vs. admixed genotypes.
+
+First step: download and install the *Loter* python package into your **local directory on the server**. Log-in to pbio381, and execute the following code from within your home directory:
+
+```
+git clone https://github.com/bcm-uga/Loter.git
+cd Loter/python-package
+python setup.py install --user
+
+```
+
+*Loter* requires reference populations to infer LAI within admixed individuals.  Here, we are interested in *P. balsamiera* vs. *P. trichocarpa* as the reference populations. Rather than rely soley on the ADMIXTURE K=2 model, were going to use the K=5 model that showed the lowest CV value:
+  
+  <img src="https://github.com/stephenrkeller/Ecological_Genomics/blob/c36553261acf89249304492fd47c091487d223a8/Fall_2021/tutorials/Admix_K5.jpg?raw=true">
+    *ADMIXTURE run for K=5. Ancestry assigned to colors: P. balsamifera (orange), P. trichocarpa (red, yellow, green), other Populus spp. (blue)*
+***
+
+### Our pipeline:  {-}
+
+  1. Extract "reference" individuals with high ancestry assignments to either Balsam (K4>0.99) or Tricho ([K1+K2+K5]>0.99. Exclude inds assigned to "Populus spp." (K3>0.5).
+2. Use VCFtools to parse our vcf files by ancestry group. **NOTE:** Well do this separately by your chromosome to keep things computationally efficient. 
+3. Run *Loter* for 1 admixed sample at a time to estimate LAI. Working on 1 sample at a time will reduce memory requirements on the server.
+
+First, get into your shared chromosome directory on the pbio381 server:
+```
+`cd /data/project_data/PopGenomics/shared/ChrXX_sweeps/`
+```
+
+### (1) Define your Chromosome and extract "reference" balsam and trichocarpa individuals  {-}
+
+```
+CHR="ChrXX"  # Be sure to customize to your chromosome number!!!
+
+echo $CHR  # Does it look right?
+
+# Then make some new folders to store future results in:
+
+mkdir LAI
+
+cd LAI/
+
+mkdir Admixed
+```
+To parse the individuals by their ancestry coefficients @ K=5, we'll use `R` at the commandline. We'll need the Q files for the K=5 ADMXITURE run, and the meta-data.
+
+Remember how to start an R session at the commandline?
+
+```
+# Interactive R session at the commandline:
+R
+```
+
+
+```
+# Import K=5 Admixture run
+Qscores <- read.table("/data/project_data/PopGenomics/shared/poplar_hybrids.LDpruned.5.Q", sep=" ",header=F)
+names(Qscores) = c("K1","K2","K3","K4","K5")
+
+# Import meta-data
+meta <- read.table("/data/project_data/PopGenomics/Combined_Transect_Sampling_Data_2020.txt",sep="\t",header=T)
+
+# Combine them 
+merged <- cbind(meta,Qscores)
+str(merged)
+
+```
+
+Now, we want to subset individuals based on their genome-wide ancestry assignments.  
+
+**Example first few lines from K=5 Q-matrix:**
+
+
+```
+
+library(data.table)
+
+dat <- read.table("~/OneDrive - University of Vermont/PBIO381/Fall2021/Module3_PopLandscapeGenomics/Admixture/example.Q", sep=" ", header=F)
+names(dat) <- c("K1 (Tricho)","K2 (Tricho)","K3 (PopSpp)","K4 (Balsam)","K5 (Tricho)")
+knitr::kable(dat)
+```
+
+**Heres how were going to group samples based on ADMIXTURE ancestry assignments:**
+
+* Balsam = K4 > 0.99
+* Tricho = (K1 + K2 + K5) > 0.99
+* PopSpp = K3 > 0.5  # Want to exclude from our LAI analysis!
+* Admixed = Everything else!
+
+
+**Now, to run this in R:**
+
+```
+for(i in 1:nrow(merged)){
+if(merged$K4[i]>=0.99){
+	merged$Anc[i]="Bals"
+	}else if (sum(c(merged$K1[i],merged$K2[i],merged$K5[i]))>=0.99){
+	merged$Anc[i]="Tricho"
+	} else if(merged$K3[i]>0.5){
+	merged$Anc[i]="PopSpp"
+	}else{
+	merged$Anc[i]="Admx"
+	}
+}
+
+table(merged$Anc)
+```
+What do your samples sizes look like for each assignment?
+
+Now, we can write these sample IDs out to separate files to use with VCFtools to group our samples.
+
+```
+Bals_Inds_Ref <- merged[merged$Anc=="Bals",1]  
+length(Bals_Inds_Ref) # Should net you 46 individuals
+write.table(Bals_Inds_Ref, "Balsam.Inds", quote=F, row.names=F, col.names=F)
+
+Tricho_Inds_Ref <- merged[merged$Anc=="Tricho",1]
+length(Tricho_Inds_Ref) # Should net you 80 individuals
+write.table(Tricho_Inds_Ref, "Tricho.Inds", quote=F, row.names=F, col.names=F)
+
+Admixed_Inds <- merged[merged$Anc=="Admx",1]
+length(Admixed_Inds) # Should net you 442 individuals
+write.table(Admixed_Inds, "Admixed.Inds", quote=F, row.names=F, col.names=F)
+
+quit() # choose 'n' when prompted
+
+```
+Back at the command line!
+
+### 2. Use VCFtools to parse the VCF file you made previously for your chromosome {-}
+
+Now we want to generate separate VCF files for each of our "reference" panels (Balsam and Tricho) and our admixed individuals.
+
+```
+#### First we grab just the Balsam and Tricho reference individuals {-}
+
+vcftools --vcf /data/project_data/PopGenomics/shared/${CHR}_sweeps/${CHR}.recode.vcf --keep Balsam.Inds --recode --stdout | gzip -c >poplar_hybrids.maf05.${CHR}.BalsRef.vcf.gz
+
+vcftools --vcf /data/project_data/PopGenomics/shared/${CHR}_sweeps/${CHR}.recode.vcf --keep Tricho.Inds --recode --stdout | gzip -c >poplar_hybrids.maf05.${CHR}.TrichoRef.vcf.gz
+
+```
+
+Well also want to export a list of all the SNP positions in our VCF files for bringing into R later and merging with the LAI outputs.  You only need to do this for one of your vcf files (the positions will be the same across them all).
+
+```
+vcftools --gzvcf poplar_hybrids.maf05.${CHR}.BalsRef.vcf.gz --kept-sites --out ${CHR}
+
+```
+### What about making VCF files for the Admixed samples? {-}
+
+LAI estimation with *Loter* is a bit, shall we say, *memory consuming.* 
+  
+  One trick is to run the analysis for one admixed sample at a time, instead of trying to feed them all into memory simultaneously. It will still take awhile, but it (hopefully) wont crash our server :)
+
+So, we need a way to loop the *Loter* analysis over each individual sample ID in the `Admixed.Inds` file, one at a time.
+
+We do this using a special kind of loop in bash called `while read`. Essentially, this runs a loop that iterates over each line in an external file.  In this case, its each sample ID (one per line) in the `Admixed.Inds` file that you made. 
+
+Lets work through a test-case first (always a good idea in programming to try a **small** experiment before the BIG run!)
+
+```
+# Example while loop:
+
+while read ID
+do
+  echo "$ID"
+done < Admixed.Inds
+```
+
+This loop:
+
+* Slurped in the file we made called `Admixed.Inds` (**note**, this happens at the end of the code chunk, as a reverse file direct, "<")
+* Then, 1 line (sample "ID") at a time...
+* Performed an operation, in this case simply printing (`echo`) the name of the sample ID to the screen
+
+Make sense?  Now, lets adapt it to our analysis!
+  
+  **START A SCREEN FIRST!**
+  
+  `screen`
+
+Then once youre in a screen...
+
+```
+CHR="ChrXX"  # Be sure to customize to your chromosome number!!!
+
+echo $CHR  # Does it look right?
+
+while read ID
+do
+  vcftools --gzvcf /data/project_data/PopGenomics/shared/${CHR}_sweeps/${CHR}.recode.vcf \
+  --indv $ID \
+  --recode \
+  --stdout | gzip -c   >Admixed/poplar_hybrids.maf05.${CHR}.${ID}.vcf.gz
+done < Admixed.Inds
+```
+Now, before you forget, **DETACH FROM YOUR SCREEN**
+
+
+**This loop:**
+
+* reads in our master VCF file that is already subsetted by our chromosome of interest
+* subsets by just the individual of interest (`--indv`)
+* writes a new file based on the subsetting (`--recode`)
+* passes that file to "stdout" which is used to send it to another program on the other side of the "pipe" `|`
+* uses `gzip` to compress the new output file to save space
+* uses the `< Admixed.Inds` to feed the loop sample IDs of the admixed individuals, one line at a time.
+
+### 3. Run *Loter!* {-}
+
+Now that we have VCFtools working for us to parse our files by individual, we can start our *Loter* analysis. 
+
+The basic logic is the same: 
+  
+  * start a **NEW** screen (it takes a LONG time)
+* run ***Loter*** iteratively for each Admixed individual in a `while read` loop
+
+```
+# First, make a new dir to store the results:
+mkdir Loter_out
+
+CHR="ChrXX"  # Be sure to customize to your chromosome number!!!
+
+echo $CHR  # Does it look right?
+
+while read ID
+do
+for file in Admixed/poplar_hybrids.maf05.${CHR}.${ID}.vcf.gz
+do
+loter_cli -r poplar_hybrids.maf05.${CHR}.BalsRef.vcf.gz poplar_hybrids.maf05.${CHR}.TrichoRef.vcf.gz \
+-a $file \
+-f vcf \
+-o Loter_out/${ID}_LAI.txt \
+-n 1 \
+-pc -v
+done
+done < Admixed.Inds
+
+```
+Note the "nested" loops here (i.e., there are 2 loops happening in the code). 
+
+* The first loop grabs one sample ID at a time from the file `Admixed.Inds`. 
+* The next loop finds the matching vcf file for that sample ID, and feeds it into the *Loter* analysis for LAI estimation.
+
+The flags control options:
+  
+  * `-o` directs the analysis output to the `Loter_out` directory you made, and names it by the ID name
+* `-n` controls how many cpus to use in the analysis (just 1 for now)
+* `-pc` implements phase correction on the inferred ancestry
+* `-v` prints "verbose" progress updates to the screen as the analysis proceeds
+
+Now, before you forget, **DETACH FROM YOUR SCREEN**
+
+### Looking ahead... {-}
+
+Were going to let this run awhile.  Good thing its Wednesday, and we dont meet again till next Monday ;)
+In the meantime, you can check progress by 
+    
+    * Doing `ll` in your `Loter_out/` directory to verify that the LAI files are getting made 
+    * You can also check if the analysis is still running under your user name using the `top` command.
+    * If it seems like things have ended early without the expected outputs (one ${ID}_LAI.txt file per admixed sample), let us know!
+      
+      On Monday, well pick up with digging into the results of our local ancestry analysis along chromosomes!
+      
+      
+## Population Genomics #7 {-}
+#### Learning Objectives  {-}
+  
+  1. Continue working to estimate local ancestry along chromosomes
+2. Collate out Loter outputs and convert into Plink format
+3. Calculate frequency of local ancestry along our chromosomes
+4. Appreciate the fact that sometimes there isnt a ready-made solution to a coding problem, and you have to work through it yourself.  
+
+Sigh...  This last point is something to emphasize, and while it can be challenging and even frustrating at times, its part of nearly every large-scale bioinformatics analysis at some point.  And reaching the solution can be incredibly rewarding.
+
+#### Did everyone's Loter analysis finish?   {-}
+
+Lets get things running if not...
+
+#### Now the tough part: how to collate and convert a massive amount of output into something we can work with {-}
+
+Let look at one output together.  We can open it in `vim` at the commandline:
+  
+  `vim 201_LAI.txt`
+
+To justify the rows and columns, type a ':' and then
+
+`set nowrap`
+
+You should see the two chromosomal haplotypes that make up this individual, with a string of 0's and 1's. What do these represent?
+  
+  Our challenge is to re-cast these data into a single value per individual and SNP position. To do this, we need to express the data as allele dosages of 0/1/2 copies of Trichocarpa ancestry. Well want to do this for all individuals, then combine the individuals together into a big matrix that we can use to calculate local ancestry frequency along chromosomes, and test for associations between local ancestry and traits.  
+
+### Our pipeline: {-}
+
+1. Convert haploid 0/1 calls to diploid 0/1/2 calls
+2. Collate 0/1/2 data across all admixed individuals into a single data matrix
+3. Convert matrix to Plink2.0 format (*.bed file)
+4. Estimate frequencies of local ancestry along chromosomes
+
+#### (1) Convert haploid calls to diloid using `datamash` and (2) Collate across individuals  {-}
+
+Calculations like these are usually easy to do in `R`. I tried (really, hard!) to make this work in `R`, but the memory requirements were just too big, and `R` ran incredibly slow, even using tools like `data.table`. So, we need a bash solution. Unlike `R`, `bash` doesnt perform mathematical functions natively, but there are functions you can use to do so. One is the `datamash` package that well use. I installed it already, but you can read bout it [here](https://www.gnu.org/software/datamash/).  
+
+Well use datamash to loop through our output files in Loter_out/ and sum up the Trichocarpa allele counts at each position. 
+
+First, well need to set some variables that well need later, such as the Chromosome ID, how many SNP positions were analyzing on that chromosome, and the number of individuls.
+
+```
+## As LOTER files get output, can convert these into 0/1/2 encoding using the bash tool 'datamash'
+
+## From within your LAI/ directory:
+
+CHR="Chr02"
+
+echo $CHR # Is it right?
+
+Nsites=`tail -n +2 ${CHR}.kept.sites | wc -l | sed 's/\s/\t/' | cut -f1` # calculates and stores the number of SNP sites for your chromosome
+
+echo $Nsites # For Chr02, Nsites=281887 SNPs
+
+Ninds=`wc -l Admixed.Inds | sed 's/\s/\t/' | cut -f1` # calculates and stores the number of admixed individuals you previously identified
+
+echo $Ninds  # Should be 442 individuals
+```
+
+Now that we have the variables defined, we can run the datamash step:
+
+```
+touch ${CHR}_matrix.diploid
+
+for file in Loter_out/*.txt
+do
+datamash --field-separator=" " sum 1-${Nsites} <$file >>${CHR}_matrix.diploid
+done
+
+```
+This step took about 2 minutes for Chr02 all the sample IDs (442). Output should be a matrix few hundred Mb in size.  You can use `ll` to check.
+
+The field separator used by Loter is a space, but most programs are expecting a tab to separate SNP positions. Additionally, right now the loci are in columns and individuals are in rows, but we want the opposite (loci in rows, individuals in columns). So, we also need to transpose our matrix. We can do this with 1 line of code by piping together several functions -- the beauty of bash!!!
+
+```
+sed 's/\s/\t/g' ${CHR}_matrix.diploid | cut -f1-${Nsites} | datamash transpose >${CHR}_matrix.diploid.tr
+
+```
+
+You should now have a transposed matrix file filled with 0/1/2 data, with loci in rows and individuals in columns.  You should head (or open in vim) to take a look and verify for yourself that the format is what we wanted.
+
+### (3) Convert matrix to Plink2.0 format  {-}
+
+[Plink2.0](https://www.cog-genomics.org/plink/2.0/) is a very powerful and flexible software for genomics analysis. And, it accepts as input 0/1/2 allele dosage data like ours!  Unfortunately, its required data format is somewhat archaic, and requires the main data matrix to be appended with the SNP positions. It also requires an accessory file that describes the individuals in our sample (.fam file).  Below, we work though the steps to make these:
+  
+  **This step will make the main data matrix with site info attached:**
+  
+  ```
+
+seq -f "snp%02g" 1 $Nsites >sites
+
+printf 'A\n%.0s' $(seq $Nsites) >allele1  # Create a dummy column of 'A' the length of your Nsites file
+
+printf "T\n%.0s" $(seq $Nsites) >allele2 # Create a dummy column of 'T' the length of your Nsites file
+
+mkdir Plink
+
+paste sites allele1 allele2 ${CHR}_matrix.diploid.tr >Plink/${CHR}_matrix.diploid.tr.forPlink
+
+```
+Take a look to verify the formatting.
+
+
+**This step will make the fam file for our samples:**
+  
+  ```
+
+cat /data/project_data/PopGenomics/Combined_Transect_Sampling_Data_2020.txt | \
+cut -f1-2 | \
+grep -w -f Admixed.Inds - | \
+cut -f2 | \
+paste - Admixed.Inds >FID_IID
+
+printf '0\t0\t0\t-9\n%.0s' $(seq $Ninds) >dummy
+
+paste FID_IID dummy  >Plink/${CHR}_fam.forPlink
+
+```
+Take a look to verify the formatting.
+
+**Now, were ready to run the conversion into Plink format (.bed)**
+
+```
+## This runs the Plink conversion from allele dosages to bed format
+
+cd Plink/ 
+
+plink2 --import-dosage ${CHR}_matrix.diploid.tr.forPlink noheader \
+--fam ${CHR}_fam.forPlink \
+--make-bed \
+--out ${CHR}_Admixed_FAI
+```
+
+Once we have the Plink format, the analysis options open up a lot. Not only cn Plink do genomics like eestimating allele frequencies, Fst, and even GWAS, but it can also export iinto a lot of other different formats 9like VCF) that we can use with other programs.  
+
+For now, if theres time left, well simply have Plink calculate the local ancestry frequencies at each SNP position:
+
+```
+plink2 --bfile ${CHR}_Admixed_FAI --freq --out ${CHR}_LAI_freq
+```
+
+We can transfer the resulting file using Fetch, WinSCP, or scp to our laptops, and plot with R! 
+
+Youll want 2 files for this (replacing "ChrXX" with your Chr ID):
+  
+1. ChrXX_SNP.kept.sites
+2. ChrXX_LAI_freq.afreq
+
+```
+library(ggplot2)
+
+setwd("path to your output files...")
+
+# Read in list of positions
+snps <- read.table("ChrXX.kept.sites",sep="\t", header=T)
+
+# Read in the local ancestry frequencies from Plink
+AF <- read.table("ChrXX_LAI_freq.afreq", skip=1,sep="\t",header=F)  
+
+# Note the skip=1 here.  
+# This skips the first line, since Plink's header line doesn't play well with R.  
+# We'll define our own header line below.
+
+names(AF) = c("CHROM",	"ID",	"REF",	"ALT",	"ALT_FREQS",	"OBS_CT")
+
+AF2 <- cbind(snps,AF)
+
+str(AF2) # How does it look?
+
+# A simple plot:
+
+p1 <- ggplot(AF2[,-3],aes(x=POS,y=ALT_FREQS)) +
+  geom_line(size=0.25, color="blue") + 
+  xlab("Position (bp) along chromosome") +
+  ylab("Frequency P. trichocarpa ancestry")
+
+p1
+
+```

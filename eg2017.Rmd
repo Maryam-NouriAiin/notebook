@@ -1,0 +1,1838 @@
+# (PART\*) Ecological Genomics 
+
+# 2017 {-}
+
+### Intro to connecting to unix servers and navigating the command-line {-}
+
+*What is the command-line?*
+
+The command-line, also known as a "terminal" or "shell", is a way of interacting with your local computer or a remote server by means of typing commands or scripts, without using a graphical user interface (GUI).
+
+
+*Why do I want to be doing this?*
+
+At first, the command-line can seem a little intimidating. But after you get used to typing instead of pointing and clicking to issue your commands, youll realize how powerful it is. For example, its quite easy to copy, move, edit, and search within thousands of files in multiple directories with some simple command-line code. It would take forever to do this by dragging/dropping with a mouse. The command-line also allows you to work with very large data files without uncompressing them fully, or loading the entire files contents into memory…something that standard GUI type applications arent good at.
+
+*So, lets get started…*
+
+- The first step is to open a terminal *shell* on your local computer. For windows users, this would be "PuTTy". For MacOS users, this is called "Terminal".
+
+- Well connect to our remote server running Unix using the secure shell (ssh) protocol. Our servers name is *pbio381* and we can connect to it using our UVM netid username and password (as long as were on-campus)
+
+```bash
+ip0af52fbf:papers srkeller$ ssh srkeller@pbio381.uvm.edu
+srkeller@pbio381.uvm.edus password: 
+Last login: Tue Jan 31 10:51:15 2017 from ip040027.uvm.edu
+[srkeller@pbio381 ~]$ 
+```
+
+- The log-in screen tells us some basic info on when we last logged in, and then gives us our current location in the filesystem (~) followed by the $ prompt, that tells us the computer is ready for our next command. 
+
+  - NOTE: The tilda (~) is short-hand for your home directory in UNIX. This is your own personal little corner of the computers hard drive space, and is the location that you should use to create folders and input/output/results files that are specific to your own work. No one has access to any files stored in your home directory but you.
+
+- To see the full path to your current directory, use the **pwd** command:
+
+  ```bash
+  [srkeller@pbio381 ~]$ pwd
+  /users/s/r/srkeller
+  [srkeller@pbio381 ~]$ 
+  ```
+
+
+
+- The path shows the full directory address up from the "root" of the file structure, which is the most basal level (appealing to all you phylogeneticists here…). The root is symbolized as "/" and each subdirectory is separated by an additional "/". So, the full path to my working directory on the server is */users/s/r/srkeller/*
+
+
+- Lets make a new folder (aka, directory) using the **mkdir** command. Lets name this folder "mydata"
+
+```bash
+[srkeller@pbio381 ~]$ mkdir mydata
+```
+
+- We can then use the **ll** command to show the current contents of any folders and files in our current location:
+
+```bash
+[srkeller@pbio381 ~]$ ll
+total 0
+drwxr-xr-x. 6 srkeller users 82 Jan 31 17:21 archive
+drwxr-xr-x. 2 srkeller users  6 Jan 31 17:21 mydata
+drwxr-xr-x. 2 srkeller users  6 Jan 31 17:15 scripts
+[srkeller@pbio381 ~]$ 
+```
+
+- Youll notive that Ive got some extra folders in my output from previous work, whereas you will probably only see the "scripts" folder you just made. 
+  - NOTE: Each row shows a file or a folder (in this case, these are all folders) diplaying (from right to left) its name, when it was last edited, size, who it belongs to , and who has permission to read (r) write (w) and exectue (x) it. More on permissions later...
+  - Try making your own folder named "scripts" and then use the **ll** command to list the folders again 
+- We can change our current location within the directory structure using the **cd** command. Lets use **cd** to move inside the *mydata/* directory and **ll** to list its contents:
+
+```bash
+[srkeller@pbio381 ~]$ cd mydata/
+[srkeller@pbio381 mydata]$ ll
+total 0
+[srkeller@pbio381 mydata]$ 
+```
+
+- Hah — nothing in there yet! Lets go get some data!
+  - Weve placed the text file containing all the metadata information on the seastar sampling under a shared space on the server. The path to this shared space is: 
+    - */data/*   Try using **cd** to navigate over to this location. Then **ll** to show its contents. You should see something like this:
+
+```bash
+drwxr-xr-x.  5 root root       73 Jan 31 17:35 archive
+drwxrwxr-x.  2 root pb381adm   40 Nov 30  2015 packages
+drwxrwxr-x. 33 root pb381adm 4096 Nov 30  2015 popgen
+drwxrwxr-x.  3 root pb381adm   42 Jan 30 09:08 project_data
+drwxrwxr-x.  2 root pb381adm    6 Oct  2  2015 scripts
+drwxr-xr-x. 18 root root     4096 Sep  2  2015 users
+[srkeller@pbio381 data]$ 
+```
+
+- Now, **cd** into the folder called "project_data" and **ll**. Do you see this?
+
+```bash
+[srkeller@pbio381 data]$ cd project_data/
+[srkeller@pbio381 project_data]$ ll
+total 8
+drwxr-xr-x. 12 srkeller users 4096 Jan 30 09:06 archive
+-rw-r--r--.  1 srkeller users 1255 Jan 30 09:08 ssw_samples.txt
+[srkeller@pbio381 project_data]$ 
+```
+
+- The file called "ssw_samples.txt" is the one with the seastar metadata. We dont want to open and make changes to this file in the shared space, because we dont want to have our edits affect the rest of the group. So, lets first make a copy of this file over to our home directory and put it inside the "mydata" folder. Use the **cp** command, followed by the filename, and the path to your destination (remember the ~ signals your home directory, and each subdirectory is then separated by a /):
+
+```bash
+[srkeller@pbio381 project_data]$ cp ssw_samples.txt ~/mydata/
+```
+
+- **cd** back to your *~/mydata/* directory and look inside. You should see your file...
+
+```bash
+[srkeller@pbio381 project_data]$ cd ~/mydata/
+[srkeller@pbio381 mydata]$ ll
+total 4
+-rw-r--r--. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+[srkeller@pbio381 mydata]$ 
+```
+
+- Lets take a peek at this file with the **head** command, which prints the first 10 lines to screen.
+
+```bash
+[srkeller@pbio381 mydata]$ head ssw_samples.txt 
+Individual	Trajectory	Location	Day3	Day6	Day9	Day12	Day15
+10	HH	INT	10_5-08_H	10_5-11_H	10_5-14_H	10_5-17_H	10_5-20_H
+24	HH	INT	24_5-08_H	24_5-11_H	24_5-14_H	24_5-17_H	24_5-20_H
+27	HH	INT	27_5-08_H	27_5-11_H	27_5-14_H	27_5-17_H	27_5-20_H
+08	HS	INT	08_5-08_H	08_5-11_S	08_5-14_S	08_5-17_S	08_5-20_S
+09	HS	INT	09_5-08_H		09_5-14_S	09_5-17_S	09_5-20_S
+15	HS	INT	15_5-08_H	15_5-11_H	15_5-14_H	15_5-17_S	15_5-20_S
+19	HS	INT		19_5-11_H	19_5-14_H	19_5-17_H	19_5-20_S
+20	HS	INT	20_5-08_H	20_5-11_H	20_5-14_H	20_5-17_H	20_5-20_S
+03	SS	INT	03_5-08_S	03_5-11_S
+```
+
+- The **tail** command provides similar functionality, but prints just the last lines in the file. These features may not seem a big deal right now, but when youre dealing with files that are 20 Gb compressed, and feature hundreds of millions of lines of data, you and your computer will be happy to have tools to peek inside without having to open the whole file!
+- What if we want to extract just the rows of data that correspond to Healthy (HH) individuals? We can use the search tool **grep** to search for a target query. Any line matching our search string will be printed to screen.
+
+```bash
+[srkeller@pbio381 mydata]$ grep HH ssw_samples.txt 
+10	HH	INT	10_5-08_H	10_5-11_H	10_5-14_H	10_5-17_H	10_5-20_H
+24	HH	INT	24_5-08_H	24_5-11_H	24_5-14_H	24_5-17_H	24_5-20_H
+27	HH	INT	27_5-08_H	27_5-11_H	27_5-14_H	27_5-17_H	27_5-20_H
+31	HH	SUB	31_6-12_H	31_6-15_H	31_6-18_H	31_6-21_H	31_6-24_H
+32	HH	SUB	32_6-12_H	32_6-15_H	32_6-18_H	32_6-21_H	
+33	HH	SUB	33_6-12_H	33_6-15_H	33_6-18_H	33_6-21_H	33_6-24_H
+34	HH	SUB	34_6-12_H	34_6-15_H	34_6-18_H	34_6-21_H	34_6-24_H
+35	HH	SUB	35_6-12_H	35_6-15_H	35_6-18_H	35_6-21_H	
+[srkeller@pbio381 mydata]$
+```
+
+- What if instead of printing it to screen, we want to save the output of our search to a new file? This is easy, just use the ">" symbol to redirect the results of any command to an output file with your choice of name.
+
+```bash
+[srkeller@pbio381 mydata]$ grep HH ssw_samples.txt >ssw_HHonly.txt
+[srkeller@pbio381 mydata]$ ll
+total 8
+-rw-r--r--. 1 srkeller users  462 Jan 31 20:46 ssw_HHonly.txt
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+[srkeller@pbio381 mydata]$ 
+```
+
+- We can do the same routine for the "SS" samples. Heres a trick, when youre doing a similar task as a previous command, hit the up arrow on your keyboard at the $ prompt, and it will recall the last command you issued. Then you just have to switch the HHs for SSs.
+
+```bash
+[srkeller@pbio381 mydata]$ grep SS ssw_samples.txt >ssw_SSonly.txt
+[srkeller@pbio381 mydata]$ ll
+total 12
+-rw-r--r--. 1 srkeller users  462 Jan 31 20:46 ssw_HHonly.txt
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+-rw-r--r--. 1 srkeller users  342 Jan 31 20:48 ssw_SSonly.txt
+[srkeller@pbio381 mydata]$ 
+```
+
+- **Grep** is a useful search tool and has many additional features for sorting and output of the results. These kinds of search algorithms are called "regular expressions", or "regexp", and are one of the most powerful tools for wokring with large text files. If you want to learn more about **grep** and its regexp capabilities, you can look at the **"man"** page or manual. In fact, every UNIX command-line program has a built-in **man** page that you can call up to help you. Just type **man** and then the program name and it will give you the manual (small excerpt shown below).
+
+```bash
+[srkeller@pbio381 mydata]$ man grep
+
+
+GREP(1)                            General Commands Manual                           GREP(1)
+
+NAME
+       grep, egrep, fgrep - print lines matching a pattern
+
+SYNOPSIS
+       grep [OPTIONS] PATTERN [FILE...]
+       grep [OPTIONS] [-e PATTERN | -f FILE] [FILE...]
+
+DESCRIPTION
+       grep searches the named input FILEs (or standard input if no files are named, or if a
+       single hyphen-minus (-) is given as file name) for lines containing a  match  to  the
+       given PATTERN.  By default, grep prints the matching lines.
+
+       In  addition,  two variant programs egrep and fgrep are available.  egrep is the same
+       as grep -E.  fgrep is the same as grep -F.  Direct  invocation  as  either  egrep  or
+       fgrep  is  deprecated,  but is provided to allow historical applications that rely on
+       them to run unmodified.
+
+OPTIONS
+   Generic Program Information
+       --help Print a usage message briefly summarizing these command-line options  and  the
+              bug-reporting address, then exit.
+
+       -V, --version
+              Print  the version number of grep to the standard output stream.  This version
+              number should be included in all bug reports (see below).
+
+   Matcher Selection
+       -E, --extended-regexp
+              Interpret PATTERN as an extended regular expression (ERE, see below).  (-E  is
+              specified by POSIX.)
+
+       -F, --fixed-strings, --fixed-regexp
+              Interpret  PATTERN  as  a list of fixed strings, separated by newlines, any of
+              which is to be matched.  (-F is  specified  by  POSIX,  --fixed-regexp  is  an
+              obsoleted alias, please do not use it in new scripts.)
+
+       -G, --basic-regexp
+              Interpret PATTERN as a basic regular expression (BRE, see below).  This is the
+              default.
+
+       -P, --perl-regexp
+              Interpret PATTERN as a Perl regular expression.  This is  highly  experimental
+              and grep -P may warn of unimplemented features.
+```
+
+- One of the most useful aspects of UNIX is the ability to take the output from one command and use it as standard input (termed stdin) into another command without having to store the intermediate files. Such a workflow is called "piping", and makes use of the pipe character (|) located above the return key to feed data between programs.
+  - Example: Say we wanted to know how many samples come from the Intertidal. We can use **grep** to do the search, and pipe the results to the command **wc** which will tally up the number of lines, words, and characters in the file…voila!
+
+```bash
+[srkeller@pbio381 mydata]$ grep INT ssw_samples.txt | wc
+     16     106     762
+[srkeller@pbio381 mydata]$ 
+```
+
+- Looks like 16 INT samples in the original data. See how quick it was to get a line count on this match, without actully opening a file or printing/saving the outputs? 
+- Now, what if we want to move the files we created with just individuals of a particular disease status. Theres a way to do this quickly using the wildcard character "*". With the wildcard, the "*\*" takes the place of any character, and in fact any length of characters. For example, make a new directory called *samples_by_disease/* inside the *mydata/* folder. Then move all files that contain the word "only" into the new directory using the **mv** command.
+
+```bash
+[srkeller@pbio381 mydata]$ mkdir sample_by_disease/
+[srkeller@pbio381 mydata]$ ll
+total 12
+drwxr-xr-x. 2 srkeller users   10 Jan 31 21:12 sample_by_disease
+-rw-r--r--. 1 srkeller users  462 Jan 31 20:46 ssw_HHonly.txt
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+-rw-r--r--. 1 srkeller users  342 Jan 31 20:48 ssw_SSonly.txt
+[srkeller@pbio381 mydata]$ mv *only* sample_by_disease/
+[srkeller@pbio381 mydata]$ ll
+total 4
+drwxr-xr-x. 2 srkeller users   60 Jan 31 21:12 sample_by_disease
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+[srkeller@pbio381 mydata]$ cd sample_by_disease/
+[srkeller@pbio381 sample_by_disease]$ ll
+total 8
+-rw-r--r--. 1 srkeller users 462 Jan 31 20:46 ssw_HHonly.txt
+-rw-r--r--. 1 srkeller users 342 Jan 31 20:48 ssw_SSonly.txt
+[srkeller@pbio381 sample_by_disease]$ 
+```
+
+- OK, what about when we have files we dont want anymore? How do we clean up our workspace? You can remove files and folders with the **rm** command. However, in its default mode, UNIX will not ask if you really mean it before getting rid of it forever(!), so this can be dangerous if youre not paying attention. 
+  - As an example, lets use our **grep** command to pull out he seastar samples that started healthy and then became sick. But perhaps we later decide were not going to work with those samples, so we use **rm** to delete that file:
+
+```bash
+[srkeller@pbio381 mydata]$ ll
+total 8
+drwxr-xr-x. 2 srkeller users   60 Jan 31 21:12 sample_by_disease
+-rw-r--r--. 1 srkeller users  282 Feb  1 05:35 ssw_HSonly.txt
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+[srkeller@pbio381 mydata]$ rm ssw_HSonly.txt 
+[srkeller@pbio381 mydata]$ ll
+total 4
+drwxr-xr-x. 2 srkeller users   60 Jan 31 21:12 sample_by_disease
+-rwxrwxr-x. 1 srkeller users 1255 Jan 31 17:42 ssw_samples.txt
+[srkeller@pbio381 mydata]$
+```
+- Gone! Forever! If that worries you, you can change your personal settings so that the server asks you to confirm deletion before it acts. To do this, well need to follow a couple of new steps:
+
+
+1.    **cd** to your home directory (~/)
+      		2. list all the files, including "hidden" ones that arent usually shown. To do this, use `ll -a`.
+      		3. Look for a file called ".bashrc" — this contains your settings for how you interact with the server when you log in.
+      		4. Were going to open this file and edit it to add a setting to request that **rm** confirms deletion with us. To edit text files on the fly in UNIX, you can use the built-in text editor, "vim": `vim .bashrc`
+      		5. You should see something that looks like this:
+
+```bash
+  # .bashrc
+
+  # Source global definitions
+  if [ -f /etc/bashrc ]; then
+          . /etc/bashrc
+  fi
+
+  # Uncomment the following line if you dont like systemctls auto-paging feature:
+  # export SYSTEMD_PAGER=
+
+  # User specific aliases and functions
+
+```
+
+6.   Use your arrow key to move your cursor down to the last line, below ""# User specific aliases and functions" — this is where were going to insert our new function.
+
+7.   By defauly, vim is in read-only mode when it opens files. To go into edit mode, press your "i" key (for "insert"). You are now able to make changes to the file.
+
+8.   Add the following text on a new line directly below the "# User specific…" line:
+
+       `alias rm=rm -i`
+
+9.   Your file should now look like this:
+
+```bash
+  # .bashrc
+
+  # Source global definitions
+  if [ -f /etc/bashrc ]; then
+          . /etc/bashrc
+  fi
+
+  # Uncomment the following line if you dont like systemctls auto-paging feature:
+  # export SYSTEMD_PAGER=
+
+  # User specific aliases and functions
+
+  alias rm=rm -i
+```
+
+10.    Youre now ready to get out of edit mode (hit the `escape key`), save your changes (type `:w`), and exit vim (type `:q`).
+
+11.    These changes wont take effect until you log out (type `exit` to log out of the server). But from now on, every time you log in, the server will remember that you want a reminder before deleting any of your work.
+
+
+
+
+#### Lets review what weve learned so far… {-}
+
+
+- Logging in to the server: `ssh netid@pbio381.uvm.edu`
+- Finding what directory youre in: `pwd`
+- Listing files in your current directory, or changing to a new directory: `ll`, `cd`
+- Making a new folder: `mkdir foldername`
+- Location of shared space, data, and programs on our class server:
+
+```
+[srkeller@pbio381 ~]$ cd /data/
+[srkeller@pbio381 data]$ ll
+total 8
+drwxr-xr-x.  5 root root       73 Jan 31 17:35 archive
+drwxrwxr-x.  2 root pb381adm   40 Nov 30  2015 packages
+drwxrwxr-x. 33 root pb381adm 4096 Nov 30  2015 popgen
+drwxrwxr-x.  3 root pb381adm   42 Jan 30 09:08 project_data
+drwxrwxr-x.  2 root pb381adm    6 Oct  2  2015 scripts
+drwxr-xr-x. 18 root root     4096 Sep  2  2015 users
+[srkeller@pbio381 data]$ 
+```
+
+- Copying or moving files from one location to another: `cp filename destinationpath/` or `mv filename destinationpath/` 
+- Peeking into the first or last few lines of a file: `head filename`, `tail filename`
+- Searching within a file for a match: `grep search string filename`
+- Outputing the results of a command to a new file: `grep search string filename >outputfilename`
+- Using wildcards to work on multiple files at the same time: `mv *.txt ~/newfolder`
+-  Using the "pipe" to send the output of one command to the input of another: `grep INT filename | wc `
+- Removing files or folders: `rm`
+- Editing text files on the server: `vim filename`       
+
+******************
+
+#### Handy [UNIX cheat sheet](https://files.fosswire.com/2007/08/fwunixref.pdf) for helping to remember some of these commonly used commands (and others) {-}
+
+#### Heres another useful [UNIX cheatsheet](http://cheatsheetworld.com/programming/unix-linux-cheat-sheet/) {-}
+
+
+
+
+## RNAseq Tutorial {-}
+
+
+### fastq files, data assessment and cleaning  {-}
+
+To work with RNA-seq data, we first need to assess then filter for quality and trim it for quality and any remaining adapter sequences.
+
+Lets take a look at our files:
+
+```
+zcat FILENAME | head
+```
+
+You could also make a smaller file to work with:
+
+```
+zcat FILENAME | head -n 1000 > ~/YOURDIRECTORY/FILENAME_250reads.fq.gz
+```
+
+#### What is this gibberish?  {-}
+
+The fast file format has 4 lines for each read: the read identifier, the read sequence, "+", and a sequence of quality scores for each base.
+
+[Heres a useful reference for understanding Quality (Phred) scores](http://www.drive5.com/usearch/manual/quality_score.html).  If P is the error probability, then:
+  
+  
+  $P =  10^{(–Q/10)}$
+    
+    $Q =  –10 * log10(P)$
+      
+      The Q score is translated to ASCII characters so that a two digit number can be represented by a single character.
+    
+    Typically, we accept bases with Q >= 30, which is equivelant to a 0.1% chance of error (40 is 0.01% error, 20 is 1% error, 10 is 10% error).  
+
+**Based on the ASCII code table linked above, what kind of characters do you want to see in your quality score?**
+  
+  Now how can we look at the quality more systematically for all reads in the file?  We can use [the program FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) (also already installed in our `/data/popgen/` directory).
+
+Lets each pick a set of files to inspect and clean by counting of the filenames around the room.
+
+Now clean your file using the following command:
+
+```
+fastqc FILENAME.fq.gz
+```
+
+Move your .html file to your computer using the `scp`command from your machine (hint: open another terminal or putty window):
+
+```
+scp mpespeni@pbio381.uvm.edu:/data/project_data/fastq/38_6-24_S_5_R2_fastqc.html .
+```
+
+The dot means "to the present directory" or you can direct it somewhere else.
+
+**How does the quality look?**
+
+[Heres a link to the Trimmomatic program](http://www.usadellab.org/cms/index.php?page=trimmomatic) that well use to clean the reads for each file. The program is already installed in our `/data/popgen/` directory.
+
+Theres an example script in the `/data/scripts/` directory.  Make a directory in your directory called "scripts" and copy the bash script over, edit in vim, make it executable, and run it!
+  
+  ```
+cp /data/scripts/trim_example.sh ~/scripts/
+  chmod u+x trim_example.sh
+./trim_example.sh  # or bash trim_example.sh
+```
+
+Now check the quality of one of your cleaned files using fastqc again.
+
+
+
+### Starting a de novo assembly using Trinity  {-}
+
+[Heres a link to the Trinity website](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
+
+Lets develop some assembly experiments...
+  
+  Heres the basic command:
+
+```
+Trinity --seqType fq --left reads_1.fq --right reads_2.fq --CPU 6 --max_memory 20G 
+```
+
+The reads need to be paired, and concatenated.
+
+Lets explore some some of the [assembly quality assessment tools that Trinity provides](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Transcriptome-Assembly-Quality-Assessment).
+  
+  For now, we can use an assembly that Melanie did last week using the samples from one individual.  The file is located in `/data/project_data/assembly/`
+  
+  ### Course notes:  {-}
+  
+  **Edit Script**
+    filenames and path:    
+    
+    * input (2)      
+  * /data/project_data/fastq/     
+    * output(4)_also.fq       
+  * /data/project_data/fastq/cleanreads/     
+    **Vim related**      
+    * "i" = insert    
+  * "w" = write     
+  * "q" = quit
+  ```
+  $ /data/popgen/trinityrnaseq-Trinity-v2.3.2/util/TrinityStats.pl /data/project_data/assembly/Trinity.fasta 
+  
+  
+  ################################
+  ### Counts of transcripts, etc.  {-}
+  ################################
+  Total trinity genes:	68935
+  Total trinity transcripts:	73435
+  Percent GC: 40.89
+  
+  ########################################
+  Stats based on ALL transcript contigs:
+    ########################################
+  
+  Contig N10: 1598
+  Contig N20: 934
+  Contig N30: 630
+  Contig N40: 467
+  Contig N50: 363
+  
+  Median contig length: 230
+  Average contig: 336.13
+  Total assembled bases: 24683495
+  
+  
+  #####################################################
+  ### Stats based on ONLY LONGEST ISOFORM per GENE:  {-}
+  #####################################################
+  
+  Contig N10: 1305
+  Contig N20: 785
+  Contig N30: 553
+  Contig N40: 420
+  Contig N50: 334
+  
+  Median contig length: 227
+  Average contig: 318.61
+  Total assembled bases: 21963260
+  ```
+  
+  
+## Mapping RNAseq {-}
+
+### Mappingyour clean reads to a reference transcriptome assembly {-}
+
+### Making a reference transcriptome and Mapping reads to the reference transcriptome{-}
+
+Recall that the general RNAseq data processing work flow is to:
+  
+  1. Clean and evaluate reads (.fastq)
+
+2. Make and evaluate a transcriptome assembly (.fasta)
+
+3. Map cleaned reads to the transcriptome assembly (makes .sam files)
+
+4. From these sequence alignment files, we can extract two types of information: (a) read counts - the number of reads that uniqely map to each "gene" and (b) single nucleotide polymorphisms between a sample and the reference.
+
+5. With these two types of data, we can go on to differential gene expression analyses and population genomics.
+
+
+
+Settling on a high quality reference transcriptome is an iterative process that requires testing different assembly parameters and inputs and evaluating the quality several ways.  A quick way for us to move forward with our data analyses for this course, however, is to predict open reading frames (ORFs - include start and stop codons) and keep only transcripts that are at least 100 amino acids long.  To do this we can use the program TransDecoder.
+
+Download TransDecoder to use to predict longest Open Reading Frames (ORFs)
+
+```
+wget https://github.com/TransDecoder/TransDecoder/archive/v3.0.1.zip
+```
+
+
+
+```
+$ cd /data/project_data/assembly/
+  $ /data/popgen/TransDecoder-3.0.1/TransDecoder.LongOrfs -t Trinity.fasta 
+-first extracting base frequencies, well need them later.
+CMD: /data/popgen/TransDecoder-3.0.1/util/compute_base_probs.pl Trinity.fasta 0 > Trinity.fasta.transdecoder_dir/base_freqs.dat
+CMD: touch Trinity.fasta.transdecoder_dir/base_freqs.dat.ok
+- extracting ORFs from transcripts.
+-total transcripts to examine: 73435
+[73400/73435] = 99.95% done  
+
+#################################
+### Done preparing long ORFs.{-}
+##################################
+	Use file: Trinity.fasta.transdecoder_dir/longest_orfs.pep  for Pfam and/or BlastP searches to enable homology-based coding region identification.
+	Then, run TransDecoder.Predict for your final coding region predictions.
+```
+
+Evaluate the "longest_orfs.cds" assembly after running Transdecoder.
+
+```
+$ /data/popgen/trinityrnaseq-Trinity-v2.3.2/util/TrinityStats.pl longest_orfs.cds
+################################
+### Counts of transcripts, etc.{-}
+################################
+Total trinity genes:	5693
+Total trinity transcripts:	8573
+Percent GC: 49.08
+########################################
+Stats based on ALL transcript contigs:
+########################################
+	Contig N10: 1626
+	Contig N20: 1032
+	Contig N30: 780
+	Contig N40: 612
+	Contig N50: 498
+	Median contig length: 390
+	Average contig: 518.78
+	Total assembled bases: 4447500
+#####################################################
+## Stats based on ONLY LONGEST ISOFORM per GENE:
+#####################################################
+	Contig N10: 1623
+	Contig N20: 1080
+	Contig N30: 828
+	Contig N40: 642
+	Contig N50: 528
+	Median contig length: 402
+	Average contig: 534.41
+	Total assembled bases: 3042405
+```
+
+We can also evaluate this assembly by using blastp to compare it to the uniprot_swissprot database.  
+
+```
+wget https://github.com/Trinotate/Trinotate/releases
+#### Run the script to download the relevant databases. {-}
+/data/popgen/Trinotate-3.0.1/admin/Build_Trinotate_Boilerplate_SQLite_db.pl  Trinotate
+```
+
+```
+#!/bin/bash/
+cd /data/popgen/databases/
+makeblastdb -in uniprot_sprot.pep -dbtype prot -out uniprot_sprot
+blastp -query /data/project_data/assembly/Trinity.fasta.transdecoder_dir/longest_orfs.pep  -db /data/popgen/databases/uniprot_sprot  -max_target_seqs 1 -outfmt 6 -evalue 1e-5 -num_threads 10 > blastp.outfmt6
+```
+
+```
+TransDecoder.Predict -t target_transcripts.fasta --retain_blastp_hits blastp.outfmt6
+```
+
+These transcriptome assembly processes are ongoing.  But for now we will map to the 5,693 "genes" based on the longest ORFs.
+
+Options for improving this assembly include: (1) using more reads from other individuals or trying a different individual, (2) changing the cleaning and assembly parameters. We can evaluate based on the percentage of genes that have good blastp hits and the percentage of single copy orthologs included in the reference (for example using the new program [BUSCO](http://busco.ezlab.org/).
+
+#### Map reads from individual samples to reference transcriptome{-}
+
+1. Navigate to the `/data/scripts/` directory to find a script called `bwaaln.sh` that you can 
+2. copy `cp` to your home directory `~/scritps/` and 
+3. open with `vim` to edit.  
+4. You need to enter your "left" reads file name (for those cleaned and paired).  
+5. Step through the script to make sure you understand each command.
+
+The script looks like this:
+
+```
+#!/bin/bash 
+ 
+# To run from present directory and save output: ./bwaaln.sh > output.bwaaln.txt 
+myLeft=38_6-24_S_5_R1.fq.gz_left_clean_paired.fq
+echo $myLeft
+myRight=${myLeft/_R1.fq.gz_left/_R2.fq.gz_right} 
+echo $myRight
+myShort=`echo $myLeft | cut -c1-11`
+echo $myShort
+# bwa index /data/project_data/assembly/longest_orfs.cds  # This only needs to be done once on the reference
+bwa aln /data/project_data/assembly/longest_orfs.cds /data/project_data/fastq/cleanreads/$myLeft > $myLeft".sai"
+bwa aln /data/project_data/assembly/longest_orfs.cds /data/project_data/fastq/cleanreads/$myRight > $myRight".sai"
+bwa sampe -r @RG\tID:"$myShort"\tSM:"$myShort"\tPL:Illumina \
+        -P /data/project_data/assembly/longest_orfs.cds $myLeft".sai" $myRight".sai" \
+        /data/project_data/fastq/cleanreads/$myLeft \
+        /data/project_data/fastq/cleanreads/$myRight > $myShort"_bwaaln.sam"
+```
+
+This script could also be made into a loop to map reads of all files one after another to the transcriptome.  We could also tidy up file names using `mv` or `rename`. 
+
+
+
+### Youve made a Sequence AlignMent (SAM) file! {-}
+  
+  A SAM file is a tab delimited text file that stores information about the alignment of reads in a FASTQ file to a reference genome or transcriptome. For each read in a FASTQ file, theres a line in the SAM file that includes 
+
+-   the read, aka. query, name, 
+
+-   a FLAG (number with information about mapping success and orientation and whether the read is the left or right read), 
+
+-   the reference sequence name to which the read mapped
+
+-   the leftmost position in the reference where the read mapped
+
+-   the mapping quality (Phred-scaled)
+
+-   a CIGAR string that gives alignment information (how many bases Match (M), where theres an Insertion (I) or Deletion (D))
+
+-   an =, mate position, inferred insert size (columns 7,8,9),
+
+-   the query sequence and Phred-scaled quality from the FASTQ file (columns 10 and 11),
+
+-   then Lots of good information in TAGS at the end, if the read mapped, including whether it is a unique read (XT:A:U), the number of best hits (X0:i:1), the number of suboptimal hits (X1:i:0).
+
+The left (R1) and right (R2) reads alternate through the file.  SAM files usually have a header section with general information where each line starts with the @ symbol. SAM and BAM files contain the same information; SAM is human readable and BAM is in binary code and therefore has a smaller file size. 
+
+Find the official Sequence AlignMent file documentation can be found [here](http://samtools.github.io/hts-specs/SAMv1.pdf).
+
+[This BWA man page](http://bio-bwa.sourceforge.net/bwa.shtml) also discusses SAM alignment format and BWA specific optional fields.
+
+- [Some FLAGs to know](http://seqanswers.com/forums/showthread.php?t=17314) - for example what do the numbers in the second column of data mean?  [Heres a SAM FLAG decoder](https://broadinstitute.github.io/picard/explain-flags.html) by the Broad Institute.
+
+- What about the map quality score, MapQ?  Thats important!  [Heres a reference](http://www.acgt.me/blog/2014/12/16/understanding-mapq-scores-in-sam-files-does-37-42).
+
+#### Lets check out our .sam files!  Try `head` and `tail`. {-}
+```
+tail -n 100 YOURFILENAME.sam > tail.sam
+vim tail.sam
+:set nowrap
+```
+  
+## RNAseq Map Count {-}
+
+
+### Sequence Alignment (SAM) files and Read count extraction {-}
+
+  #### Youve made a Sequence AlignMent (SAM) file! {-}
+  
+  A SAM file is a tab delimited text file that stores information about the alignment of reads in a FASTQ file to a reference genome or transcriptome. For each read in a FASTQ file, theres a line in the SAM file that includes 
+
+  - the read, aka. query, name, 
+  - a FLAG (number with information about mapping success and orientation and whether the read is the left or right read), 
+  - the reference sequence name to which the read mapped
+  - the leftmost position in the reference where the read mapped
+  - the mapping quality (Phred-scaled)
+  - a CIGAR string that gives alignment information (how many bases Match (M), where theres an Insertion (I) or Deletion (D))
+- an =, mate position, inferred insert size (columns 7,8,9),
+- the query sequence and Phred-scaled quality from the FASTQ file (columns 10 and 11),
+- then Lots of good information in TAGS at the end, if the read mapped, including whether it is a unique read (XT:A:U), the number of best hits (X0:i:1), the number of suboptimal hits (X1:i:0).
+
+The left (R1) and right (R2) reads alternate through the file.  SAM files usually have a header section with general information where each line starts with the @ symbol. SAM and BAM files contain the same information; SAM is human readable and BAM is in binary code and therefore has a smaller file size. 
+
+Find the official Sequence AlignMent file documentation can be found [here](http://samtools.github.io/hts-specs/SAMv1.pdf).
+
+[This BWA man page](http://bio-bwa.sourceforge.net/bwa.shtml) also discusses SAM alignment format and BWA specific optional fields.
+
+- [Some FLAGs to know](http://seqanswers.com/forums/showthread.php?t=17314) - for example what do the numbers in the second column of data mean?  [Heres a SAM FLAG decoder](https://broadinstitute.github.io/picard/explain-flags.html) by the Broad Institute.
+
+- What about the map quality score, MapQ?  Thats important!  [Heres a reference](http://www.acgt.me/blog/2014/12/16/understanding-mapq-scores-in-sam-files-does-37-42).
+
+#### Lets check out our .sam files!  Try `head` and `tail`. {-}
+
+```
+tail -n 100 YOURFILENAME.sam > tail.sam
+vim tail.sam
+:set nowrap
+```
+#### Lets see how many of our reads map uniquely. {-}
+
+Why is it important to consider whether a read maps uniquely (i.e., to one place in the transcriptome) for gene expression studies?
+  ```
+$ grep -c XT:A:U YOURFILENAME.sam 
+1177827
+$ grep -c X0:i:1 YOURFILENAME.sam
+1182952
+```
+You can check a number of other elements, total number of reads, search for the various flags... 
+
+#### Extract read counts from the .sam file from each sample {-}
+We will use a custom python script (by my friend Dan Barshis and published with the Simple Fools Guide to Population Genomics) called **countxpression.py**.  This script will take any number of input *.sam files and, for each .sam file, extract the number of reads that map to each gene (i.e. the "counts").  It will also generate a summary output of useful information including proportion of quality read alignments.  The script requires 4 input variables: mapqualitythreshold, lengththreshold, outputstatsfilename, anynumberofinputfiles. 
+```
+cd /data/scripts
+cp countxpression_pe.py ~/scripts      #or copy to your directory with the .sam file
+python countxpression_pe.py 20 35 countstatssummary.txt YOURFILENAME.sam
+```
+This python script will generate two files: a .txt file you named (3rd argument you passed the script) and a counts .txt file that includes the number of uniquely mapped reads to each gene in our transcriptome.
+Below are what the files should look like:
+```
+$ head NC_AD4_M3_bwaaln_counts.txt
+ContigName	UniqueTotReads	MultiTotReads	totalreadsgoodmapped
+OTAU000001-RA	11	207	218
+OTAU000002-RA	982	49	1031
+OTAU000003-RA	867	0	867
+OTAU000004-RA	338	0	338
+OTAU000005-RA	154	0	154
+OTAU000006-RA	26	0	26
+OTAU000007-RA	17	0	17
+OTAU000008-RA	1017	55	1072
+OTAU000009-RA	1984	0	1984
+```
+Once we have all the read counts extracted from each .sam file and in one directory, we can stitch them together with some bash scripting that I wrote.
+
+```
+# This loop takes the second column of data and renames the file to a shorter version of itself
+for filename in *counts.txt; do
+myShort=`echo $filename | cut -c1-11` 
+echo "$myShort" > $myShort"_uniqmaps.txt"    
+cut -f 2 "$filename" > $myShort"_uniqmaps.txt"  
+done 
+# makes many individual files, but they dont have the header inserted
+# This loop uses the tail command to get rid of the the first line
+for filename in *_uniqmaps.txt; do
+tail -n +2 -- "$filename" > $filename"_uniqmapsNH.txt"  
+done 
+# This loop inserts the shortened version of the filename as the first line using the echo (print) and cat functions
+for filename in *_uniqmapsNH.txt; do (myShort=`echo $filename | cut -c1-11`;echo "$myShort"; cat $filename) > tmp; mv tmp $filename; done
+# This combines all the single column datafiles into one!
+paste *_uniqmapsNH.txt > allcountsdata.txt
+# Add row/gene names to table by cutting and pasting in the first column from one of your counts files.
+cut -f 1 38_6-24_S_5_bwaaln_counts.txt | paste - allcountsdata.txt > allcountsdataRN.txt
+# Change the name back to allcountsdata.txt
+mv allcountsdataRN.txt allcountsdata.txt
+# Check out your data file!
+vim allcountsdata.txt
+# to view with tabs aligned.
+:set nowrap  
+# clean up files, get rid of intermediate files
+rm *uniqmaps*
+  
+  ```
+#### Processes going on in the background {-}
+1. Making new assembly with more sequence data
+2. Testing assembly quality several ways:
+  - stats (N50, number of contigs, etc.)
+- proportion with high quality blastp match to (a) uniprot, (b) Patiria miniata, and (c) Strongylocentrotus purpuratus
+- Proportion single-copy core eukaryotic genes represented.
+3. Cleaning the second half of the samples/reads that just finished downloading 2/14!
+  4. Map all reads to new assembly
+5. Extract read counts using custom python script.
+Hopefully all of this will be done within a week by our next class session - next Wednesday
+__________
+Clean up file names. Run script for the paired and unpaired files:
+  ```
+for file in *.fq.gz_*_clean_paired.fq ; do mv $file ${file//.fq.gz_*_clean_paired.fq/.cl.pd.fq} ; done
+for file in *.fq.gz_*_clean_unpaired.fq ; do mv $file ${file//.fq.gz_*_clean_unpaired.fq/.cl.un.fq} ; done
+```
+```
+cat 08_5-08_H_0_R1.cl.pd.fq 08_5-11_S_1_R1.cl.pd.fq 08_5-14_S_1_R1.cl.pd.fq 08_5-17_S_2_R1.cl.pd.fq 08_5-20_S_3_R1.cl.pd.fq 10_5-08_H_0_R1.cl.pd.fq 10_5-11_H_0_R1.cl.pd.fq 10_5-14_H_0_R1.cl.pd.fq 10_5-17_H_0_R1.cl.pd.fq 10_5-20_S_2_R1.cl.pd.fq 35_6-12_H_0_R1.cl.pd.fq 35_6-15_H_0_R1.cl.pd.fq 35_6-18_H_0_R1.cl.pd.fq 35_6-21_H_0_R1.cl.pd.fq 36_6-12_S_1_R1.cl.pd.fq 36_6-15_S_2_R1.cl.pd.fq 36_6-18_S_3_R1.cl.pd.fq > 08-11-35-36_R1.cl.pd.fq
+cat 08_5-08_H_0_R2.cl.pd.fq 08_5-11_S_1_R2.cl.pd.fq 08_5-14_S_1_R2.cl.pd.fq 08_5-17_S_2_R2.cl.pd.fq 08_5-20_S_3_R2.cl.pd.fq 10_5-08_H_0_R2.cl.pd.fq 10_5-11_H_0_R2.cl.pd.fq 10_5-14_H_0_R2.cl.pd.fq 10_5-17_H_0_R2.cl.pd.fq 10_5-20_S_2_R2.cl.pd.fq 35_6-12_H_0_R2.cl.pd.fq 35_6-15_H_0_R2.cl.pd.fq 35_6-18_H_0_R2.cl.pd.fq 35_6-21_H_0_R2.cl.pd.fq 36_6-12_S_1_R2.cl.pd.fq 36_6-15_S_2_R2.cl.pd.fq 36_6-18_S_3_R2.cl.pd.fq > 08-11-35-36_R2.cl.pd.fq
+```
+Install latest Trinity and bowtie2, based on directions [here](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Installing%20Trinity):
+  ```
+wget https://github.com/trinityrnaseq/trinityrnaseq/archive/Trinity-v2.4.0.zip
+unzip Trinity-v2.4.0.zip
+rm Trinity-v2.4.0.zip
+cd trinityrnaseq-Trinity-v2.4.0
+make
+make plugins
+```
+```
+wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.0/bowtie2-2.3.0-linux-x86_64.zip
+unzip bowtie2-2.3.0-linux-x86_64.zip
+rm bowtie2-2.3.0-linux-x86_64.zip
+ln -s /data/popgen/bowtie2-2.3.0/bowtie2 /usr/local/bin
+ln -s /data/popgen/bowtie2-2.3.0/bowtie2-build /usr/local/bin
+```
+Start screen and run trinity.
+```
+screen -r 30308.pts-1.pbio381
+/data/popgen/trinityrnaseq-Trinity-v2.4.0/Trinity --seqType fq --max_memory 50G \
+--left /data/project_data/fastq/cleanreads/08-11-35-36_R1.cl.pd.fq \
+--right /data/project_data/fastq/cleanreads/08-11-35-36_R2.cl.pd.fq \
+--CPU 20 > run.log 2>&1 &
+  ```
+
+#### Lets install DESeq2 in R studio and look at a script and example data file. {-}
+[Heres](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) the package website with installation instructions, manual, tutorials, etc.
+Love MI, Huber W and Anders S (2014). “Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2.” *Genome Biology*, **15**, pp. 550. [doi: 10.1186/s13059-014-0550-8](http://doi.org/10.1186/s13059-014-0550-8).
+
+```
+source("https://bioconductor.org/biocLite.R")
+biocLite("DESeq2")
+```
+
+ ## RNAseq_DGE {-}
+  #### Update on Making and Mapping to a new reference transcriptome {-}
+  
+  1. Concatenated fastq files from 4 individuals (over 200M reads) both sick and healthy.
+2. Digital normalization by kmer to make a smaller file size (8.7% of original size).
+3. Ran Trinity with really low max-memory and CPUs so that it would complete without crashing
+4. Predicted ORFs with TransDecoder.pl script.
+5. Evaluated contig stats to find that they were fewer, longer contigs.
+6. Mapped reads to this new assembly.
+7. Extracted read counts
+8. Assembled read counts table.
+
+
+
+#### Differential gene expression analyses using DESeq2 {-}
+
+1. Transfer the data files and the R scripts to your computer from the server. On Windows you can use WinSCP to drag and drop the files.  On a mac, from a terminal window on your computer, navigate to where you want to put the files:
+  ```
+cd /place/where/you/want/the/files/on/your/computer/
+  scp youruserid@pbio381.uvm.edu:/data/project_data/DGE/* .   
+```
+The wildcard ("*") grabs everything in that directory on the server and moves it to the present directory (".").
+
+2. Lets work through the script **DESeq2_exploreSSW_trim.R** script together...
+
+3. [Heres a link to the DESeq2 tutorial](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2_pdf.pdf)
+
+
+## Pop Genomics SNP & vcftools {-}
+
+
+### Population Genomics 1: Intro to working with SNP data in variant call format (vcf), and manipulation with vcftools {-}
+
+#### March 06, 2017  {-}
+
+When doing population genomics on large genome-wide or transcriptome-wide datasets, we generally want to work with files that contain just the polymoprhic sites and omit sites that are fixed. But theres also a lot of metadata from our assembly (remember those good ol sam files?) that will be important for analyzing the SNP data downstream. 
+
+*These are things like:*
+  
+  - **Position**: Where is the SNP located within a contig or chromosome of the reference assembly?
+  - **Alleles**: What are the alleles present at a given SNP? Are there only 2, or are there more? Are they single-nucleotide differences?
+  - **Depth**: How many reads cover a given SNP? How many reads were observed for each allele?
+  - **Genotype Quality (GQ):**  How confident are we that were calling the correct genotype (ex., AA, AT, or TT)?
+- **Sample Names:** Where are the data for each individual sample?
+
+
+
+As usual, the community has converged on a common standard to represent these large and sometimes complex SNP data files. It is known as the Variant Call Format, or VCF. Heres a link to the description of what each field in a VCF file means:  [VCF version 4.3 file definition](https://github.com/samtools/hts-specs/blob/master/VCFv4.3.pdf)
+
+
+
+I called SNPs using the method implemented in Gayral et al. (2014) called **reads2snp**. To get us started for today, I used just a single sample library from each individual (the first dated one). Heres the list:
+
+```
+<!-- 03_5-08_S_2 -->
+<!-- 07_5-08_S_1 -->
+<!-- 08_5-08_H_0 -->
+<!-- 09_5-08_H_0 -->
+<!-- 10_5-08_H_0 -->
+<!-- 14_5-08_S_2 -->
+<!-- 15_5-08_H_0 -->
+<!-- 19_5-11_H_0 -->
+<!-- 20_5-08_H_0 -->
+<!-- 22_5-08_S_1 -->
+<!-- 23_5-17_S_2 -->
+<!-- 24_5-08_H_0 -->
+<!-- 26_5-08_S_2 -->
+<!-- 27_5-08_H_0 -->
+<!-- 28_5-08_S_1 -->
+<!-- 29_5-08_S_2 -->
+<!-- 31_6-12_H_0 -->
+<!-- 32_6-12_H_0 -->
+<!-- 33_6-12_H_0 -->
+<!-- 34_6-12_H_0 -->
+<!-- 35_6-12_H_0 -->
+<!-- 36_6-12_S_1 -->
+<!-- 37_6-12_H_0 -->
+<!-- 38_6-12_H_0 -->
+```
+
+Eventually, well work with *all* the reads from a given individual by combining across libraries for the same genotype prior to SNP calling. More on that later...
+
+  
+### Variant Call Format (VCF) for SNP data {-}
+  
+  Well be working with vcf files a lot as we conduct the population genomics section of the course. The first step in learning how to work with these files is to use a program called **VCFTools** for parsing your data file into just those samples and sites of interest, and to calculate diversity stats on these.
+
+The manual page for VCFtools is an excellent resource! [The latest version is here.](https://vcftools.github.io/man_latest.html) 
+
+#### Basic Syntax and Usage  {-}
+
+Now: **cd** to the directory `/data/project_data/snps/reads2snps/` and do an **ll** using the wildcard *vcf…. you should see the following vcf files in the directory:
+
+```
+[srkeller@pbio381 reads2snps]$ ll *vcf
+-rw-r--r--. 1 srkeller users      17426 Mar  6 06:18 head_SSW_bamlist.txt.vcf
+-rw-r--r--. 1 srkeller users 1364923952 Mar  6 02:37 SSW_bamlist.txt.vcf
+[srkeller@pbio381 reads2snps]$ 
+```
+
+The file you want is **SSW_bamlist.txt.vcf**.  The other file is just the header so you can look at the formatting of the file in **VIM** without having to open the big file.
+
+
+
+Were going to use VCFtools to examine the effects of different filtering strategies on the number of SNPs we get and their quality. The first step is seeing if VCFtools likes our file format, and getting some basic info on the # of SNPs and samples.
+
+```bash
+vcftools --vcf filename.vcf
+```
+
+This will return some basic info that should match of general expectations of sample size. 
+
+*Did it detect the correct number of individuals?* 
+  
+  *How many SNPs do we have?*
+  
+  
+  
+  During SNP calling, **reads2snp** applied the following fairly stringent criteria when calling SNPs:
+  
+  * Minimum depth to call a genotype = 10 reads
+* Minimum genotype posterior probability = 0.95
+
+
+
+Any SNPs that didnt meet that criteria were flagged as **unres** (=unresolved) and set to missing data in the vcf file. Similarly, loci that show evidence of paralogy were flagged as **para**.
+
+*How could we quickly find out how many SNPs were flagged as unresolved?*
+*What about the number affected by paralogy?*
+
+
+
+Now, lets try filtering out positions that are likely to be errors in the sequencing or genotyping process. For now, lets just identify how many SNPs would pass each filter without actually changing the datafile at all. Then, we can decide what combination of filters we may want to implement.
+
+#### Record for each of the following steps the number of SNPs (aka sites) that would be make it through each filter: {-}
+
+* *Biallelic vs. multi-allelic SNPs:*  Keep only sites with 2 alleles. 
+  * Rationale: When looking at diversity within species, its very rare to have mutations occur at the same position. So, SNPs with >2 alleles probably reflect sequence or mapping errors. We also want to get rid of SNPs showing <2 alleles.
+
+```bash
+vcftools --vcf filename.vcf --min-alleles 2 --max-alleles 2
+```
+
+
+
+* *Minor allele frequency (MAF):* Gets rid of very rare SNPs (based on a user-defined threshold).
+* Rationale: Sequencing errors are relatively common, but they tend to happen randomly and affect only 1 read at a time. Thus, if we have a SNP that is only seen very rarely, it may be a sequencing error, and should be discarded. For us, the most liberal MAF filters would be 1 allele copy out of the total 2N copies, or 1/48 = 0.02
+
+```bash
+vcftools --vcf filename.vcf --maf 0.02
+```
+
+- *Missing data across individuals:* Get rid of sites where  fewer than 80% of our samples have data. 
+- Rationale: Missing data is a problem for any analysis, and population genetic statistics can behave oddly (i.e.. become biased) when a lot of individuals are missing data for a given SNP. 
+
+```bash
+ vcftools --vcf filename.vcf --max-missing 0.8
+```
+
+
+
+#### Combining filters {-} 
+
+Now, its time to combine filters instead of applying them one at a time. **NOTE:** VCFtools processes the filter requests in the order that you give it at the command-line. This is a key point, and means that if you apply the same filters in different orders, you will likely get different results!
+
+* I recommend the following order:   biallelic filter>MAF>missingness
+* To output the resulting filtered data as a new vcf file, add the "—recode —out outfilename" to the end of the command. 
+
+```bash
+vcftools --vcf filename.vcf --min-alleles 2 --max-alleles 2 --maf 0.02 --max-missing 0.8 --recode --out ~/biallelic.MAF0.02.Miss0.8
+```
+*Note that I re-directed the output file to my home directory. You should do the same!*
+
+#### Getting summary stats for downstream analysis and plotting in R {-}
+
+VCFtools also can provide output in the form of many useful summary stats on a vcf file. Lets look at the observed and expected heterozygosity for each SNPs and test if any violate Hardy-Weinberg equilibrium expectations: **(1=p^2 + 2pq + q^2)**. Use the quality-filtered file we generated above as input.
+
+```
+vcftools --vcf filtered_filename.vcf --hardy 
+```
+
+You can then bring this into R to take a look at which sites show deviation from HWE...
+
+
+## Pop Genomics estimating dyiversity {-}
+
+### Population Genomics 2: Estimating the diversity present within populations {-}
+
+### March 08, 2017ith {-}
+
+Where last we left off…...
+
+We were filtering SNPs and looking at how SNPs may show signs of deviation from Hardy-Weinberg equilibrium, either as a heterozygote excess OR a deficit. Let's check this again, but now we're working with ALL the sequence libraries merged per individual. Yeah! Also, were now going to use a compressed (gzipped) file to save some space. 
+
+Lets first re-apply our filters, and zip up the resulting filtered output file. Then we can take a look at Hardy-Weinberg Equilibrium (HWE).
+
+**PATH TO THE DATA:** 
+  
+  ```
+/data/_project_data/snps/reads2snps/SSW_byind.txt.vcf.gz
+```
+
+*VCFtools filtering strategy (same as last session):*
+  
+  ```bash
+$ vcftools --gzvcf SSW_byind.txt.vcf.gz --min-alleles 2 --max-alleles 2 --maf 0.02 --max-missing 0.8 --recode --out ~/SSW_all_biallelic.MAF0.02.Miss0.8  
+$ gzip SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf
+$ vcftools --gzvcf SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf --hardy
+```
+
+You can then bring the HWE output file (called "out.hwe") into **R** to take a look at which sites show deviation of observed from expected heterozygosity. Lets do this all together.
+
+
+#### Getting summary stats for downstream analysis and plotting in R {-}
+
+In the last session, we got familiar with working with SNP data in VCF files, and doing some basic filtering. Now that we have a filtered SNP dataset that has high-quality sites in it, lets look at some different measures of genetic diversity in our sea star population. 
+
+Keep in mind that the diversity of a population primarily reflects its **effective population size (Ne)**.  Ne is shaped by many different aspects of a specieslife history and ecology (sex ratio, generation time, mating system, offspring number, and many more!) as well as the populations history (bottlenecks, population growth). As a result, looking at the diversity within populations (and comparing to other populations or species) is a critical step in understanding how ecology shapes genomes. 
+
+Now: Lets take a more in-depth look at the diversity hidden within these sea star data. There are many different ways to look at the diversity within populations using SNPs. Here are some that well think about for today:
+  
+  
+  - **Nucleotide diversity (pi)**: The average number of pairwise differences between all individuals in the population. This is equivalent to the expected heterozygosity (2pq) for a bi-allelic locus.
+- **Allele frequencies (*p* and *q*)**: What is the frequency of a given SNP? Usually defined in terms of the Major (common) and minor (rare) allele at each SNP locus.
+- **Site Frequency Spectrum (SFS):** Also known as the "Allele Frequncy Spectrum". It is the histogram of allele frequencies across all SNP loci. In other words, how many loci are rare (say, frequency in the population between 0-0.1)? How many loci are common (0.4-0.5)? It turns out the shape of this distribution has an incredible amount of information in it…both about the populations demographic history (Ne, size changes) and also selection (purifying selection, positive selection)
+
+
+
+
+Weve been talking about **pi** in the last 2 papers, and seen that this relates to effective population size (Ne). Lets calculate **pi** first:
+
+```bash
+$ vcftools --gzvcf filenamevcf.gz --site-pi --out SSW_pi
+```
+
+
+
+### Diversity metrics based on subsetting your VCF files {-}
+
+Many times well want to subset the total SNP dataset to analyze diversity in different groups. Say, compare allele frequencies in all the Healthy vs. Sick seastars. Or Intertidal vs. Subtidal. This is easy, you just need to create a separate text file containing which samples below to which groups so you can tell VCFtools how to split things up.
+
+As an example, **lets compare the SNP frequencies for all loci between Healthy and Sick animals**. Perhaps there are some loci that contribute to a difference in pathogen susceptibility, which could be identified this way. Lets take a look.
+
+First, you need to create text files containing the individual IDs for just Sick individuals. The following file has all the sample IDs in it that are part of your VCF file (SNPs=Y,N), along with Health Trajectory (HH,HS,SS,MM), and Location (INT,SUB): 
+  
+  ```
+/data/project_data/snps/reads2snps/ssw_healthloc.txt
+```
+
+Use this file to get *just the **healthy** individual sample IDs*. 
+
+How can we create these files in a clever, unix-y way?   HINT: grep!   ;)
+
+Name it:
+  
+  * **"H_OneSampPerInd.txt"**
+  
+  Create another for *just the **sick** individuals*:
+  
+  * **"S_OneSampPerInd.txt"**
+  
+  
+  Well also want to remove all but the first column of data — the sample IDs. Heres a trick:
+  
+  ```
+$ cut -f1 H_OneSampPerInd.txt >H_SampleIDs.txt
+```
+
+Do the same for Sick individuals.
+
+Now that we have our individuals separated by disease status, we can call VCFtools to calculate allele frequencies separately for each population. This will require 2 separate calls to VCFtools.
+
+**Allele Frequencies between Healthy and Sick individuals:**
+  
+  ```bash
+$ vcftools --vcf filename.vcf --freq2 --keep H_SampleIDs.txt --out H_AlleleFreqs
+```
+
+```bash
+$ vcftools --vcf filename.vcf --freq2 --keep S_SampleIDs.txt --out S_AlleleFreqs
+```
+
+Before we bring this into R for plotting, lets gather one more comparison between our groups. 
+
+
+
+Recall that Wrights Fst measures allele frequency variance between groups, but standardizes the estimate based on the mean frequencies within groups. This gives a complimentary view to just comparing the raw frequencies.
+
+**Fst between Healthy and Sick individuals:**
+  
+  ```bash
+$ vcftools --vcf ~/filename.vcf --weir-fst-pop ~/H_SampleIDs.txt --weir-fst-pop ~/S_SampleIDs.txt --out HvS_OneSampPerInd
+```
+
+Now, we can import these datasets into R and make some plots to examine how the diversity varies in our dataset. We can get the data into R in one of 2 ways:
+  
+  1. Download the results files to our laptops using scp or Fetch [MacOS] or Winscp [PC]
+2. Stay on the server, and use the command-line version of R. This latter option can be more efficient if we want to do a quick look and make some simple plots, but isnt good for more complicated tasks. Heres how you would do R at the command-line on the server:
+  
+  ```R
+[srkeller@pbio381 reads2snps]$ R
+
+R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+> fst <- read.table("HvS_OneSampPerInd.weir.fst",header=T)
+> str(fst)
+'data.frame':	442 obs. of  3 variables:
+  $ CHROM : Factor w/ 111 levels "TRINITY_DN35598_c0_g1_TRINITY_DN35598_c0_g1_i1_g.5802_m.5802",..: 65 65 100 100 100 100 100 100 88 88 ...
+$ POS : int  4566 4665 978 1404 1722 3426 3729 3912 115 141 ...
+$ WEIR_AND_COCKERHAM_FST: num  0.0305 0.0085 0.0305 -0.0188 0.0732 ...
+```
+
+OK, looks like the data read in to R OK. Lets make a quick histogram of Fst and save as a pdf in our home directory on the server (~/)
+
+```R
+> pdf("HvS_Fst.pdf")
+> hist(fst$WEIR_AND_COCKERHAM_FST, breaks=20, col="red")
+> dev.off()
+null device 
+          1
+```
+
+* The first line creates the file and calls it by a name of our choosing
+* The second line asks for a histogram plot of the data, specifying the x-axis to be broken into 20 bins and to plot each bar in red
+* The last line turns the plotting device (dev) off. This tells R to save and close the plot. If you look in your home directoty on the server, youll see you pdf waiting for you….
+
+
+
+Lets also bring in the Allele Frequency results we got from VCFtools. Two interesting results to look for are:
+
+1.   Calculating allele frequency differences between Healthy vs. Sick individuals for each SNP
+
+	2. Calculate the Site Frequency Spectrum (SFS), which is simply a histogram of the allele frequencies across loci
+
+When youre done, end your **R** session and return to the command line:
+  
+  ```bash
+> quit()
+Save workspace image? [y/n/c]: n
+[srkeller@pbio381 ~]$ 
+  ```
+
+
+  
+  ###Comparing Sea Star nucleotide diversity and piN/piS to the sample of metazoans that Romiguier et al. (2014) report.{-}
+  
+  Romiguier et al. report on some very intriguing associations between species life history traits, nucleotide diversity at synonymous sites (piS), and the ratio of piN/piS (where piN is nucleotide diversity at nonsynonymous site). 
+
+(http://www.nature.com/nature/journal/v515/n7526/images/nature13685-f2.jpg)
+
+
+
+What do our sea star data have to say about this? Or more importantly: ***where do sea stars fall on the genomic diversity ~ life history continuum?***
+  
+  
+  
+  Estimating piS and piN on the entire dataset will take some time. Lets try and set this up at the end of the day and let it run. Well use the piNpiS program from Gayral et al. (2013) to run this. We only need a single input file, which is a FASTA formatted sequence file that is output from **reads2snps**
+  
+  ```bash
+$ cd /data/project_data/snps/reads2snps
+[srkeller@pbio381 reads2snps]$ /data/popgen/dNdSpiNpiS_1.0 -alignment_file=SSW_byind.txt.fas -ingroup=sp
+```
+
+While we wait for that to chug along, we can look at the output from the smaller VCF file run on just 1 sample library per individual. The output gives several files; here are the important ones:
+  
+  * Detailed results file with nucleotide diversity calculated for each gene:
+  
+  * ```
+/data/project_data/snps/reads2snps/SSW_bamlist.txt.out
+```
+
+* Overall summary of results, including mean (and confidence intervals) of diversity when averaged across all expressed genes:
+  
+  * ```bash
+/data/project_data/snps/reads2snps/SSW_bamlist.txt.sum
+```
+
+
+
+To compare the mean values across genes to Romiguiers data, we need to get their estimates and combine them with our estimates. Ive downloaded Table S3 to our server and saved as a common separated (.csv) file:
+  
+  ```bash
+/data/project_data/snps/reads2snps/Romiguier_nature13685-s3.csv
+```
+
+
+#### Class estimates of Ne {-}
+
+1. 1 million    
+2. 1 billion
+3. infinity
+4. $\frac{1}{2}$ million    
+5. $\frac{1}{4}$ million
+6. 10 million
+
+
+## Pop Genomics Allele freq and diversity {-}
+
+### Population Genomics 3: Finishing allele frequency and diversity calculations {-}
+
+##### March 20, 2017 {-}
+
+Today, well finish up our calculations of allele frequencies and nucleotide diversity in the SSW data, before moving on to testing if there population structure (in the next session). 
+
+First, recall that our previous SNP vcf file had 22 of 24 individuals in it. I found the missing 2 individuals (!) and have now called SNPs for all 24 individuals using **reads2snps**. 
+
+**PATH TO THE FINAL VCF DATA (all 24 INDS):** 
+  
+  ```
+/data/project_data/snps/reads2snps/SSW_by24inds.txt.vcf.gz
+```
+
+* *Use VCFTools to filter genotypes and save in your home directory in gzipped format:*
+  
+  ```bash
+$ cd /data/project_data/snps/reads2snps
+$ vcftools --gzvcf SSW_by24inds.txt.vcf.gz --min-alleles 2 --max-alleles 2 --maf 0.02 --max-missing 0.8 --recode --out ~/SSW_all_biallelic.MAF0.02.Miss0.8  
+$ cd ~/
+  $ gzip SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf
+```
+
+
+  #### Estimate allele frequencies in H and S:{-}
+  
+  **Let compare the SNP frequencies for all loci between Healthy and Sick animals**. Perhaps there are some loci that contribute to a difference in pathogen susceptibility, which could be identified this way? Let take a look.
+
+First, we need to re-create our text files containing the individual ID for just Sick (and separately, just Healthy) individuals. These meta-data are in the following file:
+
+```
+/data/project_data/snps/reads2snps/ssw_healthloc.txt
+```
+
+Remember how to parse this file on the command line to get *just the **healthy** individual IDs*? Here the strategy:
+  
+  * Use **grep** to match rows of data for disease trajectory
+* Pipe the results to **cut** to grab just the 1st column (-f1) corresponding to sample ID. 
+* Save the output to your home directory and name it: **"H_SampleIDs.txt"**
+
+```bash
+$ cd /data/project_data/snps/reads2snps/
+$ grep "HH" ssw_healthloc.txt | cut -f1 >~/H_SampleIDs.txt
+```
+
+* Confirm  that there are 8 individuals in your output file.
+* Do the same for Sick individuals, saving to your home directory as: **"S_SampleIDs.txt"**. The **grep** command here is a little different, since we want to match *either* HS *or* SS.  The "\\|" part of the match tells  **grep** to match HS *OR* SS
+
+```bash
+$ grep "HS\|SS" ssw_healthloc.txt | cut -f1 >~/S_SampleIDs.txt
+```
+
+* Confirm that there are 14 individuals in your output file
+
+
+
+Now call VCFtools on your filtered gzipped vcf file saved in your home directory to calculate allele frequencies for each group. This will require 2 separate calls to VCFtools.
+
+**Allele Frequencies between Healthy and Sick individuals:**
+
+```bash
+$ cd ~/<path to your filtered vcf file in your home directory>
+$ vcftools --gzvcf SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.gz --freq2 --keep H_SampleIDs.txt --out H_AlleleFreqs
+```
+
+```bash
+$ vcftools --gzvcf SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.gz --freq2 --keep S_SampleIDs.txt --out S_AlleleFreqs
+```
+
+
+
+Let also calculate Wright Fst between H and S groups, which standardizes allele frequency differences based on the mean frequencies within groups. 
+
+**Fst between Healthy and Sick individuals:**
+
+```bash
+$ vcftools --gzvcf SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.gz --weir-fst-pop H_SampleIDs.txt --weir-fst-pop S_SampleIDs.txt --out HvS_Fst
+```
+
+
+
+Now, we can import these datasets into **R** and make some plots to examine how the diversity and differentiation varies in our dataset:
+
+1. Download all 3 new results files to your laptop using **scp** or **Fetch** [MacOS] or **WinScp** [PC]
+2. Open the **H_AlleleFreqs.frq** file in a text editor and edit the header line as follows:
+   1. DELETE:   {Freq}
+   2. REPLACE with:   H_REF <tab> H_ALT
+   3. Do the same for the **S_AlleleFreqs.frq** file...
+3. Open **R**, paste the following into an R script, and work through it:
+
+```R
+# Set your working directory to where you downloaded your results files:
+setwd("~/github/PBIO381_srkeller_labnotebook/results/")
+
+# List the files in this directory -- you should see your results output from VCFTools if the download was successful
+list.files()
+
+# Let do the allele freq comparisons first:
+  H_freq <- read.table("H_AlleleFreqs.frq", header=T)
+S_freq <- read.table("S_AlleleFreqs.frq", header=T)
+
+# Since these files have identical numbers of SNPs in the exact same order, we can concatenate them together into one large dataframe:
+All_freq <- merge(H_freq, S_freq, by=c("CHROM", "POS"))
+
+# Check the results of your merge to make sure things look OK
+str(All_freq) # shows the structure of the data
+head(All_freq)
+
+# Looks good, now let calculate the difference in minor allele frequency at each SNP and plot as a histogram
+All_freq$diff <- (All_freq$H_ALT - All_freq$S_ALT)
+
+hist(All_freq$diff, breaks=50, col="red", main="Allele frequency difference (H-S)")
+
+# Looks like most loci show little difference (i.e., likely drift), but perhaps a few show very large differences between healthy and sick (drift or selection?)
+
+# How do these highly divergent frequenices compare to Fst at the same SNPs?
+fst <- read.table("HvS_Fst.weir.fst", header=T)
+
+All_freq.fst <- merge(All_freq, fst, by=c("CHROM", "POS"))
+
+plot(All_freq.fst$diff, All_freq.fst$WEIR_AND_COCKERHAM_FST, xlab="Allele frequency difference (H-S)", ylab="Fst", main="Healthy vs. Sick SNP divergence")
+
+# Which are the genes that are showing the highest divergence between Healthy and Sick?
+All_freq.fst[which(All_freq.fst$WEIR_AND_COCKERHAM_FST>0.2),]
+```
+
+
+
+  
+####Comparing Sea Star nucleotide diversity and piN/piS to the sample of metazoans that Romiguier et al. (2014) report.{-}
+  
+  Romiguier et al. report on some very intriguing associations between species life history traits, nucleotide diversity at synonymous sites (piS), and the ratio of piN/piS (where piN is nucleotide diversity at nonsynonymous site). 
+
+(http://www.nature.com/nature/journal/v515/n7526/images/nature13685-f2.jpg)
+
+
+
+What do our sea star data have to say about this? Or more importantly: ***where do sea stars fall on the genomic diversity ~ life history continuum?***
+  
+  Estimating piS and piN on the entire dataset will take some time. Let try and set this up at the end of the day and let it run. 
+
+Well use the **piNpiS** script from Gayral et al. (2013) to run this. We only need a single input file, which is a FASTA formatted sequence file that is output from **reads2snps**, and well save the output to our home directories:
+
+```bash
+$ cd /data/project_data/snps/reads2snps
+$ /data/popgen/dNdSpiNpiS_1.0 -alignment_file=SSW_by24inds.txt.fas -ingroup=sp -out=~/dNdSpiNpiS_output
+```
+
+
+
+While we wait for that to chug along (itll calculate confidence intervals from 10,000 bootstraps…which takes ~5 hours on our data), we can look at the summary output from the smaller VCF file run previously on just 1 sample library per individual:
+  
+  * ```bash
+$ cat SSW_bamlist.txt.sum
+```
+
+* Record what we got for our sea stars:
+  
+  * piS: _________
+* piN: _________
+* ave. piN/piS: _________
+
+To compare the mean values across genes to Romiguier data, we need to get their estimates and combine them with our estimates. Ive downloaded Romiguier Table S3 to our server and saved as a common separated (.csv) file.
+
+```bash
+/data/project_data/snps/reads2snps/Romiguier_nature13685-s3.csv
+```
+
+Download this file to your laptop and then import it into **R**:
+
+```R
+# Set your working directory to where you downloaded your file:
+setwd("~/github/PBIO381_srkeller_labnotebook/data/")
+
+# List the files in this directory
+list.files()
+
+# Read in the Romiguier data:
+Rom <- read.csv("Romiguier_nature13685-s3.csv", header=T)
+
+# Import OK?
+str(Rom) 
+head(Rom)
+
+# Looks good!
+# Now let look at how the strength of purifying selection (piN/piS) compares to the size of Ne (piS). Well plot these on a log scale to linearize the relationship.
+plot(log(Rom$piS), log(Rom$piNpiS), pch=21, bg="blue", xlab="log Synonymous Nucleotide Diversity (piS)", ylab="log Ratio of Nonysn to Syn Diversity (piN/piS)", main="Purifying Selection vs. Effective Population Size")
+
+# Now let add our SSW points to the existing plot and give them a different symbol
+points(log(0.00585312), log(0.264041), pch=24, cex=1.5, bg="red") 
+
+# We can also add a regression line to the plot to see how far off the SSW estimates are from expectation
+reg <- lm(log(Rom$piNpiS) ~ log(Rom$piS)) # Fits a linear regression
+abline(reg) # adds the regression line to the plot
+
+# It would be useful to highlight the other echinoderms in the dataset...do our seastars behave similarly?
+echino <- Rom[which(Rom$Phylum=="Echinodermata"),] # subsets the data
+points(log(echino$piS), log(echino$piNpiS), pch=21, bg="red") # adds the points
+
+# Lastly, let add a legend:
+legend("bottomleft", cex=1, legend=c("Metazoans", "Echinoderms", "P. ochraceus"), pch=c(21,21,24), col=c("blue", "red", "red"))
+
+# Pisaster seems to be in a group with other echinoderms that have relaxed purifying selection (high piN/piS), given their Ne...Interesting! Can we hypothesize why this might be?
+```
+
+
+
+## Pop Genomics PCA and Admixture {-}
+
+### Population Genomics 4: Population Structure with PCA and ADMIXTURE {-}
+
+#### March 27, 2017 (revised after class to correct typos) {-}
+
+Our next goal is to look for the presence of population structure in our sample of sea stars. Recall that these animals were all collected from the same general geographic area, and the dispersal ability of sea star gametes and juvelines is pretty impressive. So, we dont necessarily expect to find a lot of structure, but one nevers knows without checking...
+
+Well take 2 different approaches to test if there is any population structure present in our sample: 
+  
+  1. Principal Component Analysis (PCA) and related analyses on the SNPs to see if they group by sampling locality or disease status
+
+2. The maximum likelihood ADMIXTURE program to cluster genotypes into *K*  groups, in which well vary *K* from 1 - 10
+
+
+   Keep in mind, both analyses are naive with regard to the actual sampling locality of individuals, so they provide a relatively unbiased way of determining if there are actually >1 genetically distinct groups represented in the data.
+
+
+
+#### PCA on SNP genotypes: {-}
+
+Principal Components Analysis (PCA) is a powerful multivariate technique to reduce the dimensionality of large SNP datasets into a few synthetic axes (PCs) that describe the major structure present in the data. Well do this in **R** using the *adegent* package ([adegenet manual available here](https://cran.r-project.org/web/packages/adegenet/adegenet.pdf)).
+
+
+
+* Transfer your filtered vcf.gz file (SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.gz) from the server to your local machine. You know the drill…use Fetch, WinScp, or scp at the command-line.
+* Also transfer the metadata on ssw locality and disease, found here:
+
+```
+/data/project_data/snps/reads2snps/ssw_healthloc.txt
+```
+
+
+
+* Open **R**, paste the following into an R script, and work through it:
+
+```R
+# Set your working directory to where you downloaded your results files:
+setwd("~/github/PBIO381_srkeller_labnotebook/data/SNP_data/")
+
+list.files() # Do you see your downloaded files there? If not, double check to make sure youve set your working directory to the right spot
+
+# Well need to install 2 packages to work with the SNP data:
+install.packages("vcfR") # reads in vcf files and proides tools for file conversion 
+install.packages("adegenet") # pop-genetics package with some handy routines, including PCA and other multivariate methods (DAPC)
+
+# ...and load the libraries
+library(vcfR)
+library(adegenet)
+
+#Read the vcf SNP data into R
+vcf1 <- read.vcfR("SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf")
+
+# The adegenet package uses a highly efficient way of storing large SNP datasets in R called a "genlight" object. The following function creates a genlight object from your vcf:
+gl1 <- vcfR2genlight(vcf1)
+print(gl1) # Looks good! Right # of SNPs and individuals!
+
+# For info, try:
+gl1$ind.names
+gl1$loc.names[1:10]
+gl1$chromosome[1:3]
+
+# Notice theres nothing in the field that says "pop"? Lets fix that...
+ssw_meta <- read.table("ssw_healthloc.txt", header=T) # read in the metadata
+ssw_meta <- ssw_meta[order(ssw_meta$Individual),] # sort by Individual ID, just like the VCF file
+
+# Confirm the IDs are ordered the same in gl1 and ssw_meta:
+gl1$ind.names
+ssw_meta$Individual
+
+gl1$pop <- ssw_meta$Location # assign locality info
+
+# THIS IS THE LINE OF CODE THAT WAS CAUSING US ISSUES IN CLASS! HERE, IVE CORRECTED IT TO ASSIGN ALL FIELDS IN THE META-DATA FOR ssw_meta AS A LIST OF VARIABLES IN gl1$other. FROM HERE ON, THE CODE SHOULD WORK FINE. 
+gl1$other <- as.list(ssw_meta) # assign disease status
+
+# WE can explore the structure of our SNP data using the glPlot function, which gives us a sample x SNP view of the VCF file
+glPlot(gl1, posi="bottomleft")
+
+# Now, lets compute the PCA on the SNP genotypes and plot it:
+pca1 <- glPca(gl1, nf=4, parallel=F) # nf = number of PC axes to retain (here, 4)
+
+pca1 # prints summary
+
+# Plot the individuals in SNP-PCA space, with locality labels:
+plot(pca1$scores[,1], pca1$scores[,2], 
+     cex=2, pch=20, col=gl1$pop, 
+     xlab="Principal Component 1", 
+     ylab="Principal Component 2", 
+     main="PCA on SSW data (Freq missing=20%; 5317 SNPs)")
+legend("topleft", 
+       legend=unique(gl1$pop), 
+       pch=20, 
+       col=c("black", "red"))
+
+# Perhaps we want to show disease status instead of locality:
+plot(pca1$scores[,1], pca1$scores[,2], 
+     cex=2, pch=20, col=as.factor(gl1$other$Trajectory), 
+     xlab="Principal Component 1", 
+     ylab="Principal Component 2", 
+     main="PCA on SSW data (Freq missing=20%; 5317 SNPs)")
+legend("topleft", 
+       legend=unique(gl1$other$Trajectory), 
+       pch=20, 
+       col=as.factor(unique(gl1$other$Trajectory)))
+
+# Which SNPs load most strongly on the 1st PC axis?
+loadingplot(abs(pca1$loadings[,1]),
+            threshold=quantile(abs(pca1$loadings), 0.999))
+
+# Get their locus names
+gl1$loc.names[which(abs(pca1$loadings)>quantile(abs(pca1$loadings), 0.999))]
+```
+
+
+
+If you have *a-priori* defined groups, another way to analyze SNP-PCA information is with a discriminant analysis. This is known as **Discriminant Analysis of Principal Components (DAPC)**, and is a very useful means of finding the SNPs that *most* differentiate your samples for a variable of interest. [Read more on this method here](https://bmcgenet.biomedcentral.com/articles/10.1186/1471-2156-11-94). 
+
+For our data, we might choose to perform DAPC based on *a-priori* disease status designations...
+
+```R
+# Run the DAPC using disease status to group samples
+disease.dapc <- dapc(gl1, pop=gl1$other$Trajectory, n.pca=8, n.da=3,
+                     var.loadings=T, pca.info=T, parallel=F)
+
+# Scatterplot of results
+scatter.dapc(disease.dapc, grp=gl1$other$Trajectory, legend=T)
+
+# Plot the posterior assignment probabilities to each group
+compoplot(disease.dapc)
+
+# Which loci contribute the most to distinguishing Healthy vs. Sick individuals?
+loadingplot(abs(disease.dapc$var.load), 
+            lab.jitter=1, 
+            threshold=quantile(abs(disease.dapc$var.load), probs=0.999))
+```
+
+#### ADMIXTURE analysis {-}
+  
+  A second way of estimating population structure besides PCA is to use genotypic clustering algorithms. These include the familiar program STRUCTURE, as well as many others that have sprung up like it. All share the common feature of using multi-locus genetic data to estimate:
+  
+  * (i) the number of clusters present, and 
+* (ii) each individuals proportion of genetic ancestry in these clusters
+
+With large population genomic datasets, STRUCTURE would take a prohibitively long time to run. Thus, analyzing thousands to millions of SNPs requires computationally efficient approaches to the clustering problem. A good option is the maximum-likelihood program ADMIXTURE by John Novembres lab.
+
+For reference, here is the source page for information on [ADMIXTURE](https://www.genetics.ucla.edu/software/admixture/).
+
+And as with any good software, there is also a well annotated [manual](https://www.genetics.ucla.edu/software/admixture/admixture-manual.pdf) available.
+
+ADMIXTURE introduces a user-defined number of groups or clusters (known as K) and uses maximum likelihood to estimate allele frequencies in each cluster, and assign each individual ancestry (Q) to one or more of these clusters. 
+
+To run ADMIXTURE, we need to provide an input file and the requested level of K to investigate. Unfortunately, getting the data formatted properly for input is a bit of a pain. 
+
+The program [PGDSpider](http://www.cmpg.unibe.ch/software/PGDSpider/) is able to convert vcf files to .geno format, which ADMIXTURE can read. This requires 4 files:
+  
+  * the input data file in vcf format
+* a text file with sample IDs and the population designations
+* a settings file (.spid) that tells PGDSpider how to process the data
+* a bash script that runs the program with all the above settings specified
+
+**Lucky for you, Ive already done this!**  But, here are the files for future reference, in case you need to do this yourself down the road. Make sure theyre all in the same directory along with your vcf file before running.
+
+```bash
+/data/project_data/snps/reads2snps/SSW_tidal.pops
+/data/project_data/snps/reads2snps/vcf2admixture_SSW.spid
+/data/project_data/snps/reads2snps/vcf2geno.sh
+```
+
+
+
+The ready-to-go geno file is located on our server here:
+  
+  ```bash
+/data/project_data/snps/reads2snps/SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.geno
+```
+
+In the same path, you should also see a bash script:
+  
+  ```bash
+/data/project_data/snps/reads2snps/ADMIX.sh
+```
+
+Use **cp** to copy the .geno and ADMIX.sh files to your *home directory on the server*, then **cd** there and confirm the files are present.
+
+From within your home directory, open the ADMIX.sh script in vim. Lets walk through what each step is doing:
+
+```bash
+#!/bin/bash
+
+# Run ADMIXTURE to determine the number of genetic clusters in the SNP data, 
+# and the ancestry proportions of each individual
+
+# Heres the utility of for loops...
+
+for K in {1..10}
+
+do
+
+admixture -C 0.000001 --cv ./SSW_all_biallelic.MAF0.02.Miss1.0.recode.vcf.geno $K \
+| tee log${K}.out
+
+done
+
+### After the for loop finishes, you can use grep to grab the values of the CV from each separate log file and append them into a new summary text file. {-}
+
+grep CV log*.out >chooseK.txt
+```
+
+
+
+ When youre ready to go, exit vim to return to the command line, and execute the script.
+
+```bash
+$ bash ADMIX.sh
+```
+
+The cross-validation procedure in ADMIXTURE breaks the samples into 5 equally sized chunks. It then masks each chunk in turn, trains the model to estimate the allele frequencies and ancestry assignments on the unmasked data, and then attempts to predict the genotype values for the masked individuals. 
+
+**If the model is good (and theres true structure in the data), then the best value of K is the one that will *minimize* the cross-validation (CV) error. This is shown in the example plot below (not our SSW data)**
+  
+(https://www.researchgate.net/profile/Jason_Hodgson/publication/263579532/figure/download/fig3/AS:392426666643462@1470573216485/Figure-S1-Plot-of-ADMIXTURE-cross-validation-error-from-K2-through-K6-We-chose-K3-to.png)The CV values for our runs are stored in the output file "chooseK.txt"
+
+Print the contents of this file to your screen:
+  
+  ```bash
+$ cat chooseK.txt
+```
+
+* What level of K is the CV the lowest? 
+  * What does this say about the presence of genetic structure in our SSW data?
+  
+  
+  
+  
+  We can check our estimates of individual ancestry and make admixture barplots in R.
+
+* Download the output Q files that ADMIXTURE generated to your laptop: Lets get the files corresponding to K=1-3 (*.1Q, *.2Q, *.3Q)
+* Simple plots can be made with this R script:
+
+```R
+setwd("~/github/PBIO381_srkeller_labnotebook/results")
+
+# Import the ADMIXTURE Q matrices
+K1Q <- read.table("SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.1.Q")
+K2Q <- read.table("SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.2.Q")
+K3Q <- read.table("SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf.3.Q")
+
+# Get the SSW meta-data
+ssw_meta <- read.table("~/github/PBIO381_srkeller_labnotebook/data/SNP_data/ssw_healthloc.txt", header=T)
+  
+# Set up the plotting conditions for a multi-panel plot (3 rows, 1 column)
+par(mfrow=c(3,1))
+
+# Make the barplots for K=1-3
+barplot(t(as.matrix(K1Q)), 
+        col=rainbow(2),
+        names.arg=ssw_meta$Location, 
+        cex.names=0.75, 
+        xlab="Individual", ylab="Ancestry", 
+        border=NA)
+barplot(t(as.matrix(K2Q)), 
+        col=rainbow(2),
+        names.arg=ssw_meta$Location, 
+        cex.names=0.75, 
+        xlab="Individual", ylab="Ancestry", 
+        border=NA)
+barplot(t(as.matrix(K3Q)), 
+        col=rainbow(3),
+        names.arg=ssw_meta$Location, 
+        cex.names=0.75, 
+        xlab="Individual", ylab="Ancestry", 
+        border=NA)
+```
+
+
+## Pop Genomics Adegent {-
+}
+### Population genomics part 4: Adegent {-}
+##### author: "Antdrew Nguyen"{-}
+ 
+  ### PCA {-}
+  
+  ```{r pca, eval=FALSE}
+# Set your working directory to where you downloaded your results files:
+#setwd("~/github/PBIO381_srkeller_labnotebook/data/SNP_data/")
+
+list.files() # Do you see your downloaded files there? If not, double check to make sure you've set your working directory to the right spot
+
+# We'll need to install 2 packages to work with the SNP data:
+#install.packages("vcfR") # reads in vcf files and proides tools for file conversion 
+#install.packages("adegenet") # pop-genetics package with some handy routines, including PCA and other multivariate methods (DAPC)
+
+# ...and load the libraries
+library(adegenet)
+library(vcfR)
+
+#Read the vcf SNP data into R
+download.file("https://raw.githubusercontent.com/stephenrkeller/PBIO381_srkeller_labnotebook/master/data/SNP_data/SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf",dest="test.vcf")
+
+vcf1<-read.vcfR("test.vcf")
+#vcf1 <- read.vcfR("SSW_all_biallelic.MAF0.02.Miss0.8.recode.vcf")
+
+# The adegenet package uses a highly efficient way of storing large SNP datasets in R called a "genlight" object. The following function creates a genlight object from your vcf:
+gl1 <- vcfR2genlight(vcf1)
+print(gl1) # Looks good! Right # of SNPs and individuals!
+
+# For info, try:
+gl1$ind.names
+gl1$loc.names[1:10]
+
+# Notice there's nothing in the field that says "pop"? Let's fix that...
+ssw_meta <- read.table("Tutorial/ssw_healthloc.txt", header=T) # read in the metadata
+ssw_meta <- ssw_meta[order(ssw_meta$Individual),] # sort it by Individual ID
+
+# Confirm the ID's are ordered the same in gl1 and ssw_meta:
+gl1$ind.names
+ssw_meta$Individual
+
+gl1$pop <- ssw_meta$Location # assign locality info
+gl1$other <- as.list(ssw_meta$Trajectory) # assign disease status
+
+
+# WE can explore the structure of our SNP data using the glPlot function, which gives us a sample x SNP view of the VCF file
+glPlot(gl1, posi="bottomleft")
+
+# Now, let's compute the PCA on the SNP genotypes and plot it:
+pca1 <- glPca(gl1, nf=4) # nf = number of PC axes to retain (here, 4)
+pca1 # prints summary
+
+# Plot the individuals in SNP-PCA space, with locality labels:
+plot(pca1$scores[,1], pca1$scores[,2], 
+     cex=2, pch=20, col=gl1$pop, 
+     xlab="Principal Component 1", 
+     ylab="Principal Component 2", 
+     main="PCA on SSW data (Freq missing=20%; 5317 SNPs)")
+legend("topleft", 
+       legend=unique(gl1$pop), 
+       pch=20, 
+       col=c("black", "red"))
+
+# Perhaps we want to show disease status instead of locality:
+plot(pca1$scores[,1], pca1$scores[,2], 
+     cex=2, pch=20, col=as.factor(unlist(gl1$other)), 
+     xlab="Principal Component 1", 
+     ylab="Principal Component 2", 
+     main="PCA on SSW data (Freq missing=20%; 5317 SNPs)")
+legend("topleft", 
+       legend=unique(as.factor(unlist(gl1$other))), 
+       pch=20, 
+       col=as.factor(unique(unlist(gl1$other))))
+
+# Which SNPs load most strongly on the 1st PC axis?
+loadingplot(abs(pca1$loadings[,1]),
+            threshold=quantile(abs(pca1$loadings), 0.999))
+# Get their locus names
+gl1$loc.names[which(quantile(abs(pca1$loadings))>0.999)]
+
+threshold<-quantile(abs(pca1$loadings),0.999)
+
+gl1$loc.names[which(abs(pca1$loadings)>threshold)]
+
+gl1$loc.names[which(quantile(abs(pca1$loadings),0.999)>0.0770)]
+
+```
+
+#### DA PCA (Descriminant analysis of PCAs) {-}
+```{r DAPCA,eval=FALSE}
+
+# Run the DAPC using disease status to group samples
+disease.dapc <- dapc(gl1, pop=as.factor(unlist(gl1$other)), n.pca=8, n.da=3,
+                     var.loadings=T, pca.info=T)
+
+# Scatterplot of results
+scatter.dapc(disease.dapc, grp=as.factor(unlist(gl1$other)), legend=T)
+
+# Plot the posterior assignment probabilities to each group
+compoplot(disease.dapc)
+
+# Which loci contribute the most to distinguishing Healthy vs. Sick individuals?
+loadingplot(abs(disease.dapc$var.load), 
+            lab.jitter=1, 
+            threshold=quantile(abs(disease.dapc$var.load), probs=0.999))
+```
+
+
+### Admixture {-}
+
+```{r ADMIXTURE, eval=FALSE}
+
+```
